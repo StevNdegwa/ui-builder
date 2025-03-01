@@ -1,27 +1,32 @@
-export default {
-    colors: {
-        white: 'rgba(255, 255, 255, 1)',
-        whiteTransparency9: 'rgba(255, 255, 255, 0.9)',
-        whiteTransparency8: 'rgba(255, 255, 255, 0.8)',
-        whiteTransparency7: 'rgba(255, 255, 255, 0.7)',
-        whiteTransparency6: 'rgba(255, 255, 255, 0.6)',
-        whiteTransparency5: 'rgba(255, 255, 255, 0.5)',
-        whiteTransparency4: 'rgba(255, 255, 255, 0.4)',
-        whiteTransparency3: 'rgba(255, 255, 255, 0.3)',
-        whiteTransparency2: 'rgba(255, 255, 255, 0.2)',
-        whiteTransparency1: 'rgba(255, 255, 255, 0.1)',
-        whiteTransparency05: 'rgba(255, 255, 255, 0.05)',
-        text: 'rgba(27, 28, 30)',
-        textTransparency9: 'rgba(27, 28, 30, 0.9)',
-        textTransparency8: 'rgba(27, 28, 30, 0.8)',
-        textTransparency7: 'rgba(27, 28, 30, 0.7)',
-        textTransparency6: 'rgba(27, 28, 30, 0.6)',
-        textTransparency5: 'rgba(27, 28, 30, 0.5)',
-        textTransparency4: 'rgba(27, 28, 30, 0.4)',
-        textTransparency3: 'rgba(27, 28, 30, 0.3)',
-        textTransparency2: 'rgba(27, 28, 30, 0.2)',
-        textTransparency1: 'rgba(27, 28, 30, 0.1)',
-        textTransparency05: 'rgba(27, 28, 30, 0.05)',
-        dark: 'rgba(16, 13, 54)',
+const theme = {
+  "fontFamily": {
+    body: "sans-serif",
+  },
+  "colorSchemes": {
+    "light": {
+      "palette": {
+        "primary":{
+
+        }
+      },
+      "white": "#ffffff",
+      "dark": "#282C35",
+      "text": "#f2f2f2",
+      "bg":"rgb(255,255,255)"
+    }
+  },
+  breakpoints: {
+    keys: ["xs", "sm", "md", "lg", "xl"],
+    values: {
+      xs: 0,
+      sm: 480,
+      md: 768,
+      lg: 1024,
+      xl: 1240,
     },
+  },      
 }
+
+export const ThemeType = typeof theme
+
+export default theme
