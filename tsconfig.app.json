@@ -6,6 +6,8 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -24,8 +26,9 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": "src",
     "paths": {
-      "@styles/*": ["styles/*"],
-      "@components/*": ["components/*"],
+      "@ui/*": ["ui/*"],
+      "@modules/*": ["modules/*"],
+      "@app/*": ["app/*"],
     }
   },
   "include": ["src"]
