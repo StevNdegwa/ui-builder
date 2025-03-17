@@ -1,6 +1,6 @@
 interface IBuildable {
   elementPropertiesAsString?: ()=> string;
-  saveElement(): void;
+  serializeELement(): void;
 }
 
 interface IBuildableBlockElement {

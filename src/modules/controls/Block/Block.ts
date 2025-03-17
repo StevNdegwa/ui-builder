@@ -1,5 +1,5 @@
 import { css, CSSResultGroup } from "lit";
-import { getElementDimensionValue } from "@modules/utils/controls";
+import { getElementDimensionValue, getPropertiesAsString } from "@modules/utils/controls";
 import { ELEMENT_STYLE_PROPERTIES } from "../constants";
 import { Buildable } from "../Buildable";
 
@@ -14,9 +14,10 @@ export class UIBlock extends Buildable implements IBuildableBlockElement {
   }
 
   static properties = {
+    ...Buildable.properties,
     width: { type: String },
     height: { type: String },
-  };
+  }
 
   static styles?: CSSResultGroup = css`
     :host {
@@ -66,6 +67,9 @@ export class UIBlock extends Buildable implements IBuildableBlockElement {
   }
 
   elementPropertiesAsString() {
-    return `height:${this.height};width:${this.width};`;
+    return getPropertiesAsString({
+        width: this.getElementWidth(),
+        height: this.getElementHeight(),
+        });
   }
 }

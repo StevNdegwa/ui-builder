@@ -1,15 +1,21 @@
 import { html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { UIBlock } from "../Block";
+import { getPropertiesAsString } from "@modules/utils/controls";
 
 @customElement("ui-section")
 export class UISection extends UIBlock {
+
   constructor() {
     super();
   }
 
   updated(changedProperties: Map<string, string>) {
     super.updated(changedProperties);
+  }
+
+  elementPropertiesAsString(): string {
+    return getPropertiesAsString({}) + super.elementPropertiesAsString();
   }
 
   render() {
@@ -25,8 +31,7 @@ declare module "react" {
         React.HTMLAttributes<HTMLElement>,
         HTMLElement
       > & {
-        width?: string;
-        height?: string;
+        props?: string;
       };
     }
   }

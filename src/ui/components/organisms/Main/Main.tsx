@@ -11,7 +11,7 @@ export const Main = () => {
   const sectionRef = useRef<UISection>(null);
 
   const handleSave = () => {
-    sectionRef.current?.saveElement();
+    console.log(sectionRef.current?.serializeELement());
   };
 
   return (
@@ -20,8 +20,7 @@ export const Main = () => {
         <Frame setElementWidth={setWidth} setElementHeight={setHeight}>
           <ui-section
             ref={sectionRef}
-            width={width}
-            height={height}
+            props={JSON.stringify({ background: "#f0f0f0" })}
           ></ui-section>
         </Frame>
       </BuilderContainer>

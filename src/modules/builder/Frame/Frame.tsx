@@ -37,7 +37,7 @@ export const Frame: FC<FrameProps> = ({ children, setElementWidth }) => {
   const updateHorizontalPosition = useCallback(
     (position: number) => {
       setHorizontalPosition(position);
-      setElementWidth((position / scratchPadWidth) * 100 + "%");
+      setElementWidth(Math.round((position / scratchPadWidth) * 100) + "%");
     },
     [scratchPadWidth, setElementWidth]
   );

@@ -11,3 +11,16 @@ export function getElementDimensionValue(value: string | number | undefined): st
     return "100%";
 
 }
+
+export function getPropertiesAsString(props: Record<string, string | number>): string {
+    let properties = "";
+    
+    for (const key in props) {
+        if (Object.prototype.hasOwnProperty.call(props, key)) {
+            const element = props[key];
+            properties += `${key}:${element};`;
+        }
+    }
+
+    return properties;
+}
