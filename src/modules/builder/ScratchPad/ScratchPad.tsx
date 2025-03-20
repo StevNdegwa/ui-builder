@@ -45,8 +45,6 @@ export const ScratchPad: FC<ScratchPadProps> = ({
       <Wrapper
         height={height}
         width={width}
-        x="5"
-        y="5"
         onMouseMove={onMouseMove}
         onClick={stopMoving}
         ref={scratChPadRef}

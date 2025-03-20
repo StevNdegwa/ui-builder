@@ -1,14 +1,18 @@
-import { Box, Typography } from "@ui/components";
-import { useEffect } from "react";
+import { Box, Button, FlexBox, Typography } from "@ui/components";
+import { Wrapper } from "./styles";
 
 export const Settings = () => {
-  useEffect(() => {
-    console.log("Settings mounted");
-  }, []);
-
   return (
-    <Box element="section">
-      <Typography>Settings</Typography>
-    </Box>
+    <Wrapper element="section">
+      <FlexBox direction="column">
+        <Typography heading="h2">Element settings</Typography>
+
+        <Box>
+          <FlexBox justify="end">
+            <Button size="sm">Save</Button>
+          </FlexBox>
+        </Box>
+      </FlexBox>
+    </Wrapper>
   );
 };

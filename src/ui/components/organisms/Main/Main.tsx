@@ -1,32 +1,12 @@
-import { useRef, useState } from "react";
-import { Frame } from "@modules/builder";
-import { Button } from "@ui/components/atoms";
-import { BuilderContainer, Controls, Wrapper } from "./style";
-import { UISection } from "@modules/controls";
+import { FC, PropsWithChildren } from "react";
+import { BuilderContainer, Wrapper } from "./style";
 
-export const Main = () => {
-  const [width, setWidth] = useState("100%");
-  const [height, setHeight] = useState("100%");
+export type MainProps = PropsWithChildren;
 
-  const sectionRef = useRef<UISection>(null);
-
-  const handleSave = () => {
-    console.log(sectionRef.current?.serializeELement());
-  };
-
+export const Main: FC<MainProps> = ({ children }) => {
   return (
     <Wrapper element="main" direction="column">
-      <BuilderContainer>
-        <Frame setElementWidth={setWidth} setElementHeight={setHeight}>
-          <ui-section
-            ref={sectionRef}
-            props={JSON.stringify({ background: "#f0f0f0" })}
-          ></ui-section>
-        </Frame>
-      </BuilderContainer>
-      <Controls>
-        <Button onClick={handleSave}>Save Changes</Button>
-      </Controls>
+      <BuilderContainer>{children}</BuilderContainer>
     </Wrapper>
   );
 };

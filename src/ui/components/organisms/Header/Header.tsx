@@ -1,9 +1,9 @@
-import { Box, Typography } from "@ui/components";
+import { AppIcon, Wrapper } from "./styles";
 
 export const Header = () => {
   return (
-    <Box element="header">
-      <Typography>UI Builder</Typography>
-    </Box>
+    <Wrapper element="header" align="center">
+      <AppIcon />
+    </Wrapper>
   );
 };

@@ -5,7 +5,6 @@ import { getPropertiesAsString } from "@modules/utils/controls";
 
 @customElement("ui-section")
 export class UISection extends UIBlock {
-
   constructor() {
     super();
   }
@@ -19,7 +18,7 @@ export class UISection extends UIBlock {
   }
 
   render() {
-    return html`<div class="wrapper"><p>Builder Section</p></div>`;
+    return html`<div class="wrapper">Builder Section</div>`;
   }
 }
 

@@ -1,5 +1,8 @@
 import { css, CSSResultGroup } from "lit";
-import { getElementDimensionValue, getPropertiesAsString } from "@modules/utils/controls";
+import {
+  getElementDimensionValue,
+  getPropertiesAsString,
+} from "@modules/utils/controls";
 import { ELEMENT_STYLE_PROPERTIES } from "../constants";
 import { Buildable } from "../Buildable";
 
@@ -17,12 +20,18 @@ export class UIBlock extends Buildable implements IBuildableBlockElement {
     ...Buildable.properties,
     width: { type: String },
     height: { type: String },
-  }
+  };
 
   static styles?: CSSResultGroup = css`
     :host {
       --ui-buildable-element-width: 100%;
       --ui-buildable-element-height: 100%;
+      padding: 0px;
+      margin: 0px;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      display: block;
     }
 
     :host > .wrapper {
@@ -54,6 +63,8 @@ export class UIBlock extends Buildable implements IBuildableBlockElement {
   };
 
   updated(changedProperties: Map<string, string>): void {
+    console.log("\n updated::", changedProperties);
+
     this.updatedWidthProperty(changedProperties);
     this.updatedHeightProperty(changedProperties);
   }
@@ -68,8 +79,8 @@ export class UIBlock extends Buildable implements IBuildableBlockElement {
 
   elementPropertiesAsString() {
     return getPropertiesAsString({
-        width: this.getElementWidth(),
-        height: this.getElementHeight(),
-        });
+      width: this.getElementWidth(),
+      height: this.getElementHeight(),
+    });
   }
 }

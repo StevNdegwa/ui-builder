@@ -1,13 +1,12 @@
-import { FC, useEffect } from "react";
+import { FC, PropsWithChildren } from "react";
 import { Grid } from "@ui/components/molecules";
 import { Wrapper } from "./styles";
 import { Footer, Header, Settings, Sidebar } from "@ui/components/organisms";
 import { Main } from "@ui/components/organisms/Main";
 
-export const Dashboard: FC = () => {
-  useEffect(() => {
-    console.log("Dashboard mounted");
-  }, []);
+export type DashboardProps = PropsWithChildren;
+
+export const Dashboard: FC<DashboardProps> = ({ children }) => {
   return (
     <Wrapper
       templateColumns="60px 1fr 350px"
@@ -25,7 +24,7 @@ export const Dashboard: FC = () => {
         <Sidebar />
       </Grid.Item>
       <Grid.Item area="main">
-        <Main />
+        <Main>{children}</Main>
       </Grid.Item>
       <Grid.Item area="settings">
         <Settings />

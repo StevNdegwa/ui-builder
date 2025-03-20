@@ -1,20 +1,28 @@
-
 import styled from "styled-components";
 import { FlexBox } from "@ui/components/molecules";
 import { Box } from "@ui/components/atoms";
 
 export const Wrapper = styled(FlexBox)`
-border: 1px solid green;
-height: 100%;
-padding: 20px;
+  height: 100%;
+  padding: 10px;
 `;
-
 
 export const BuilderContainer = styled(Box)`
-height: calc(100% - 40px);
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  ${({
+    theme: {
+      colorSchemes: {
+        palette: { gray },
+      },
+    },
+  }) => `
+  box-shadow: 0 0 16px 0 ${gray[100]};
+  `}
 `;
 
-export const Controls = styled(Box)`
-border: 1px solid red;
-height: 40px;
+export const Controls = styled(FlexBox)`
+  height: 60px;
+  padding: 0 10px;
 `;

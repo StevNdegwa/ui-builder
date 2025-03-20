@@ -32,15 +32,15 @@ export const Resize: FC<ResizeProps> = ({
   return (
     <g>
       <Indicator
-        x1={horizontalPosition + 5}
-        y1="5"
-        x2={horizontalPosition + 5}
-        y2={length + 5}
+        x1={horizontalPosition}
+        y1="0"
+        x2={horizontalPosition}
+        y2={length}
         pointerEvents={"none"}
         $show={showIndicator || isMoving}
       />
       <Thumb
-        cx={horizontalPosition + 5}
+        cx={horizontalPosition}
         cy={"50%"}
         r="5"
         onMouseDown={startMoving}

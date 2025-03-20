@@ -29,6 +29,7 @@
       "@ui/*": ["ui/*"],
       "@modules/*": ["modules/*"],
       "@app/*": ["app/*"],
+      "@media/*": ["media/*"]
     }
   },
   "include": ["src"]
