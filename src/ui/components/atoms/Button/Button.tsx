@@ -1,29 +1,27 @@
+import clsx from "clsx";
 import { forwardRef, HTMLAttributes, PropsWithChildren } from "react";
 import { Wrapper } from "./styles";
 
 export type ButtonProps = PropsWithChildren<
   HTMLAttributes<HTMLButtonElement> & {
-    /**
-     * The variant of the button.
-     * @default "primary"
-     */
-    variant?: "primary" | "secondary" | "tertiary";
-    /**
-     * The size of the button.
-     * @default "medium"
-     * */
-    size?: "small" | "medium" | "large";
-    /**
-     * The loading state of the button.
-     */
+    variant?: "solid" | "outlined" | "text";
+    color?: "primary" | "secondary" | "gray";
+    size?: "xs" | "sm" | "md" | "lg" | "xl";
     loading?: boolean;
+    disabled?: boolean;
   }
 >;
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, variant, color, size, loading, className, ...props }, ref) => {
+    const classList = clsx(className, {
+      [`${variant}-variant`]: !!variant,
+      [`${color}-color`]: !!color,
+      [`${size}-size`]: !!size,
+    });
+
     return (
-      <Wrapper {...props} ref={ref}>
+      <Wrapper {...props} className={classList} $loading={loading} ref={ref}>
         {children}
       </Wrapper>
     );

@@ -1,4 +1,5 @@
 interface IBuildable {
+  props: string;
   elementPropertiesAsString?: ()=> string;
   serializeELement(): void;
 }
