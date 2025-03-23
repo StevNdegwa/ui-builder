@@ -1,7 +1,10 @@
 interface IBuildable {
   props: string;
-  elementPropertiesAsString?: ()=> string;
   serializeELement(): void;
+}
+
+interface IBuildableElement {
+  elementPropertiesAsString?: () => string;
 }
 
 interface IBuildableBlockElement {
@@ -9,4 +12,4 @@ interface IBuildableBlockElement {
   height: string | number;
 }
 
-type IBuildableConfig = Record<string, string>
+type IBuildableConfig = Record<string, string>;

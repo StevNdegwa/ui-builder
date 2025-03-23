@@ -4,9 +4,7 @@ import { UIBlock } from "../Block";
 import { getPropertiesAsString } from "@modules/utils/controls";
 
 @customElement("ui-section")
-export class UISection extends UIBlock {
-  propData: Record<string, string> = {};
-
+export class UISection extends UIBlock implements IBuildableElement {
   constructor() {
     super();
   }

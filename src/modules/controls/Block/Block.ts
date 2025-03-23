@@ -6,16 +6,15 @@ import {
 import { ELEMENT_STYLE_PROPERTIES } from "../constants";
 import { Buildable } from "../Buildable";
 
-export class UIBlock extends Buildable implements IBuildableBlockElement {
+export class UIBlock
+  extends Buildable
+  implements IBuildableBlockElement, IBuildableElement
+{
   declare width: string | number;
   declare height: string | number;
 
-  propData: Record<string, string> = {};
-
   constructor() {
     super();
-    this.width = "100%";
-    this.height = "100%";
   }
 
   static properties = {
@@ -46,19 +45,29 @@ export class UIBlock extends Buildable implements IBuildableBlockElement {
     }
   `;
 
+  connectedCallback(): void {
+    super.connectedCallback();
+    this.updatedWidthProperty(this.propData);
+    this.updatedHeightProperty(this.propData);
+  }
+
   updatedWidthProperty = (changedProperties: Map<string, string>) => {
     if (changedProperties.has("width")) {
-      const newElWidth = this.getElementWidth();
+      const newElWidth = getElementDimensionValue(
+        changedProperties.get("width")
+      );
       this.style.setProperty(ELEMENT_STYLE_PROPERTIES.WIDTH, newElWidth);
-      this.propData.width = newElWidth;
+      this.propData.set("width", newElWidth);
     }
   };
 
   updatedHeightProperty = (changedProperties: Map<string, string>) => {
     if (changedProperties.has("height")) {
-      const newElHeight = this.getElementHeight();
+      const newElHeight = getElementDimensionValue(
+        changedProperties.get("height")
+      );
       this.style.setProperty(ELEMENT_STYLE_PROPERTIES.HEIGHT, newElHeight);
-      this.propData.height = newElHeight;
+      this.propData.set("height", newElHeight);
     }
   };
 
@@ -66,14 +75,6 @@ export class UIBlock extends Buildable implements IBuildableBlockElement {
     super.updated(changedProperties);
     this.updatedWidthProperty(changedProperties);
     this.updatedHeightProperty(changedProperties);
-  }
-
-  getElementWidth() {
-    return getElementDimensionValue(this.width);
-  }
-
-  getElementHeight() {
-    return getElementDimensionValue(this.height);
   }
 
   elementPropertiesAsString() {

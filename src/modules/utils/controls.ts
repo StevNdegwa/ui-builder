@@ -28,14 +28,14 @@ export function getElementDimensionValue(
 }
 
 export function getPropertiesAsString(
-  props: Record<string, string | number>
+  propsMap: Map<string, string | number | undefined>
 ): string {
   let properties = "";
 
-  for (const key in props) {
-    const element = props[key];
-    properties += `${key}:${element};`;
-  }
+  propsMap.forEach((value, key) => {
+    const dimensionValue = getElementDimensionValue(value);
+    properties += `${key}:${dimensionValue};`;
+  });
 
   return properties;
 }

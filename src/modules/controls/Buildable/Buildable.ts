@@ -1,11 +1,14 @@
 import { LitElement } from "lit";
 
-export class Buildable extends LitElement implements IBuildable {
+export class Buildable
+  extends LitElement
+  implements IBuildable, IBuildableElement
+{
   declare props: string;
 
   static properties = { props: { type: String } };
 
-  propData: Record<string, string> = {};
+  propData: Map<string, string> = new Map();
 
   constructor() {
     super();
@@ -13,6 +16,15 @@ export class Buildable extends LitElement implements IBuildable {
 
   connectedCallback(): void {
     super.connectedCallback();
+
+    if (this.props) {
+      const propData = this.props.split(";");
+
+      propData.forEach((prop) => {
+        const [key, value] = prop.split(":");
+        this.propData.set(key, value);
+      });
+    }
   }
 
   disconnectedCallback() {
