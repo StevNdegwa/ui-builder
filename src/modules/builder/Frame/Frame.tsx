@@ -35,11 +35,15 @@ export const Frame = forwardRef<HTMLDivElement, FrameProps>(
     }, [stopMoving]);
 
     const updateHorizontalPosition = useCallback(
-      (position: number) => {
-        setHorizontalPosition(position);
-        setElementWidth(Math.round((position / scratchPadWidth) * 100) + "%");
+      (position: Pos) => {
+        if (isMoving) {
+          setHorizontalPosition(position.x);
+          setElementWidth(
+            Math.round((position.x / scratchPadWidth) * 100) + "%"
+          );
+        }
       },
-      [scratchPadWidth, setElementWidth]
+      [scratchPadWidth, setElementWidth, isMoving]
     );
 
     useLayoutEffect(() => {
@@ -69,9 +73,8 @@ export const Frame = forwardRef<HTMLDivElement, FrameProps>(
             <ScratchPad
               width={scratchPadWidth}
               height={scratchPadHeight}
-              isMoving={isMoving}
               stopMoving={stopMoving}
-              setHorizontalPosition={updateHorizontalPosition}
+              setGridPosition={updateHorizontalPosition}
             >
               <Resize
                 length={scratchPadHeight}

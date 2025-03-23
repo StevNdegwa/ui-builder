@@ -25,7 +25,7 @@ export default function App() {
     const frameRefEl = frameRef.current;
 
     if (frameRefEl) {
-      frameRefEl.appendChild(bc.getElement());
+      // frameRefEl.appendChild(bc.getElement());
 
       buildableControlRef.current = bc;
     }
