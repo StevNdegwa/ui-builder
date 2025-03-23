@@ -1,19 +1,31 @@
-import { Buildable } from "@modules/controls";
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { UISection } from "@modules/controls";
 
 export class BuildableControl {
-  element: Buildable;
+  element: UISection;
 
-  constructor(element: Buildable) {
-    this.element = element;
+  constructor() {
+    this.element = this.createElement();
   }
 
-  getElement(): Buildable {
+  createElement = (): UISection => {
+    const element = document.createElement("ui-section") as UISection;
+    element.setAttribute("props", JSON.stringify({ background: "#f0f0f0" }));
+    return element;
+  };
+
+  getElement(): UISection {
     return this.element;
   }
 
   getElementProperties() {}
 
-  updateProperties() {}
+  updateProperties(prop: string, value: string) {
+    // @ts-expect-error
+    this.element[prop] = value;
+  }
 
-  getElementString() {}
+  getElementString() {
+    return this.element.serializeELement();
+  }
 }

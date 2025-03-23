@@ -4,9 +4,11 @@ import { Wrapper } from "./styles";
 import { Footer, Header, Settings, Sidebar } from "@ui/components/organisms";
 import { Main } from "@ui/components/organisms/Main";
 
-export type DashboardProps = PropsWithChildren;
+export type DashboardProps = PropsWithChildren<{
+  settingsForm?: React.ReactNode;
+}>;
 
-export const Dashboard: FC<DashboardProps> = ({ children }) => {
+export const Dashboard: FC<DashboardProps> = ({ children, settingsForm }) => {
   return (
     <Wrapper
       templateColumns="60px 1fr 350px"
@@ -27,7 +29,7 @@ export const Dashboard: FC<DashboardProps> = ({ children }) => {
         <Main>{children}</Main>
       </Grid.Item>
       <Grid.Item area="settings">
-        <Settings />
+        <Settings>{settingsForm}</Settings>
       </Grid.Item>
       <Grid.Item area="footer">
         <Footer />

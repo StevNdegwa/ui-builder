@@ -1,17 +1,15 @@
-import { Box, Button, FlexBox, Typography } from "@ui/components";
+import { FlexBox, Typography } from "@ui/components";
 import { Wrapper } from "./styles";
+import { FC, PropsWithChildren } from "react";
 
-export const Settings = () => {
+export type SettingsProps = PropsWithChildren;
+
+export const Settings: FC<SettingsProps> = ({ children }) => {
   return (
     <Wrapper element="section">
-      <FlexBox direction="column">
+      <FlexBox direction="column" gap="sm">
         <Typography heading="h2">Element settings</Typography>
-
-        <Box>
-          <FlexBox justify="end">
-            <Button size="sm">Save</Button>
-          </FlexBox>
-        </Box>
+        {children}
       </FlexBox>
     </Wrapper>
   );

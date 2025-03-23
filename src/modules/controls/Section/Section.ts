@@ -5,6 +5,8 @@ import { getPropertiesAsString } from "@modules/utils/controls";
 
 @customElement("ui-section")
 export class UISection extends UIBlock {
+  propData: Record<string, string> = {};
+
   constructor() {
     super();
   }
@@ -14,11 +16,13 @@ export class UISection extends UIBlock {
   }
 
   elementPropertiesAsString(): string {
-    return getPropertiesAsString({}) + super.elementPropertiesAsString();
+    return (
+      getPropertiesAsString(this.propData) + super.elementPropertiesAsString()
+    );
   }
 
   render() {
-    return html`<div class="wrapper">Builder Section</div>`;
+    return html`<div class="wrapper">Buildable Section</div>`;
   }
 }
 

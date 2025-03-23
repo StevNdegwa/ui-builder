@@ -38,7 +38,7 @@ const colorSchemes = {
     },
   },
   bg: "#ffffff",
-  textOnLight: "#f2f2f2",
+  textOnLight: "#0f0f0f",
   textOnDark: "#ffffff",
 };
 

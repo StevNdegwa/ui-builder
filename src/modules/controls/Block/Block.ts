@@ -10,6 +10,8 @@ export class UIBlock extends Buildable implements IBuildableBlockElement {
   declare width: string | number;
   declare height: string | number;
 
+  propData: Record<string, string> = {};
+
   constructor() {
     super();
     this.width = "100%";
@@ -46,25 +48,22 @@ export class UIBlock extends Buildable implements IBuildableBlockElement {
 
   updatedWidthProperty = (changedProperties: Map<string, string>) => {
     if (changedProperties.has("width")) {
-      this.style.setProperty(
-        ELEMENT_STYLE_PROPERTIES.WIDTH,
-        this.getElementWidth()
-      );
+      const newElWidth = this.getElementWidth();
+      this.style.setProperty(ELEMENT_STYLE_PROPERTIES.WIDTH, newElWidth);
+      this.propData.width = newElWidth;
     }
   };
 
   updatedHeightProperty = (changedProperties: Map<string, string>) => {
     if (changedProperties.has("height")) {
-      this.style.setProperty(
-        ELEMENT_STYLE_PROPERTIES.WIDTH,
-        this.getElementHeight()
-      );
+      const newElHeight = this.getElementHeight();
+      this.style.setProperty(ELEMENT_STYLE_PROPERTIES.HEIGHT, newElHeight);
+      this.propData.height = newElHeight;
     }
   };
 
   updated(changedProperties: Map<string, string>): void {
-    console.log("\n updated::", changedProperties);
-
+    super.updated(changedProperties);
     this.updatedWidthProperty(changedProperties);
     this.updatedHeightProperty(changedProperties);
   }
@@ -78,9 +77,8 @@ export class UIBlock extends Buildable implements IBuildableBlockElement {
   }
 
   elementPropertiesAsString() {
-    return getPropertiesAsString({
-      width: this.getElementWidth(),
-      height: this.getElementHeight(),
-    });
+    return (
+      getPropertiesAsString(this.propData) + super.elementPropertiesAsString()
+    );
   }
 }
