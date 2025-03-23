@@ -12,15 +12,22 @@ export class UIBlock
 {
   declare width: string | number;
   declare height: string | number;
+  declare "background-color": string;
 
   constructor() {
     super();
+
+    // Set default values
+    this.propData.set("width", "100%");
+    this.propData.set("height", "100%");
+    this.propData.set("background-color", "rgb(212, 212, 212)");
   }
 
   static properties = {
     ...Buildable.properties,
     width: { type: String },
     height: { type: String },
+    "background-color": { type: String, attribute: "background-color" },
   };
 
   static styles?: CSSResultGroup = css`
@@ -38,7 +45,7 @@ export class UIBlock
     :host > .wrapper {
       width: var(--ui-buildable-element-width, 100%);
       height: var(--ui-buildable-element-height, 0px);
-      background-color: yellow;
+      background-color: var(--ui-buildable-element-bg-color, transparent);
       padding: 0px;
       margin: 0px;
       box-sizing: border-box;
@@ -47,14 +54,25 @@ export class UIBlock
 
   connectedCallback(): void {
     super.connectedCallback();
-    this.updatedWidthProperty(this.propData);
-    this.updatedHeightProperty(this.propData);
+
+    this.style.setProperty(
+      ELEMENT_STYLE_PROPERTIES.WIDTH,
+      this.propData.get("width") || "100%"
+    );
+    this.style.setProperty(
+      ELEMENT_STYLE_PROPERTIES.HEIGHT,
+      this.propData.get("height") || "100%"
+    );
+    this.style.setProperty(
+      ELEMENT_STYLE_PROPERTIES.BG_COLOR,
+      this.propData.get("background-color") || "transparent"
+    );
   }
 
   updatedWidthProperty = (changedProperties: Map<string, string>) => {
     if (changedProperties.has("width")) {
       const newElWidth = getElementDimensionValue(
-        changedProperties.get("width")
+        this.width || changedProperties.get("width")
       );
       this.style.setProperty(ELEMENT_STYLE_PROPERTIES.WIDTH, newElWidth);
       this.propData.set("width", newElWidth);
@@ -64,10 +82,18 @@ export class UIBlock
   updatedHeightProperty = (changedProperties: Map<string, string>) => {
     if (changedProperties.has("height")) {
       const newElHeight = getElementDimensionValue(
-        changedProperties.get("height")
+        this.height || changedProperties.get("height")
       );
       this.style.setProperty(ELEMENT_STYLE_PROPERTIES.HEIGHT, newElHeight);
       this.propData.set("height", newElHeight);
+    }
+  };
+
+  updateBackgroundProperty = (changedProperties: Map<string, string>) => {
+    if (changedProperties.has("background-color")) {
+      const newBgColor = this["background-color"] || "transparent";
+      this.style.setProperty(ELEMENT_STYLE_PROPERTIES.BG_COLOR, newBgColor);
+      this.propData.set("background-color", newBgColor);
     }
   };
 
@@ -75,6 +101,7 @@ export class UIBlock
     super.updated(changedProperties);
     this.updatedWidthProperty(changedProperties);
     this.updatedHeightProperty(changedProperties);
+    this.updateBackgroundProperty(changedProperties);
   }
 
   elementPropertiesAsString() {

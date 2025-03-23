@@ -12,7 +12,7 @@ import { GlobalStyle, ThemeProvider } from "@ui/styles";
 import "@modules/controls";
 import BuilderContext from "./context/BuilderContext";
 import { BuildableControl, Frame } from "@modules/builder";
-import { Button, FlexBox, Input } from "@ui/components";
+import { Button, ColorInput, FlexBox, Input } from "@ui/components";
 
 export default function App() {
   const [, setWidth] = useState("100%");
@@ -25,7 +25,7 @@ export default function App() {
     const frameRefEl = frameRef.current;
 
     if (frameRefEl) {
-      // frameRefEl.appendChild(bc.getElement());
+      frameRefEl.appendChild(bc.getElement());
 
       buildableControlRef.current = bc;
     }
@@ -52,6 +52,15 @@ export default function App() {
 
     if (buildableControlRef.current) {
       buildableControlRef.current.updateProperties("width", height);
+    }
+  };
+
+  const updateBgHandler: FormEventHandler<HTMLInputElement> = (event) => {
+    if (buildableControlRef.current) {
+      buildableControlRef.current.updateProperties(
+        "background-color",
+        event.currentTarget.value
+      );
     }
   };
 
@@ -83,6 +92,7 @@ export default function App() {
                   onChange={updateWidthHandler}
                   placeholder="Width"
                 />
+                <ColorInput onChange={updateBgHandler} />
                 <FlexBox justify="end">
                   <Button size="sm" onClick={saveElement}>
                     Save
