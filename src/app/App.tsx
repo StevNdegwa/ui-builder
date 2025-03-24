@@ -12,7 +12,12 @@ import { GlobalStyle, ThemeProvider } from "@ui/styles";
 import "@modules/controls";
 import BuilderContext from "./context/BuilderContext";
 import { BuildableControl, Frame } from "@modules/builder";
-import { Button, ColorInput, FlexBox, Input } from "@ui/components";
+import {
+  Button,
+  ColorInput,
+  FlexBox,
+  LengthInputControl,
+} from "@ui/components";
 
 export default function App() {
   const [, setWidth] = useState("100%");
@@ -37,21 +42,15 @@ export default function App() {
     };
   }, []);
 
-  const updateHeightHandler: FormEventHandler<HTMLInputElement> = (event) => {
-    const newValue = event.currentTarget.value;
-    const height = `${newValue}px`;
-
+  const updateHeightHandler = (newValue: string) => {
     if (buildableControlRef.current) {
-      buildableControlRef.current.updateProperties("height", height);
+      buildableControlRef.current.updateProperties("height", newValue);
     }
   };
 
-  const updateWidthHandler: FormEventHandler<HTMLInputElement> = (event) => {
-    const newValue = event.currentTarget.value;
-    const height = `${newValue}px`;
-
+  const updateWidthHandler = (newValue: string) => {
     if (buildableControlRef.current) {
-      buildableControlRef.current.updateProperties("width", height);
+      buildableControlRef.current.updateProperties("width", newValue);
     }
   };
 
@@ -82,17 +81,16 @@ export default function App() {
           settingsForm={
             <>
               <FlexBox direction="column" gap="sm">
-                <Input
-                  type="number"
-                  onChange={updateHeightHandler}
-                  placeholder="Height"
-                />
-                <Input
-                  type="number"
+                <LengthInputControl
                   onChange={updateWidthHandler}
                   placeholder="Width"
                 />
+                <LengthInputControl
+                  onChange={updateHeightHandler}
+                  placeholder="Height"
+                />
                 <ColorInput onChange={updateBgHandler} />
+
                 <FlexBox justify="end">
                   <Button size="sm" onClick={saveElement}>
                     Save
