@@ -9,12 +9,12 @@ import { ScratchPad } from "../ScratchPad";
 import { Resize } from "../Resize";
 import { Contents, SvgWrapper, Wrapper } from "./styles";
 
-export type FrameProps = {
+export type BuilderProps = {
   setElementWidth: (width: string) => void;
   setElementHeight: (height: string) => void;
 };
 
-export const Frame = forwardRef<HTMLDivElement, FrameProps>(
+export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
   ({ setElementWidth }, ref) => {
     const rectRef = useRef<SVGSVGElement>(null);
     const [isMoving, setIsMoving] = useState(false);

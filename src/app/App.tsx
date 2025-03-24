@@ -11,7 +11,7 @@ import { GlobalStyle, ThemeProvider } from "@ui/styles";
 
 import "@modules/controls";
 import BuilderContext from "./context/BuilderContext";
-import { BuildableControl, Frame } from "@modules/builder";
+import { BuildableControl, Builder } from "@modules/builder";
 import {
   Button,
   ColorInput,
@@ -100,7 +100,7 @@ export default function App() {
             </>
           }
         >
-          <Frame
+          <Builder
             setElementWidth={setWidth}
             setElementHeight={setHeight}
             ref={frameRef}

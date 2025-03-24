@@ -1,2 +1,2 @@
-export * from "./Frame";
+export * from "./Builder";
 export * from "./BuildableControl";
