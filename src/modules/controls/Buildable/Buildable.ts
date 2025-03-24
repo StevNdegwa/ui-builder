@@ -1,6 +1,6 @@
 import { LitElement } from "lit";
 
-export class Buildable
+export class UIBuildable
   extends LitElement
   implements IBuildable, IBuildableElement
 {
@@ -25,6 +25,8 @@ export class Buildable
         this.propData.set(key, value);
       });
     }
+
+    this.classList.add("ui-buildable");
   }
 
   disconnectedCallback() {

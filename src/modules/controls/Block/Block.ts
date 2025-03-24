@@ -4,10 +4,10 @@ import {
   getPropertiesAsString,
 } from "@modules/utils/controls";
 import { ELEMENT_STYLE_PROPERTIES } from "../constants";
-import { Buildable } from "../Buildable";
+import { UIBuildable } from "../Buildable";
 
 export class UIBlock
-  extends Buildable
+  extends UIBuildable
   implements IBuildableBlockElement, IBuildableElement
 {
   declare width: string | number;
@@ -24,7 +24,7 @@ export class UIBlock
   }
 
   static properties = {
-    ...Buildable.properties,
+    ...UIBuildable.properties,
     width: { type: String },
     height: { type: String },
     "background-color": { type: String, attribute: "background-color" },
@@ -67,6 +67,8 @@ export class UIBlock
       ELEMENT_STYLE_PROPERTIES.BG_COLOR,
       this.propData.get("background-color") || "transparent"
     );
+
+    this.classList.add("ui-block");
   }
 
   updatedWidthProperty = (changedProperties: Map<string, string>) => {

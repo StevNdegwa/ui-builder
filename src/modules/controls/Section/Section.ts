@@ -9,6 +9,11 @@ export class UISection extends UIBlock implements IBuildableElement {
     super();
   }
 
+  connectedCallback(): void {
+    super.connectedCallback();
+    this.classList.add("ui-section");
+  }
+
   updated(changedProperties: Map<string, string>) {
     super.updated(changedProperties);
   }
