@@ -6,7 +6,6 @@ export const Wrapper = styled.rect`
 `;
 
 export const GridLabelsX = styled.g`
-  transform: translate(0px, 8px);
   stroke: none;
   & > text {
     font-size: 8px;
@@ -18,7 +17,6 @@ export const GridLabelsX = styled.g`
 `;
 
 export const GridLabelsY = styled.g`
-  transform: translate(4px, 0px);
   stroke: none;
   & > text {
     font-size: 8px;
