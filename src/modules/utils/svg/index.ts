@@ -15,6 +15,10 @@ export function getELement(
     element.setAttribute(attribute.name, attribute.value + "");
   });
 
+  elementConfig.classNames?.forEach((className) => {
+    element.classList.add(className);
+  });
+
   if (elementConfig.textContent)
     element.textContent = elementConfig.textContent;
 
