@@ -12,6 +12,7 @@ import { Contents, ScratchpadContainer, Wrapper } from "./styles";
 import { Frames } from "../Frames";
 import { useForwardRef } from "@modules/utils/hooks";
 import { BUILDER_PADDING } from "../constants";
+import { useBuildableEditActions } from "../utils/hooks/useBuildableEditActions";
 
 export type BuilderProps = PropsWithChildren<{
   setElementWidth: (width: string) => void;
@@ -21,9 +22,11 @@ export type BuilderProps = PropsWithChildren<{
 export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
   ({ setElementWidth, children }, ref) => {
     const contentsWrapperRef = useForwardRef<HTMLDivElement>(ref);
+    const resizeActionsRef = useRef<SVGGElement>(null);
+    const addActionsRef = useRef<SVGGElement>(null);
+    const scratchPadRef = useRef<SVGRectElement>(null);
     const rectRef = useRef<SVGSVGElement>(null);
     const [isMoving, setIsMoving] = useState(false);
-    const [horizontalPosition, setHorizontalPosition] = useState(0);
     const [scratchPadWidth, setScratchPadWidth] = useState(0);
     const [scratchPadHeight, setScratchPadHeight] = useState(0);
     const uiBuildableElementsLen =
@@ -33,12 +36,15 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
       BuildableFrameConfig[]
     >([]);
 
+    useBuildableEditActions(
+      buildableElements,
+      scratchPadRef,
+      addActionsRef,
+      resizeActionsRef
+    );
+
     const stopMoving = useCallback(() => {
       setIsMoving(false);
-    }, []);
-
-    const startMoving = useCallback(() => {
-      setIsMoving(true);
     }, []);
 
     const onScratchPadMouseLeave = useCallback(() => {
@@ -48,7 +54,6 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
     const updateHorizontalPosition = useCallback(
       (position: Pos) => {
         if (isMoving) {
-          setHorizontalPosition(position.x);
           setElementWidth(
             Math.round((position.x / scratchPadWidth) * 100) + "%"
           );
@@ -60,7 +65,6 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
     useLayoutEffect(() => {
       if (rectRef.current) {
         const boundingRect = rectRef.current.getBoundingClientRect();
-        setHorizontalPosition(boundingRect.width);
         setScratchPadWidth(boundingRect.width);
         setScratchPadHeight(boundingRect.height);
       }
@@ -113,8 +117,13 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
               height={scratchPadHeight}
               stopMoving={stopMoving}
               setGridPosition={updateHorizontalPosition}
+              ref={scratchPadRef}
             >
-              <Frames elements={buildableElements} />
+              <Frames
+                elements={buildableElements}
+                resizeActionsRef={resizeActionsRef}
+                addActionsRef={addActionsRef}
+              />
             </ScratchPad>
           </svg>
         </ScratchpadContainer>
