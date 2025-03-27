@@ -1,20 +1,11 @@
-import { FC } from "react";
-import { AddActions, ResizeActions } from "./styles";
+import { forwardRef } from "react";
+import { Actions } from "./styles";
 
 export type FramesProps = {
-  elements: BuildableFrameConfig[];
   resizeActionsRef: React.RefObject<SVGGElement | null>;
   addActionsRef: React.RefObject<SVGGElement | null>;
 };
 
-export const Frames: FC<FramesProps> = ({
-  resizeActionsRef,
-  addActionsRef,
-}) => {
-  return (
-    <>
-      <ResizeActions ref={resizeActionsRef} />
-      <AddActions ref={addActionsRef} />
-    </>
-  );
-};
+export const Frames = forwardRef<SVGGElement>((_, ref) => {
+  return <Actions ref={ref} />;
+});

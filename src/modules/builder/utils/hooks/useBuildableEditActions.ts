@@ -1,19 +1,18 @@
 import { generate } from "@modules/utils/svg";
 import { useEffect } from "react";
+import { finalize, fromEvent, map, Subscription } from "rxjs";
 
 export function useBuildableEditActions(
   elements: BuildableFrameConfig[],
   scratchPadRef: React.RefObject<SVGRectElement | null>,
-  addActionsRef: React.RefObject<SVGGElement | null>,
-  resizeActionsRef: React.RefObject<SVGGElement | null>
+  actionsRef: React.RefObject<SVGGElement | null>
 ) {
   useEffect(() => {
     const scratchPadEl = scratchPadRef.current;
-    const addActionsEl = addActionsRef.current;
-    const resizeActionsEl = resizeActionsRef.current;
+    const actionsEl = actionsRef.current;
 
     if (elements.length && scratchPadEl) {
-      if (resizeActionsEl) {
+      if (actionsEl) {
         const resizeActionConfigs: ElementConfigType[] = elements.map(
           ({ width, height, x, y }) => ({
             name: "g",
@@ -74,134 +73,180 @@ export function useBuildableEditActions(
                   { name: "y2", value: height },
                 ],
               },
+              {
+                name: "g",
+                classNames: ["add-action"],
+                attributes: [
+                  {
+                    name: "transform",
+                    value: `translate(${x + width / 2}, ${y + height / 2})`,
+                  },
+                  { name: "opacity", value: "0" },
+                ],
+                children: [
+                  {
+                    name: "circle",
+                    attributes: [
+                      { name: "cx", value: 0 },
+                      { name: "cy", value: 0 },
+                      { name: "r", value: 16 },
+                    ],
+                  },
+                  {
+                    name: "line",
+                    attributes: [
+                      { name: "x1", value: 0 },
+                      { name: "y1", value: -8 },
+                      { name: "x2", value: 0 },
+                      { name: "y2", value: 8 },
+                    ],
+                  },
+                  {
+                    name: "line",
+                    attributes: [
+                      { name: "x1", value: -8 },
+                      { name: "y1", value: 0 },
+                      { name: "x2", value: 8 },
+                      { name: "y2", value: 0 },
+                    ],
+                  },
+                ],
+              },
             ],
           })
         );
 
         generate(resizeActionConfigs).forEach((element) => {
-          resizeActionsEl.appendChild(element);
+          actionsEl.appendChild(element);
 
-          const resizeOverlay = element.querySelector("rect.resize-overlay");
-          const resizeLine = element.querySelector("line.resize-right-thumb");
-          const resizeTopThumb = element.querySelector("line.resize-top-thumb");
+          const resizeOverlay = element.querySelector(
+            "rect.resize-overlay"
+          ) as SVGLineElement;
+          const resizeRightLine = element.querySelector(
+            "line.resize-right-thumb"
+          ) as SVGLineElement;
+          const resizeTopThumb = element.querySelector(
+            "line.resize-top-thumb"
+          ) as SVGLineElement;
           const resizeBottomThumb = element.querySelector(
             ".resize-bottom-thumb"
+          ) as SVGLineElement;
+          const resizeLeftThumb = element.querySelector(
+            ".resize-left-thumb"
+          ) as SVGLineElement;
+          const addActionsGroup = element.querySelector(
+            "g.add-action"
+          ) as SVGGElement;
+
+          const getElementRect = () => element.getBoundingClientRect();
+
+          const scratchPadMouseMoveEvt = fromEvent(
+            scratchPadEl,
+            "mousemove"
+          ).pipe(
+            map((event) => () => {
+              const { width, height } = scratchPadEl.getBoundingClientRect();
+              const { x, y } = getElementRect();
+
+              return [
+                Math.min((event as MouseEvent).clientX - x, width),
+                Math.min((event as MouseEvent).clientY - y, height),
+              ];
+            }),
+            finalize(() => {
+              resizeOverlay?.setAttribute("pointer-events", "all");
+            })
           );
 
-          const { x, width } = element.getBoundingClientRect();
+          let scratchPadMouseMoveEvtSubscription: Subscription | null = null;
 
-          const mouseMoveHandler = (e: MouseEvent) => {
-            e.stopPropagation();
+          fromEvent(
+            [resizeRightLine, resizeBottomThumb, scratchPadEl],
+            "mouseup"
+          ).subscribe(() => scratchPadMouseMoveEvtSubscription?.unsubscribe());
 
-            const newPos = Math.min(e.clientX - x, width);
+          fromEvent(
+            [resizeBottomThumb, resizeRightLine, scratchPadEl, element],
+            "click"
+          ).subscribe(() => {
+            scratchPadMouseMoveEvtSubscription?.unsubscribe();
+          });
 
-            resizeLine?.setAttribute("x1", `${newPos}`);
-            resizeLine?.setAttribute("x2", `${newPos}`);
+          if (resizeOverlay) {
+            fromEvent(resizeOverlay, "mouseover").subscribe(() => {
+              addActionsGroup.setAttribute("opacity", "1");
+            });
+            fromEvent(resizeOverlay, "mouseleave").subscribe(() => {
+              addActionsGroup.setAttribute("opacity", "0");
+            });
+          }
 
-            resizeTopThumb?.setAttribute("x2", `${newPos}`);
-            resizeBottomThumb?.setAttribute("x2", `${newPos}`);
+          if (addActionsGroup) {
+            fromEvent(addActionsGroup, "mouseover").subscribe(() => {
+              addActionsGroup.setAttribute("opacity", "1");
+            });
+            fromEvent(addActionsGroup, "mouseleave").subscribe(() => {
+              addActionsGroup.setAttribute("opacity", "0");
+            });
+          }
 
-            resizeOverlay?.setAttribute("width", `${newPos}`);
-          };
+          if (resizeRightLine) {
+            fromEvent(resizeRightLine, "mousedown").subscribe(() => {
+              scratchPadMouseMoveEvtSubscription =
+                scratchPadMouseMoveEvt.subscribe((getPosition) => {
+                  const [newXPos] = getPosition();
+                  const { height } = getElementRect();
 
-          if (resizeLine) {
-            resizeLine.addEventListener("mousedown", (e) => {
-              e.stopPropagation();
+                  resizeRightLine?.setAttribute("x1", `${newXPos}`);
+                  resizeRightLine?.setAttribute("x2", `${newXPos}`);
 
-              scratchPadEl.addEventListener("mousemove", mouseMoveHandler);
+                  resizeTopThumb?.setAttribute("x2", `${newXPos}`);
+                  resizeBottomThumb?.setAttribute("x2", `${newXPos}`);
 
-              scratchPadEl.addEventListener("mouseup", (e) => {
-                e.stopPropagation();
+                  resizeOverlay?.setAttribute("width", `${newXPos}`);
 
-                scratchPadEl.removeEventListener("mousemove", mouseMoveHandler);
-              });
-
-              element.addEventListener("click", (e) => {
-                e.stopPropagation();
-
-                element.removeEventListener("mousemove", mouseMoveHandler);
-              });
+                  addActionsGroup.setAttribute(
+                    "transform",
+                    `translate(${newXPos / 2}, ${height / 2})`
+                  );
+                });
 
               resizeOverlay?.setAttribute("pointer-events", "none");
             });
+          }
 
-            resizeLine.addEventListener("mouseup", (e) => {
-              e.stopPropagation();
+          if (resizeBottomThumb) {
+            fromEvent(resizeBottomThumb, "mousedown").subscribe(() => {
+              scratchPadMouseMoveEvtSubscription =
+                scratchPadMouseMoveEvt.subscribe((getPosition) => {
+                  const [, newYPos] = getPosition();
+                  const { width } = getElementRect();
+                  resizeBottomThumb?.setAttribute("y1", `${newYPos}`);
+                  resizeBottomThumb?.setAttribute("y2", `${newYPos}`);
 
-              console.log("mouseup");
+                  resizeRightLine?.setAttribute("y2", `${newYPos}`);
 
-              scratchPadEl.removeEventListener("mousemove", mouseMoveHandler);
-            });
+                  resizeLeftThumb?.setAttribute("y2", `${newYPos}`);
 
-            resizeLine.addEventListener("click", (e) => {
-              e.stopPropagation();
+                  resizeOverlay?.setAttribute("height", `${newYPos}`);
 
-              scratchPadEl.removeEventListener("mousemove", mouseMoveHandler);
+                  addActionsGroup.setAttribute(
+                    "transform",
+                    `translate(${width / 2}, ${newYPos / 2})`
+                  );
+                });
 
-              console.log("click");
+              resizeOverlay?.setAttribute("pointer-events", "none");
             });
           }
-        });
-      }
-
-      if (addActionsEl) {
-        const addActionConfigs: ElementConfigType[] = elements.map(
-          ({ width, height, x, y }) => ({
-            name: "g",
-            attributes: [
-              {
-                name: "transform",
-                value: `translate(${x + width / 2}, ${y + height / 2})`,
-              },
-            ],
-            children: [
-              {
-                name: "circle",
-                attributes: [
-                  { name: "cx", value: 0 },
-                  { name: "cy", value: 0 },
-                  { name: "r", value: 16 },
-                ],
-              },
-              {
-                name: "line",
-                attributes: [
-                  { name: "x1", value: 0 },
-                  { name: "y1", value: -8 },
-                  { name: "x2", value: 0 },
-                  { name: "y2", value: 8 },
-                  { name: "stroke", value: "white" },
-                  { name: "stroke-width", value: 2 },
-                ],
-              },
-              {
-                name: "line",
-                attributes: [
-                  { name: "x1", value: -8 },
-                  { name: "y1", value: 0 },
-                  { name: "x2", value: 8 },
-                  { name: "y2", value: 0 },
-                  { name: "stroke", value: "white" },
-                  { name: "stroke-width", value: 2 },
-                ],
-              },
-            ],
-          })
-        );
-
-        generate(addActionConfigs).forEach((element) => {
-          addActionsEl.appendChild(element);
         });
       }
     }
 
     return () => {
-      if (resizeActionsEl) {
-        resizeActionsEl.innerHTML = "";
-      }
-      if (addActionsEl) {
-        addActionsEl.innerHTML = "";
+      if (actionsEl) {
+        actionsEl.innerHTML = "";
       }
     };
-  }, [elements, addActionsRef, scratchPadRef, resizeActionsRef]);
+  }, [elements, scratchPadRef, actionsRef]);
 }

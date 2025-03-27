@@ -22,8 +22,7 @@ export type BuilderProps = PropsWithChildren<{
 export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
   ({ setElementWidth, children }, ref) => {
     const contentsWrapperRef = useForwardRef<HTMLDivElement>(ref);
-    const resizeActionsRef = useRef<SVGGElement>(null);
-    const addActionsRef = useRef<SVGGElement>(null);
+    const actionsRef = useRef<SVGGElement>(null);
     const scratchPadRef = useRef<SVGRectElement>(null);
     const rectRef = useRef<SVGSVGElement>(null);
     const [isMoving, setIsMoving] = useState(false);
@@ -36,12 +35,7 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
       BuildableFrameConfig[]
     >([]);
 
-    useBuildableEditActions(
-      buildableElements,
-      scratchPadRef,
-      addActionsRef,
-      resizeActionsRef
-    );
+    useBuildableEditActions(buildableElements, scratchPadRef, actionsRef);
 
     const stopMoving = useCallback(() => {
       setIsMoving(false);
@@ -71,31 +65,39 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
     }, [rectRef]);
 
     useEffect(() => {
-      const contentsWrapperEl = contentsWrapperRef.current;
+      // Add setTimeout to allow the DOM to update
 
-      if (contentsWrapperEl && uiBuildableElementsLen > 0) {
-        const contentStart = contentsWrapperEl.getBoundingClientRect();
+      /**
+       *  TODO find a better way to wait for element loading
+       */
+      setTimeout(() => {
+        const contentsWrapperEl = contentsWrapperRef.current;
 
-        setBuildableElements(
-          Array.from(
-            contentsWrapperRef.current?.querySelectorAll(".ui-buildable") || []
-          ).map((element) => {
-            const box = element.getBoundingClientRect();
+        if (contentsWrapperEl && uiBuildableElementsLen > 0) {
+          const contentStart = contentsWrapperEl.getBoundingClientRect();
 
-            const config = {
-              left: box.left,
-              top: box.top,
-              width: box.width,
-              height: box.height,
-              x: box.x - contentStart.x + BUILDER_PADDING,
-              y: box.y - contentStart.y + BUILDER_PADDING,
-              element,
-            };
+          setBuildableElements(
+            Array.from(
+              contentsWrapperRef.current?.querySelectorAll(".ui-buildable") ||
+                []
+            ).map((element) => {
+              const box = element.getBoundingClientRect();
 
-            return config;
-          })
-        );
-      }
+              const config = {
+                left: box.left,
+                top: box.top,
+                width: box.width,
+                height: box.height,
+                x: box.x - contentStart.x + BUILDER_PADDING,
+                y: box.y - contentStart.y + BUILDER_PADDING,
+                element,
+              };
+
+              return config;
+            })
+          );
+        }
+      }, 1);
     }, [contentsWrapperRef, uiBuildableElementsLen]);
 
     return (
@@ -119,11 +121,7 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
               setGridPosition={updateHorizontalPosition}
               ref={scratchPadRef}
             >
-              <Frames
-                elements={buildableElements}
-                resizeActionsRef={resizeActionsRef}
-                addActionsRef={addActionsRef}
-              />
+              <Frames ref={actionsRef} />
             </ScratchPad>
           </svg>
         </ScratchpadContainer>

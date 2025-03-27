@@ -16,29 +16,45 @@ export const AddActions = styled.g`
 `}
 `;
 
-export const ResizeActions = styled.g`
+export const Actions = styled.g`
   ${({
     theme: {
       colorSchemes: {
-        palette: { secondary },
+        palette: { secondary, primary },
       },
     },
   }) => `
   & rect {
     cursor: all-scroll;
     fill: ${rgba(secondary[50], 0.2)};
-    &:hover{
-        fill: ${rgba(secondary[50], 0.3)};
-    }
   }
   & line {
     stroke: ${secondary[500]};
     stroke-width: 4;
     cursor: col-resize;
+    stroke-linecap: round;
 
-    &.resize-top-thumb, .resize-bottom-thumb{
+    &.resize-top-thumb, &.resize-bottom-thumb{
         cursor: row-resize;
-        }
+    }
   }
+    & g.add-action {
+        cursor: pointer;
+      & circle {
+        fill: ${primary[500]};
+        cursor: pointer;
+      }
+      & line {
+        stroke: white;
+        stroke-width: 4;
+        cursor: pointer;
+      }
+    }
+
+    &:hover{
+      & rect {
+        fill: ${rgba(secondary[50], 0.3)};
+      }
+    }
   `}
 `;

@@ -19,7 +19,7 @@ export class UIBlock
 
     // Set default values
     this.propData.set("width", "100%");
-    this.propData.set("height", "100%");
+    this.propData.set("height", "200px");
     this.propData.set("background-color", "rgb(212, 212, 212)");
   }
 
@@ -37,14 +37,12 @@ export class UIBlock
       padding: 0px;
       margin: 0px;
       box-sizing: border-box;
-      width: 100%;
-      height: 100%;
       display: block;
     }
 
     :host > .wrapper {
-      width: var(--ui-buildable-element-width, 100%);
-      height: var(--ui-buildable-element-height, 0px);
+      width: var(--ui-buildable-element-width);
+      height: var(--ui-buildable-element-height);
       background-color: var(--ui-buildable-element-bg-color, transparent);
       padding: 0px;
       margin: 0px;
