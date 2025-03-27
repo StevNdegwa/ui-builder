@@ -15,12 +15,10 @@ import { useForwardRef } from "@modules/utils/hooks";
 export type ScratchPadProps = PropsWithChildren<{
   height: number;
   width: number;
-  stopMoving: () => void;
-  setGridPosition: (position: Pos) => void;
 }>;
 
 export const ScratchPad = forwardRef<SVGRectElement, ScratchPadProps>(
-  ({ children, width, height, stopMoving, setGridPosition }, ref) => {
+  ({ children, width, height }, ref) => {
     const scratChPadRef = useForwardRef<SVGRectElement>(ref);
     const gridXLabelsRef = useRef<SVGGElement>(null);
     const gridYLabelsRef = useRef<SVGGElement>(null);
@@ -41,7 +39,6 @@ export const ScratchPad = forwardRef<SVGRectElement, ScratchPadProps>(
         y: event.clientY - scratchpadStartPosition.y,
       };
 
-      setGridPosition(newPos);
       setScratchPadPosition(newPos);
     };
 
@@ -115,7 +112,6 @@ export const ScratchPad = forwardRef<SVGRectElement, ScratchPadProps>(
           height={height}
           width={width}
           onMouseMove={onMouseMove}
-          onClick={stopMoving}
           ref={scratChPadRef}
         />
         <GridLabelsX transform={`translate(10, 8)`} ref={gridXLabelsRef} />

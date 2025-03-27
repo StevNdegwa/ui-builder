@@ -2,7 +2,6 @@ import {
   useLayoutEffect,
   useState,
   useRef,
-  useCallback,
   forwardRef,
   PropsWithChildren,
   useEffect,
@@ -14,18 +13,13 @@ import { useForwardRef } from "@modules/utils/hooks";
 import { BUILDER_PADDING } from "../constants";
 import { useBuildableEditActions } from "../utils/hooks/useBuildableEditActions";
 
-export type BuilderProps = PropsWithChildren<{
-  setElementWidth: (width: string) => void;
-  setElementHeight: (height: string) => void;
-}>;
-
+export type BuilderProps = PropsWithChildren;
 export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
-  ({ setElementWidth, children }, ref) => {
+  ({ children }, ref) => {
     const contentsWrapperRef = useForwardRef<HTMLDivElement>(ref);
     const actionsRef = useRef<SVGGElement>(null);
     const scratchPadRef = useRef<SVGRectElement>(null);
     const rectRef = useRef<SVGSVGElement>(null);
-    const [isMoving, setIsMoving] = useState(false);
     const [scratchPadWidth, setScratchPadWidth] = useState(0);
     const [scratchPadHeight, setScratchPadHeight] = useState(0);
     const uiBuildableElementsLen =
@@ -36,25 +30,6 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
     >([]);
 
     useBuildableEditActions(buildableElements, scratchPadRef, actionsRef);
-
-    const stopMoving = useCallback(() => {
-      setIsMoving(false);
-    }, []);
-
-    const onScratchPadMouseLeave = useCallback(() => {
-      stopMoving();
-    }, [stopMoving]);
-
-    const updateHorizontalPosition = useCallback(
-      (position: Pos) => {
-        if (isMoving) {
-          setElementWidth(
-            Math.round((position.x / scratchPadWidth) * 100) + "%"
-          );
-        }
-      },
-      [scratchPadWidth, setElementWidth, isMoving]
-    );
 
     useLayoutEffect(() => {
       if (rectRef.current) {
@@ -112,13 +87,10 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
             xmlns="http://www.w3.org/2000/svg"
             ref={rectRef}
             strokeWidth={2}
-            onMouseLeave={onScratchPadMouseLeave}
           >
             <ScratchPad
               width={scratchPadWidth}
               height={scratchPadHeight}
-              stopMoving={stopMoving}
-              setGridPosition={updateHorizontalPosition}
               ref={scratchPadRef}
             >
               <Frames ref={actionsRef} />

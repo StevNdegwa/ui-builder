@@ -1,20 +1,14 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { UISection } from "@modules/controls";
+import { UIBuildable } from "@modules/controls";
 
 export class BuildableControl {
-  element: UISection;
+  element: UIBuildable;
 
-  constructor() {
-    this.element = this.createElement();
+  constructor(element: UIBuildable) {
+    this.element = element;
   }
 
-  createElement = (): UISection => {
-    const element = document.createElement("ui-section") as UISection;
-    element.setAttribute("props", JSON.stringify({ background: "#f0f0f0" }));
-    return element;
-  };
-
-  getElement(): UISection {
+  getElement(): UIBuildable {
     return this.element;
   }
 
