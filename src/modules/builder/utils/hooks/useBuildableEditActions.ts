@@ -79,7 +79,7 @@ export function useBuildableEditActions(
                 attributes: [
                   {
                     name: "transform",
-                    value: `translate(${x + width / 2}, ${y + height / 2})`,
+                    value: `translate(${width / 2}, ${height / 2})`,
                   },
                   { name: "opacity", value: "0" },
                 ],

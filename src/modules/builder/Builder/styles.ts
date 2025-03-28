@@ -1,13 +1,21 @@
+import { Box, FlexBox } from "@ui/components";
 import styled from "styled-components";
 
-export const Wrapper = styled.div`
+export const Wrapper = styled(FlexBox)`
   width: 100%;
   height: 100%;
-  position: relative;
-  user-select: none;
+  padding: 10px;
 `;
 
-export const ScratchpadContainer = styled.div`
+export const Editor = styled(Box)`
+  width: calc(100% - 360px);
+  height: calc(100% - 20px);
+  position: relative;
+  user-select: none;
+  background-color: white;
+`;
+
+export const ScratchpadContainer = styled(Box)`
   width: 100%;
   height: 100%;
   position: absolute;
@@ -16,7 +24,7 @@ export const ScratchpadContainer = styled.div`
   z-index: 2;
 `;
 
-export const FrameContainer = styled.div`
+export const FrameContainer = styled(Box)`
   width: calc(100% - 20px);
   height: calc(100% - 20px);
   position: absolute;
@@ -25,7 +33,7 @@ export const FrameContainer = styled.div`
   z-index: 5;
 `;
 
-export const Contents = styled.div`
+export const Contents = styled(Box)`
   width: calc(100% - 20px);
   height: calc(100% - 20px);
   z-index: -1;
@@ -34,4 +42,11 @@ export const Contents = styled.div`
   top: 10px;
   left: 10px;
   z-index: 1;
+`;
+
+export const SettingsForm = styled(Box)`
+  width: 340px;
+  height: calc(100% - 20px);
+  background-color: white;
+  padding: 10px;
 `;

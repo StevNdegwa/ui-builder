@@ -4,13 +4,13 @@ import { Box } from "@ui/components/atoms";
 
 export const Wrapper = styled(FlexBox)`
   height: 100%;
-  padding: 10px;
+  box-sizing: border-box;
 `;
 
 export const BuilderContainer = styled(Box)`
   width: 100%;
   height: 100%;
-  background-color: white;
+  box-sizing: border-box;
   ${({
     theme: {
       colorSchemes: {
@@ -25,4 +25,5 @@ export const BuilderContainer = styled(Box)`
 export const Controls = styled(FlexBox)`
   height: 60px;
   padding: 0 10px;
+  box-sizing: border-box;
 `;

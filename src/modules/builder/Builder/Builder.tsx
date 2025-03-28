@@ -7,11 +7,24 @@ import {
   useEffect,
 } from "react";
 import { ScratchPad } from "../ScratchPad";
-import { Contents, ScratchpadContainer, Wrapper } from "./styles";
+import {
+  Contents,
+  Editor,
+  ScratchpadContainer,
+  SettingsForm,
+  Wrapper,
+} from "./styles";
 import { Frames } from "../Frames";
 import { useForwardRef } from "@modules/utils/hooks";
 import { BUILDER_PADDING } from "../constants";
 import { useBuildableEditActions } from "../utils/hooks/useBuildableEditActions";
+import {
+  Button,
+  ColorInput,
+  FlexBox,
+  LengthInputControl,
+  Typography,
+} from "@ui/components";
 
 export type BuilderProps = PropsWithChildren;
 export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
@@ -76,27 +89,44 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
     }, [contentsWrapperRef, uiBuildableElementsLen]);
 
     return (
-      <Wrapper>
-        <Contents ref={contentsWrapperRef}>{children}</Contents>
-        <ScratchpadContainer>
-          <svg
-            width="100%"
-            height="100%"
-            data-name="Element Frame"
-            id="Layer_1"
-            xmlns="http://www.w3.org/2000/svg"
-            ref={rectRef}
-            strokeWidth={2}
-          >
-            <ScratchPad
-              width={scratchPadWidth}
-              height={scratchPadHeight}
-              ref={scratchPadRef}
+      <Wrapper gap="sm">
+        <Editor>
+          <Contents ref={contentsWrapperRef}>{children}</Contents>
+          <ScratchpadContainer>
+            <svg
+              width="100%"
+              height="100%"
+              data-name="Element Frame"
+              id="Layer_1"
+              xmlns="http://www.w3.org/2000/svg"
+              ref={rectRef}
+              strokeWidth={2}
             >
-              <Frames ref={actionsRef} />
-            </ScratchPad>
-          </svg>
-        </ScratchpadContainer>
+              <ScratchPad
+                width={scratchPadWidth}
+                height={scratchPadHeight}
+                ref={scratchPadRef}
+              >
+                <Frames ref={actionsRef} />
+              </ScratchPad>
+            </svg>
+          </ScratchpadContainer>
+        </Editor>
+        <SettingsForm>
+          <FlexBox direction="column" gap="md">
+            <Typography heading="h4">Settings</Typography>
+            <FlexBox direction="column" gap="sm">
+              <FlexBox gap="xs">
+                <LengthInputControl placeholder="Width" />
+                <LengthInputControl placeholder="Height" />
+              </FlexBox>
+              <ColorInput />
+            </FlexBox>
+            <FlexBox direction="column" gap="sm">
+              <Button color="primary">Save</Button>
+            </FlexBox>
+          </FlexBox>
+        </SettingsForm>
       </Wrapper>
     );
   }
