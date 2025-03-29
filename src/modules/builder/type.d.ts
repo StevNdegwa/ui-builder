@@ -1,3 +1,5 @@
+import { BuildableControl } from "./BuildableControl";
+
 type Pos = {
   x: number;
   y: number;
@@ -10,5 +12,5 @@ type BuildableFrameConfig = {
   left: number;
   x: number;
   y: number;
-  element: Node;
+  element: BuildableControl;
 };

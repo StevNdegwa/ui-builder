@@ -11,6 +11,8 @@ export default function App() {
       <Dashboard>
         <Builder>
           <ui-section></ui-section>
+          <ui-section></ui-section>
+          <ui-section></ui-section>
         </Builder>
       </Dashboard>
     </ThemeProvider>

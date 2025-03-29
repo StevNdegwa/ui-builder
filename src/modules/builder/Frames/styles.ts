@@ -51,6 +51,16 @@ export const Actions = styled.g`
       }
     }
 
+    & .edit-action {
+      cursor: pointer;
+      & circle {
+        cursor: pointer;
+      }
+      & path {
+        fill: ${secondary[500]};
+      }
+    }
+
     &:hover{
       & rect {
         fill: ${rgba(secondary[50], 0.3)};

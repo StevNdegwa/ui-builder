@@ -7,6 +7,12 @@ import {
   useEffect,
 } from "react";
 import { ScratchPad } from "../ScratchPad";
+import { useForwardRef } from "@modules/utils/hooks";
+import { FlexBox, Typography } from "@ui/components";
+import { UIBuildable } from "@modules/controls";
+import { Frames } from "../Frames";
+import { BUILDER_PADDING } from "../constants";
+import { useBuildableEditActions } from "../utils/hooks/useBuildableEditActions";
 import {
   Contents,
   Editor,
@@ -14,17 +20,9 @@ import {
   SettingsForm,
   Wrapper,
 } from "./styles";
-import { Frames } from "../Frames";
-import { useForwardRef } from "@modules/utils/hooks";
-import { BUILDER_PADDING } from "../constants";
-import { useBuildableEditActions } from "../utils/hooks/useBuildableEditActions";
-import {
-  Button,
-  ColorInput,
-  FlexBox,
-  LengthInputControl,
-  Typography,
-} from "@ui/components";
+import { BuildableFrameConfig } from "../type";
+import { PropertiesForm } from "../PropertiesForm";
+import { BuildableControl } from "../BuildableControl";
 
 export type BuilderProps = PropsWithChildren;
 export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
@@ -38,11 +36,11 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
     const uiBuildableElementsLen =
       contentsWrapperRef.current?.querySelectorAll(".ui-buildable").length || 0;
 
-    const [buildableElements, setBuildableElements] = useState<
+    const [buildableConfigs, setBuildableConfigs] = useState<
       BuildableFrameConfig[]
     >([]);
 
-    useBuildableEditActions(buildableElements, scratchPadRef, actionsRef);
+    useBuildableEditActions(buildableConfigs, scratchPadRef, actionsRef);
 
     useLayoutEffect(() => {
       if (rectRef.current) {
@@ -64,24 +62,22 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
         if (contentsWrapperEl && uiBuildableElementsLen > 0) {
           const contentStart = contentsWrapperEl.getBoundingClientRect();
 
-          setBuildableElements(
+          setBuildableConfigs(
             Array.from(
               contentsWrapperRef.current?.querySelectorAll(".ui-buildable") ||
                 []
             ).map((element) => {
               const box = element.getBoundingClientRect();
 
-              const config = {
+              return {
                 left: box.left,
                 top: box.top,
                 width: box.width,
                 height: box.height,
                 x: box.x - contentStart.x + BUILDER_PADDING,
                 y: box.y - contentStart.y + BUILDER_PADDING,
-                element,
+                element: new BuildableControl(element as UIBuildable),
               };
-
-              return config;
             })
           );
         }
@@ -115,16 +111,7 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
         <SettingsForm>
           <FlexBox direction="column" gap="md">
             <Typography heading="h4">Settings</Typography>
-            <FlexBox direction="column" gap="sm">
-              <FlexBox gap="xs">
-                <LengthInputControl placeholder="Width" />
-                <LengthInputControl placeholder="Height" />
-              </FlexBox>
-              <ColorInput />
-            </FlexBox>
-            <FlexBox direction="column" gap="sm">
-              <Button color="primary">Save</Button>
-            </FlexBox>
+            <PropertiesForm elementsControls={buildableConfigs} />
           </FlexBox>
         </SettingsForm>
       </Wrapper>
