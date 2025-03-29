@@ -8,6 +8,7 @@ export const Wrapper = styled(FlexBox)`
 `;
 
 export const BuilderContainer = styled(Box)`
+  position: relative;
   width: 100%;
   height: 100%;
   box-sizing: border-box;

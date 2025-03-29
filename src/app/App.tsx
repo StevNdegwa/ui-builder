@@ -10,9 +10,7 @@ export default function App() {
       <GlobalStyle />
       <Dashboard>
         <Builder>
-          <ui-section>
-            <span slot="contents">Sample section to test</span>
-          </ui-section>
+          <ui-section></ui-section>
           {/* <ui-section></ui-section>
           <ui-section></ui-section> */}
         </Builder>

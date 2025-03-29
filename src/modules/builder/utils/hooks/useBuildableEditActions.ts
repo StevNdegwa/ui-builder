@@ -10,6 +10,11 @@ export function useBuildableEditActions(
   actionsRef: React.RefObject<SVGGElement | null>
 ) {
   const [activeElementIndex, setActiveElementIndex] = useState<number>(0);
+  const [addElementsModalOpen, setAddElementsModal] = useState(false);
+
+  const closeAddElementsModal = () => setAddElementsModal(false);
+
+  const openAddElementsModal = () => setAddElementsModal(true);
 
   useEffect(() => {
     const scratchPadEl = scratchPadRef.current;
@@ -216,6 +221,9 @@ export function useBuildableEditActions(
           const actionPoints = element.querySelectorAll(
             ".action"
           ) as NodeListOf<SVGGElement>;
+          const addActionBtn = element.querySelector(
+            "g.add-action > circle"
+          ) as SVGCircleElement;
 
           const getRectElementBounds = () =>
             resizeOverlay.getBoundingClientRect();
@@ -255,6 +263,12 @@ export function useBuildableEditActions(
           ).subscribe(() => {
             scratchPadMouseMoveEvtSubscription?.unsubscribe();
           });
+
+          if (addActionBtn) {
+            fromEvent(addActionBtn, "click").subscribe(() => {
+              openAddElementsModal();
+            });
+          }
 
           if (actionPoints.length) {
             fromEvent(actionPoints, "mouseover").subscribe(() => {
@@ -352,5 +366,5 @@ export function useBuildableEditActions(
     };
   }, [elements, scratchPadRef, actionsRef]);
 
-  return { activeElementIndex };
+  return { activeElementIndex, addElementsModalOpen, closeAddElementsModal };
 }

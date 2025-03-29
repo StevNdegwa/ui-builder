@@ -23,6 +23,7 @@ import {
 import { BuildableFrameConfig } from "../type";
 import { PropertiesForm } from "../PropertiesForm";
 import { BuildableControl } from "../BuildableControl";
+import { AddElementModal } from "../AddElementModal";
 
 export type BuilderProps = PropsWithChildren;
 export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
@@ -40,11 +41,8 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
       BuildableFrameConfig[]
     >([]);
 
-    const { activeElementIndex } = useBuildableEditActions(
-      buildableConfigs,
-      scratchPadRef,
-      actionsRef
-    );
+    const { activeElementIndex, addElementsModalOpen, closeAddElementsModal } =
+      useBuildableEditActions(buildableConfigs, scratchPadRef, actionsRef);
 
     useLayoutEffect(() => {
       if (rectRef.current) {
@@ -121,6 +119,13 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
             />
           </FlexBox>
         </SettingsForm>
+        {buildableConfigs[activeElementIndex] && (
+          <AddElementModal
+            isOpen={addElementsModalOpen}
+            close={closeAddElementsModal}
+            buildable={buildableConfigs[activeElementIndex].element}
+          />
+        )}
       </Wrapper>
     );
   }

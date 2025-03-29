@@ -19,6 +19,16 @@ export class BuildableControl {
     this.element[prop] = value;
   }
 
+  insertChildElement() {
+    const newElement = document.createElement("div");
+
+    newElement.setAttribute("slot", "contents");
+
+    newElement.textContent = "Sample added section to test";
+
+    this.element.appendChild(newElement);
+  }
+
   getElementString() {
     return this.element.serializeELement();
   }
