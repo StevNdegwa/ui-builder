@@ -1,4 +1,4 @@
-import { Dashboard } from "@ui/components/pages";
+import { Dashboard } from "./Dashboard";
 import { GlobalStyle, ThemeProvider } from "@ui/styles";
 import { Builder } from "@modules/builder";
 
