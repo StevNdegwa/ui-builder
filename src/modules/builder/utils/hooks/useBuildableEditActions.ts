@@ -18,18 +18,22 @@ export function useBuildableEditActions(
     if (elements.length && scratchPadEl) {
       if (actionsEl) {
         const resizeActionConfigs: ElementConfigType[] = elements.map(
-          ({ width, height, x, y }, index) => ({
+          ({ width, height, x, y }) => ({
             name: "g",
             attributes: [
               {
                 name: "transform",
                 value: `translate(${x}, ${y})`,
               },
+              {
+                name: "opacity",
+                value: "0", // should be 0
+              },
             ],
             children: [
               {
                 name: "rect",
-                classNames: ["resize-overlay"],
+                classNames: ["resize-overlay", "action"],
                 attributes: [
                   { name: "width", value: width },
                   { name: "height", value: height },
@@ -39,42 +43,42 @@ export function useBuildableEditActions(
               },
               {
                 name: "line",
-                classNames: ["resize-top-thumb"],
+                classNames: ["resize-top-thumb", "action"],
                 attributes: [
-                  { name: "x1", value: 0 },
-                  { name: "y1", value: 0 },
-                  { name: "x2", value: width },
-                  { name: "y2", value: 0 },
+                  { name: "x1", value: width * 0.375 },
+                  { name: "y1", value: 2 },
+                  { name: "x2", value: width * 0.625 },
+                  { name: "y2", value: 2 },
                 ],
               },
               {
                 name: "line",
-                classNames: ["resize-right-thumb"],
+                classNames: ["resize-right-thumb", "action"],
                 attributes: [
-                  { name: "x1", value: width },
-                  { name: "y1", value: 0 },
-                  { name: "x2", value: width },
-                  { name: "y2", value: height },
+                  { name: "x1", value: width - 2 },
+                  { name: "y1", value: height * 0.375 },
+                  { name: "x2", value: width - 2 },
+                  { name: "y2", value: height * 0.625 },
                 ],
               },
               {
                 name: "line",
-                classNames: ["resize-bottom-thumb"],
+                classNames: ["resize-bottom-thumb", "action"],
                 attributes: [
-                  { name: "x1", value: 0 },
-                  { name: "y1", value: height },
-                  { name: "x2", value: width },
-                  { name: "y2", value: height },
+                  { name: "x1", value: width * 0.375 },
+                  { name: "y1", value: height - 2 },
+                  { name: "x2", value: width * 0.625 },
+                  { name: "y2", value: height - 2 },
                 ],
               },
               {
                 name: "line",
-                classNames: ["resize-left-thumb"],
+                classNames: ["resize-left-thumb", "action"],
                 attributes: [
-                  { name: "x1", value: 0 },
-                  { name: "y1", value: 0 },
-                  { name: "x2", value: 0 },
-                  { name: "y2", value: height },
+                  { name: "x1", value: 2 },
+                  { name: "y1", value: height * 0.375 },
+                  { name: "x2", value: 2 },
+                  { name: "y2", value: height * 0.625 },
                 ],
               },
               {
@@ -85,11 +89,11 @@ export function useBuildableEditActions(
                     name: "transform",
                     value: `translate(${width / 2}, ${height / 2})`,
                   },
-                  { name: "opacity", value: "0" },
                 ],
                 children: [
                   {
                     name: "circle",
+                    classNames: ["action"],
                     attributes: [
                       { name: "cx", value: 0 },
                       { name: "cy", value: 0 },
@@ -103,6 +107,10 @@ export function useBuildableEditActions(
                       { name: "y1", value: -8 },
                       { name: "x2", value: 0 },
                       { name: "y2", value: 8 },
+                      {
+                        name: "pointer-events",
+                        value: "none",
+                      },
                     ],
                   },
                   {
@@ -112,6 +120,10 @@ export function useBuildableEditActions(
                       { name: "y1", value: 0 },
                       { name: "x2", value: 8 },
                       { name: "y2", value: 0 },
+                      {
+                        name: "pointer-events",
+                        value: "none",
+                      },
                     ],
                   },
                 ],
@@ -128,6 +140,7 @@ export function useBuildableEditActions(
                 children: [
                   {
                     name: "circle",
+                    classNames: ["action"],
                     attributes: [
                       {
                         name: "cx",
@@ -144,20 +157,6 @@ export function useBuildableEditActions(
                       {
                         name: "fill",
                         value: "transparent",
-                      },
-                    ],
-                    events: [
-                      {
-                        name: "click",
-                        handler: (event) => {
-                          console.log(
-                            "\n setActiveElementIndex:: ",
-                            index,
-                            event
-                          );
-
-                          setActiveElementIndex(index);
-                        },
                       },
                     ],
                   },
@@ -208,8 +207,18 @@ export function useBuildableEditActions(
           const addActionsGroup = element.querySelector(
             "g.add-action"
           ) as SVGGElement;
+          const editActions = element.querySelector(
+            "g.edit-action > circle"
+          ) as SVGGElement;
+          const editActionGroup = element.querySelector(
+            "g.edit-action"
+          ) as SVGGElement;
+          const actionPoints = element.querySelectorAll(
+            ".action"
+          ) as NodeListOf<SVGGElement>;
 
-          const getElementRect = () => element.getBoundingClientRect();
+          const getRectElementBounds = () =>
+            resizeOverlay.getBoundingClientRect();
 
           const scratchPadMouseMoveEvt = fromEvent(
             scratchPadEl,
@@ -217,7 +226,7 @@ export function useBuildableEditActions(
           ).pipe(
             map((event) => () => {
               const { width, height } = scratchPadEl.getBoundingClientRect();
-              const { x, y } = getElementRect();
+              const { x, y } = getRectElementBounds();
 
               return [
                 Math.min((event as MouseEvent).clientX - x, width),
@@ -234,7 +243,11 @@ export function useBuildableEditActions(
           fromEvent(
             [resizeRightLine, resizeBottomThumb, scratchPadEl],
             "mouseup"
-          ).subscribe(() => scratchPadMouseMoveEvtSubscription?.unsubscribe());
+          ).subscribe(() => {
+            console.log("Mouse up", scratchPadMouseMoveEvtSubscription);
+            scratchPadMouseMoveEvtSubscription?.unsubscribe();
+            console.log("Mouse up", scratchPadMouseMoveEvtSubscription);
+          });
 
           fromEvent(
             [resizeBottomThumb, resizeRightLine, scratchPadEl, element],
@@ -243,21 +256,19 @@ export function useBuildableEditActions(
             scratchPadMouseMoveEvtSubscription?.unsubscribe();
           });
 
-          if (resizeOverlay) {
-            fromEvent(resizeOverlay, "mouseover").subscribe(() => {
-              addActionsGroup.setAttribute("opacity", "1");
+          if (actionPoints.length) {
+            fromEvent(actionPoints, "mouseover").subscribe(() => {
+              element.setAttribute("opacity", "1");
             });
-            fromEvent(resizeOverlay, "mouseleave").subscribe(() => {
-              addActionsGroup.setAttribute("opacity", "0");
+
+            fromEvent(actionPoints, "mouseleave").subscribe(() => {
+              element.setAttribute("opacity", "0");
             });
           }
 
-          if (addActionsGroup) {
-            fromEvent(addActionsGroup, "mouseover").subscribe(() => {
-              addActionsGroup.setAttribute("opacity", "1");
-            });
-            fromEvent(addActionsGroup, "mouseleave").subscribe(() => {
-              addActionsGroup.setAttribute("opacity", "0");
+          if (editActions) {
+            fromEvent(editActions, "click").subscribe(() => {
+              setActiveElementIndex(index);
             });
           }
 
@@ -265,23 +276,34 @@ export function useBuildableEditActions(
             fromEvent(resizeRightLine, "mousedown").subscribe(() => {
               scratchPadMouseMoveEvtSubscription =
                 scratchPadMouseMoveEvt.subscribe((getPosition) => {
-                  const [newXPos] = getPosition();
-                  const { height } = getElementRect();
+                  if (!scratchPadMouseMoveEvtSubscription?.closed) {
+                    const [newXPos] = getPosition();
 
-                  resizeRightLine?.setAttribute("x1", `${newXPos}`);
-                  resizeRightLine?.setAttribute("x2", `${newXPos}`);
+                    resizeRightLine?.setAttribute("x1", `${newXPos - 2}`);
+                    resizeRightLine?.setAttribute("x2", `${newXPos - 2}`);
 
-                  resizeTopThumb?.setAttribute("x2", `${newXPos}`);
-                  resizeBottomThumb?.setAttribute("x2", `${newXPos}`);
+                    resizeTopThumb?.setAttribute("x1", `${newXPos * 0.375}`);
+                    resizeTopThumb?.setAttribute("x2", `${newXPos * 0.625}`);
 
-                  resizeOverlay?.setAttribute("width", `${newXPos}`);
+                    resizeBottomThumb?.setAttribute("x1", `${newXPos * 0.375}`);
+                    resizeBottomThumb?.setAttribute("x2", `${newXPos * 0.625}`);
 
-                  addActionsGroup.setAttribute(
-                    "transform",
-                    `translate(${newXPos / 2}, ${height / 2})`
-                  );
+                    editActionGroup.setAttribute(
+                      "transform",
+                      `translate(${newXPos - 24}, 8)`
+                    );
 
-                  control.updateProperties("width", newXPos + "px");
+                    resizeOverlay?.setAttribute("width", `${newXPos}`);
+
+                    const { height } = getRectElementBounds();
+
+                    addActionsGroup.setAttribute(
+                      "transform",
+                      `translate(${newXPos / 2}, ${height / 2})`
+                    );
+
+                    control.updateProperties("width", newXPos + "px");
+                  }
                 });
 
               resizeOverlay?.setAttribute("pointer-events", "none");
@@ -292,23 +314,28 @@ export function useBuildableEditActions(
             fromEvent(resizeBottomThumb, "mousedown").subscribe(() => {
               scratchPadMouseMoveEvtSubscription =
                 scratchPadMouseMoveEvt.subscribe((getPosition) => {
-                  const [, newYPos] = getPosition();
-                  const { width } = getElementRect();
-                  resizeBottomThumb?.setAttribute("y1", `${newYPos}`);
-                  resizeBottomThumb?.setAttribute("y2", `${newYPos}`);
+                  if (!scratchPadMouseMoveEvtSubscription?.closed) {
+                    const [, newYPos] = getPosition();
+                    resizeBottomThumb?.setAttribute("y1", `${newYPos - 2}`);
+                    resizeBottomThumb?.setAttribute("y2", `${newYPos - 2}`);
 
-                  resizeRightLine?.setAttribute("y2", `${newYPos}`);
+                    resizeRightLine?.setAttribute("y1", `${newYPos * 0.375}`);
+                    resizeRightLine?.setAttribute("y2", `${newYPos * 0.625}`);
 
-                  resizeLeftThumb?.setAttribute("y2", `${newYPos}`);
+                    resizeLeftThumb?.setAttribute("y1", `${newYPos * 0.375}`);
+                    resizeLeftThumb?.setAttribute("y2", `${newYPos * 0.625}`);
 
-                  resizeOverlay?.setAttribute("height", `${newYPos}`);
+                    resizeOverlay?.setAttribute("height", `${newYPos}`);
 
-                  addActionsGroup.setAttribute(
-                    "transform",
-                    `translate(${width / 2}, ${newYPos / 2})`
-                  );
+                    const { width } = getRectElementBounds();
 
-                  control.updateProperties("height", newYPos + "px");
+                    addActionsGroup.setAttribute(
+                      "transform",
+                      `translate(${width / 2}, ${newYPos / 2})`
+                    );
+
+                    control.updateProperties("height", newYPos + "px");
+                  }
                 });
 
               resizeOverlay?.setAttribute("pointer-events", "none");

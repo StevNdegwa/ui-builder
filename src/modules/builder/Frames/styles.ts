@@ -20,7 +20,7 @@ export const Actions = styled.g`
   ${({
     theme: {
       colorSchemes: {
-        palette: { secondary, primary },
+        palette: { secondary },
       },
     },
   }) => `
@@ -41,7 +41,7 @@ export const Actions = styled.g`
     & g.add-action {
         cursor: pointer;
       & circle {
-        fill: ${primary[500]};
+        fill: ${secondary[500]};
         cursor: pointer;
       }
       & line {
