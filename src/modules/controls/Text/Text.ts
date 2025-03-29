@@ -9,6 +9,7 @@ export class UIText extends UIBuildable implements IBuildableElement {
 
   constructor() {
     super();
+    this.propData.set("content", "A very simple text");
   }
 
   static properties = {
@@ -45,7 +46,7 @@ export class UIText extends UIBuildable implements IBuildableElement {
   }
 
   render() {
-    return html`<span class="wrapper">${this.content}</span>`;
+    return html`<span class="text-wrapper">${this.content}</span>`;
   }
 }
 
