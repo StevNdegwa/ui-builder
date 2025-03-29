@@ -11,6 +11,7 @@ import { GridLabelsX, GridLabelsY, Wrapper, XYIndicator } from "./style";
 import { generate } from "@modules/utils/svg";
 import { BUILDER_PADDING } from "../constants";
 import { useForwardRef } from "@modules/utils/hooks";
+import { Pos } from "../type";
 
 export type ScratchPadProps = PropsWithChildren<{
   height: number;
@@ -51,7 +52,7 @@ export const ScratchPad = forwardRef<SVGRectElement, ScratchPadProps>(
 
     useLayoutEffect(() => {
       const gridLabelXEl = gridXLabelsRef.current;
-      const gridLabelYEl = gridYLabelsRef.current;
+      // const gridLabelYEl = gridYLabelsRef.current;
 
       const percentageArr = [100];
 
@@ -76,28 +77,28 @@ export const ScratchPad = forwardRef<SVGRectElement, ScratchPadProps>(
         });
       }
 
-      if (gridLabelYEl && height > 0) {
-        const yTextConfigs: ElementConfigType[] = percentageArr.map((data) => ({
-          name: "text",
-          textContent: data + "%",
-          attributes: [
-            {
-              name: "y",
-              value: (data * (height - BUILDER_PADDING * 2)) / 100 + "px",
-            },
-            { name: "font-size", value: "10" },
-            { name: "fill", value: "black" },
-            {
-              name: "writing-mode",
-              value: "vertical-lr",
-            },
-          ],
-        }));
+      // if (gridLabelYEl && height > 0) {
+      //   const yTextConfigs: ElementConfigType[] = percentageArr.map((data) => ({
+      //     name: "text",
+      //     textContent: data + "%",
+      //     attributes: [
+      //       {
+      //         name: "y",
+      //         value: (data * (height - BUILDER_PADDING * 2)) / 100 + "px",
+      //       },
+      //       { name: "font-size", value: "10" },
+      //       { name: "fill", value: "black" },
+      //       {
+      //         name: "writing-mode",
+      //         value: "vertical-lr",
+      //       },
+      //     ],
+      //   }));
 
-        generate(yTextConfigs).forEach((element) => {
-          gridLabelYEl.appendChild(element);
-        });
-      }
+      //   generate(yTextConfigs).forEach((element) => {
+      //     gridLabelYEl.appendChild(element);
+      //   });
+      // }
 
       return () => {
         if (gridLabelXEl) {
