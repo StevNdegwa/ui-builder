@@ -6,16 +6,24 @@ import {
 } from "@ui/components";
 import { FC } from "react";
 import { BuildableFrameConfig } from "../type";
+import { Wrapper } from "./styles";
 
 export type PropertiesFormProps = {
   elementsControls: Array<BuildableFrameConfig>;
+  activeElementIndex: number;
 };
 
 export const PropertiesForm: FC<PropertiesFormProps> = ({
   elementsControls,
+  activeElementIndex,
 }) => {
   return elementsControls.map(({ element }, index) => (
-    <FlexBox direction="column" gap="sm" key={index}>
+    <Wrapper
+      $show={index === activeElementIndex}
+      direction="column"
+      gap="sm"
+      key={index}
+    >
       <FlexBox direction="column" gap="sm">
         <FlexBox gap="xs">
           <LengthInputControl
@@ -39,6 +47,6 @@ export const PropertiesForm: FC<PropertiesFormProps> = ({
       <FlexBox direction="column" gap="sm">
         <Button color="primary">Save</Button>
       </FlexBox>
-    </FlexBox>
+    </Wrapper>
   ));
 };

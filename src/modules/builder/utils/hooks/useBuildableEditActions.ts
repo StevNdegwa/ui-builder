@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { finalize, fromEvent, map, Subscription } from "rxjs";
 import { BuildableControl } from "@modules/builder/BuildableControl";
 import { BuildableFrameConfig } from "@modules/builder/type";
@@ -9,6 +9,8 @@ export function useBuildableEditActions(
   scratchPadRef: React.RefObject<SVGRectElement | null>,
   actionsRef: React.RefObject<SVGGElement | null>
 ) {
+  const [activeElementIndex, setActiveElementIndex] = useState<number>(0);
+
   useEffect(() => {
     const scratchPadEl = scratchPadRef.current;
     const actionsEl = actionsRef.current;
@@ -16,7 +18,7 @@ export function useBuildableEditActions(
     if (elements.length && scratchPadEl) {
       if (actionsEl) {
         const resizeActionConfigs: ElementConfigType[] = elements.map(
-          ({ width, height, x, y }) => ({
+          ({ width, height, x, y }, index) => ({
             name: "g",
             attributes: [
               {
@@ -144,6 +146,20 @@ export function useBuildableEditActions(
                         value: "transparent",
                       },
                     ],
+                    events: [
+                      {
+                        name: "click",
+                        handler: (event) => {
+                          console.log(
+                            "\n setActiveElementIndex:: ",
+                            index,
+                            event
+                          );
+
+                          setActiveElementIndex(index);
+                        },
+                      },
+                    ],
                   },
                   {
                     name: "path",
@@ -156,6 +172,10 @@ export function useBuildableEditActions(
                       {
                         name: "transform",
                         value: "scale(0.03)",
+                      },
+                      {
+                        name: "pointer-events",
+                        value: "none",
                       },
                     ],
                   },
@@ -304,4 +324,6 @@ export function useBuildableEditActions(
       }
     };
   }, [elements, scratchPadRef, actionsRef]);
+
+  return { activeElementIndex };
 }

@@ -19,6 +19,10 @@ export function getELement(
     element.classList.add(className);
   });
 
+  elementConfig.events?.forEach(({ name, handler }) =>
+    element.addEventListener(name, handler)
+  );
+
   if (elementConfig.textContent)
     element.textContent = elementConfig.textContent;
 

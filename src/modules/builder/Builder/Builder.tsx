@@ -40,7 +40,11 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
       BuildableFrameConfig[]
     >([]);
 
-    useBuildableEditActions(buildableConfigs, scratchPadRef, actionsRef);
+    const { activeElementIndex } = useBuildableEditActions(
+      buildableConfigs,
+      scratchPadRef,
+      actionsRef
+    );
 
     useLayoutEffect(() => {
       if (rectRef.current) {
@@ -111,7 +115,10 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
         <SettingsForm>
           <FlexBox direction="column" gap="md">
             <Typography heading="h4">Settings</Typography>
-            <PropertiesForm elementsControls={buildableConfigs} />
+            <PropertiesForm
+              elementsControls={buildableConfigs}
+              activeElementIndex={activeElementIndex}
+            />
           </FlexBox>
         </SettingsForm>
       </Wrapper>
