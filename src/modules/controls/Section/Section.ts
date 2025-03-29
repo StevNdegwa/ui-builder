@@ -25,7 +25,9 @@ export class UISection extends UIBlock implements IBuildableElement {
   }
 
   render() {
-    return html`<div class="wrapper">Buildable Section</div>`;
+    return html`<div class="wrapper">
+      <slot name="contents"></slot>
+    </div>`;
   }
 }
 
