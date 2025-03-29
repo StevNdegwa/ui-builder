@@ -10,6 +10,8 @@ export class UIBuildable
 
   propData: Map<string, string> = new Map();
 
+  TAKES_CHILDREN = false;
+
   constructor() {
     super();
   }

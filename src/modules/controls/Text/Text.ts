@@ -46,7 +46,7 @@ export class UIText extends UIBuildable implements IBuildableElement {
   }
 
   render() {
-    return html`<span class="text-wrapper">${this.content}</span>`;
+    return html`<span class="text-wrapper">Sample Content</span>`;
   }
 }
 

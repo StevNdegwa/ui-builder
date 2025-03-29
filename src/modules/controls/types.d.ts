@@ -1,6 +1,8 @@
 interface IBuildable {
   props: string;
   serializeELement(): void;
+  TAKES_CHILDREN: boolean;
+  propData: Map<string, string>;
 }
 
 interface IBuildableElement {
@@ -13,3 +15,5 @@ interface IBuildableBlockElement {
 }
 
 type IBuildableConfig = Record<string, string>;
+
+type BuildableElementNames = "ui-section" | "ui-text";

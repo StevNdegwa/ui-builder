@@ -7,6 +7,7 @@ import { getPropertiesAsString } from "@modules/utils/controls";
 export class UISection extends UIBlock implements IBuildableElement {
   constructor() {
     super();
+    this.TAKES_CHILDREN = true;
   }
 
   connectedCallback(): void {

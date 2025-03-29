@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { UIBuildable } from "@modules/controls";
+import { UIBuildable, UISection } from "@modules/controls";
+import { UIText } from "@modules/controls/Text";
 
 export class BuildableControl {
   element: UIBuildable;
@@ -19,14 +20,19 @@ export class BuildableControl {
     this.element[prop] = value;
   }
 
-  insertChildElement() {
-    const newElement = document.createElement("div");
+  insertChildElement(name: BuildableElementNames) {
+    const buildableInstance: UIBuildable = new ({
+      "ui-text": UIText,
+      "ui-section": UISection,
+    }[name] || UISection)();
 
-    newElement.setAttribute("slot", "contents");
+    const childElement = new DOMParser()
+      .parseFromString(buildableInstance.serializeELement(), "text/html")
+      .body.firstElementChild?.cloneNode(true) as Element;
 
-    newElement.textContent = "Sample added section to test";
+    childElement.setAttribute("slot", "contents");
 
-    this.element.appendChild(newElement);
+    this.element.appendChild(childElement);
   }
 
   getElementString() {

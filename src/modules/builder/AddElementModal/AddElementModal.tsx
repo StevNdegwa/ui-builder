@@ -1,6 +1,8 @@
 import { FC } from "react";
-import { Button, Modal } from "@ui/components";
+import { MdOutlineTextSnippet } from "react-icons/md";
+import { Modal, Typography } from "@ui/components";
 import { BuildableControl } from "../BuildableControl";
+import { ElementCard, ElementCardIcon, ElementCardLabel } from "./styles";
 
 export type AddElementModalProps = {
   isOpen: boolean;
@@ -13,16 +15,21 @@ export const AddElementModal: FC<AddElementModalProps> = ({
   close,
   buildable,
 }) => {
-  const onAddElement = () => {
-    buildable.insertChildElement();
+  const onAddElement = (name: BuildableElementNames) => {
+    buildable.insertChildElement(name);
     close();
   };
 
   return (
     <Modal isOpen={isOpen} onClose={close}>
-      <div>
-        <Button onClick={onAddElement}>Add Element</Button>
-      </div>
+      <ElementCard direction="column" onClick={() => onAddElement("ui-text")}>
+        <ElementCardIcon align="center" justify="center">
+          <MdOutlineTextSnippet size={40} />
+        </ElementCardIcon>
+        <ElementCardLabel align="center" justify="center">
+          <Typography weight="bold">Text</Typography>
+        </ElementCardLabel>
+      </ElementCard>
     </Modal>
   );
 };
