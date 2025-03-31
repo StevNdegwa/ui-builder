@@ -21,7 +21,7 @@ export const PropertiesForm: FC<PropertiesFormProps> = ({
     <Wrapper
       $show={index === activeElementIndex}
       direction="column"
-      gap="sm"
+      gap="md"
       key={index}
     >
       <FlexBox direction="column" gap="sm">
@@ -44,8 +44,9 @@ export const PropertiesForm: FC<PropertiesFormProps> = ({
           }
         />
       </FlexBox>
-      <FlexBox direction="column" gap="sm">
-        <Button color="primary">Save</Button>
+      <FlexBox justify="space-between" direction="column" gap="xs">
+        <Button color="primary">Copy Document</Button>
+        <Button color="primary">Copy Section</Button>
       </FlexBox>
     </Wrapper>
   ));
