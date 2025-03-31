@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { BoxProps } from "@components/atoms/Box";
+import { BoxProps } from "@ui/components";
 import { Item } from "./Item";
 import { Wrapper } from "./styles";
 
