@@ -10,9 +10,8 @@
   "license": "ISC",
   "author": "Stephen <sndegwa.n@outlook.com> (https://stevndegwa.github.io/)",
   "type": "module",
-  "module": "./dist/controls-package/ui-builder-controls.es.js",
   "files": [
-    "dist/controls-package"
+    "controls-dist"
   ],
   "scripts": {
     "dev": "vite",
@@ -21,7 +20,8 @@
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "publish::ui-components": "npm publish --access=public"
+    "publish::ui-components": "npm publish --access=public",
+    "build::ui-components": "tsc -b && vite build --config vite.controls.config.ts"
   },
   "dependencies": {
     "lit": "^3.2.1"
