@@ -20,7 +20,7 @@
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "publish::ui-components": "npm publish --access=public",
+    "publish::ui-components": "npm run build::ui-components && npm publish --access=public",
     "build::ui-components": "tsc -b && vite build --config vite.controls.config.ts"
   },
   "dependencies": {
