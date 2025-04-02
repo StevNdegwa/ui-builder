@@ -1,10 +1,10 @@
-import { css, CSSResultGroup } from "lit";
 import {
   getElementDimensionValue,
   getPropertiesAsString,
 } from "@modules/utils/controls";
 import { ELEMENT_STYLE_PROPERTIES } from "../constants";
 import { UIBuildable } from "../Buildable";
+import styles from "./styles";
 
 export class UIBlock
   extends UIBuildable
@@ -29,26 +29,6 @@ export class UIBlock
     height: { type: String },
     "background-color": { type: String, attribute: "background-color" },
   };
-
-  static styles?: CSSResultGroup = css`
-    :host {
-      --ui-buildable-element-width: 100%;
-      --ui-buildable-element-height: 100%;
-      padding: 0px;
-      margin: 0px;
-      box-sizing: border-box;
-      display: block;
-    }
-
-    :host > .wrapper {
-      width: var(--ui-buildable-element-width);
-      height: var(--ui-buildable-element-height);
-      background-color: var(--ui-buildable-element-bg-color, transparent);
-      padding: 0px;
-      margin: 0px;
-      box-sizing: border-box;
-    }
-  `;
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -110,3 +90,5 @@ export class UIBlock
     );
   }
 }
+
+UIBlock.styles = styles;

@@ -3,18 +3,20 @@ import { customElement } from "lit/decorators.js";
 import { getPropertiesAsString } from "@modules/utils/controls";
 import { UIBuildable } from "../Buildable";
 
+export const TEXT_CONTENT_PROP = "text-content";
+
 @customElement("ui-text")
 export class UIText extends UIBuildable implements IBuildableElement {
-  declare content: string;
+  declare [TEXT_CONTENT_PROP]: string;
 
   constructor() {
     super();
-    this.propData.set("content", "A very simple text");
+    this.propData.set(TEXT_CONTENT_PROP, "A very simple text");
   }
 
   static properties = {
     ...UIBuildable.properties,
-    content: { type: String },
+    [TEXT_CONTENT_PROP]: { type: String },
   };
 
   connectedCallback(): void {
@@ -28,14 +30,16 @@ export class UIText extends UIBuildable implements IBuildableElement {
   }
 
   updatedContentProperty = (changedProperties: Map<string, string>) => {
-    if (changedProperties.has("content")) {
-      const newContent = changedProperties.get("content") as string;
+    if (changedProperties.has(TEXT_CONTENT_PROP)) {
+      const newContent = this[TEXT_CONTENT_PROP] || ("" as string);
 
-      const textContainer = this.querySelector(".wrapper");
+      const textContainer = this.shadowRoot?.querySelector(".text-wrapper");
 
-      if (textContainer) textContainer.innerHTML = newContent;
+      if (textContainer) {
+        textContainer.innerHTML = newContent;
+      }
 
-      this.propData.set("content", newContent);
+      this.propData.set(TEXT_CONTENT_PROP, newContent);
     }
   };
 

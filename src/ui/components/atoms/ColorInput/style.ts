@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const Wrapper = styled.input`
   width: 100%;
+  height: 32px;
   border: none;
   cursor: pointer;
   ${({
@@ -15,7 +16,7 @@ export const Wrapper = styled.input`
   }) => `
     background-color: ${gray[50]};
     color: ${textOnLight};
-    padding: 1%;
+    padding: 4px;
     border-radius: ${borderRadius.md};
     border: 1px solid ${gray[50]};
     &:disabled {

@@ -1,12 +1,7 @@
-import {
-  Button,
-  ColorInput,
-  FlexBox,
-  LengthInputControl,
-} from "@ui/components";
+import { FlexBox } from "@ui/components";
 import { FC } from "react";
 import { BuildableFrameConfig } from "../type";
-import { Wrapper } from "./styles";
+import { FormButton, Wrapper } from "./styles";
 
 export type PropertiesFormProps = {
   elementsControls: Array<BuildableFrameConfig>;
@@ -25,28 +20,13 @@ export const PropertiesForm: FC<PropertiesFormProps> = ({
       key={index}
     >
       <FlexBox direction="column" gap="sm">
-        <FlexBox gap="xs">
-          <LengthInputControl
-            placeholder="Width"
-            onChange={(newLen) => element.updateProperties("width", newLen)}
-          />
-          <LengthInputControl
-            placeholder="Height"
-            onChange={(newLen) => element.updateProperties("height", newLen)}
-          />
-        </FlexBox>
-        <ColorInput
-          onChange={(event) =>
-            element.updateProperties(
-              "background-color",
-              (event.target as HTMLInputElement).value
-            )
-          }
-        />
+        {element.getElementPropertiesConfigs().map((config, index) => (
+          <div key={index}>{config}</div>
+        ))}
       </FlexBox>
-      <FlexBox justify="space-between" direction="column" gap="xs">
-        <Button color="primary">Copy Document</Button>
-        <Button color="primary">Copy Section</Button>
+      <FlexBox justify="space-between" direction="row" gap="xs">
+        <FormButton color="primary">Copy Document</FormButton>
+        <FormButton color="primary">Copy Section</FormButton>
       </FlexBox>
     </Wrapper>
   ));

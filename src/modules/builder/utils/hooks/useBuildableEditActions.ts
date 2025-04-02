@@ -323,7 +323,7 @@ export function useBuildableEditActions(
                       `translate(${newXPos / 2}, ${height / 2})`
                     );
 
-                    control.updateProperties("width", newXPos + "px");
+                    control.updateProperty("width", newXPos + "px");
                   }
                 });
 
@@ -355,7 +355,7 @@ export function useBuildableEditActions(
                       `translate(${width / 2}, ${newYPos / 2})`
                     );
 
-                    control.updateProperties("height", newYPos + "px");
+                    control.updateProperty("height", newYPos + "px");
                   }
                 });
 

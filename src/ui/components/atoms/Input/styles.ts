@@ -19,7 +19,7 @@ export const Wrapper = styled.input`
     color: ${textOnLight};
     padding: ${padding.md};
     border-radius: ${borderRadius.md};
-    border: 1px solid ${gray[50]};
+    border: 1px solid ${gray[100]};
     &:disabled {
         opacity: 0.8;
         cursor: not-allowed;

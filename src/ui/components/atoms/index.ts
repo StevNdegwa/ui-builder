@@ -5,3 +5,4 @@ export * from "./Button";
 export * from "./Input";
 export * from "./ColorInput";
 export * from "./SliderInput";
+export * from "./TextArea";

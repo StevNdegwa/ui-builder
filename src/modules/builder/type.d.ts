@@ -14,3 +14,10 @@ type BuildableFrameConfig = {
   y: number;
   element: BuildableControl;
 };
+
+type BuilderFieldValue = string | number | boolean;
+
+type BuilderFieldProps = {
+  name: string;
+  onChange: (newValue: BuilderFieldValue) => void;
+};
