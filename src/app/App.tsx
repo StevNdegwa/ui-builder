@@ -4,17 +4,23 @@ import { Builder } from "@modules/builder";
 
 import "@modules/controls/Section/Section";
 import "@modules/controls/Text/Text";
+import { Toast } from "@ui/components";
+import { useHandleNotification } from "./hooks/useHandleNotification";
 
 export default function App() {
+  const { showNotification, handleNotification, notificationMessage } =
+    useHandleNotification();
+
   return (
     <ThemeProvider>
       <GlobalStyle />
       <Dashboard>
-        <Builder>
+        <Builder notify={handleNotification}>
           <ui-section></ui-section>
-          {/* <ui-section></ui-section>
-          <ui-section></ui-section> */}
         </Builder>
+        <Toast show={showNotification} title="Title">
+          {notificationMessage}
+        </Toast>
       </Dashboard>
     </ThemeProvider>
   );

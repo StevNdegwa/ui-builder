@@ -37,7 +37,7 @@ const colorSchemes = {
       "900": "#505050",
     },
   },
-  bg: "#ffffff",
+  bg: "white",
   textOnLight: "#0f0f0f",
   textOnDark: "#ffffff",
 };
@@ -117,12 +117,18 @@ const borderRadius = {
   xl: "16px",
 };
 
+const layers = {
+  modal: 10,
+  notification: 100,
+};
+
 const theme = {
   fonts,
   colorSchemes,
   breakpoints,
   borderRadius,
   spacings,
+  layers,
 };
 
 export const ThemeType = typeof theme;

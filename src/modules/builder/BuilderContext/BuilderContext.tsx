@@ -1,15 +1,14 @@
-import { BuildableControl } from "@modules/builder";
 import { createContext, FC, PropsWithChildren, useContext } from "react";
 
 export type BuilderContextType = {
-  activeBuildable: BuildableControl | null;
+  notify: (message: string) => void;
 };
 
-const BuilderContext = createContext<BuilderContextType>({
-  activeBuildable: null,
-});
+const BuilderContext = createContext<BuilderContextType>(
+  {} as BuilderContextType
+);
 
-export const BuildableContextProvider: FC<
+export const BuilderContextProvider: FC<
   PropsWithChildren<{ value: BuilderContextType }>
 > = ({ children, value }) => {
   return (

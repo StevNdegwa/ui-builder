@@ -24,10 +24,14 @@ import { BuildableFrameConfig } from "../type";
 import { PropertiesForm } from "../PropertiesForm";
 import { BuildableControl } from "../BuildableControl";
 import { AddElementModal } from "../AddElementModal";
+import { BuilderContextProvider } from "../BuilderContext";
 
-export type BuilderProps = PropsWithChildren;
+export type BuilderProps = PropsWithChildren<{
+  notify: (message: string) => void;
+}>;
+
 export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
-  ({ children }, ref) => {
+  ({ children, notify }, ref) => {
     const contentsWrapperRef = useForwardRef<HTMLDivElement>(ref);
     const actionsRef = useRef<SVGGElement>(null);
     const scratchPadRef = useRef<SVGRectElement>(null);
@@ -87,46 +91,48 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
     }, [contentsWrapperRef, uiBuildableElementsLen]);
 
     return (
-      <Wrapper gap="sm">
-        <Editor>
-          <Contents ref={contentsWrapperRef}>{children}</Contents>
-          <ScratchpadContainer>
-            <svg
-              width="100%"
-              height="100%"
-              data-name="Element Frame"
-              id="Layer_1"
-              xmlns="http://www.w3.org/2000/svg"
-              ref={rectRef}
-              strokeWidth={2}
-            >
-              <ScratchPad
-                width={scratchPadWidth}
-                height={scratchPadHeight}
-                ref={scratchPadRef}
+      <BuilderContextProvider value={{ notify }}>
+        <Wrapper gap="sm">
+          <Editor>
+            <Contents ref={contentsWrapperRef}>{children}</Contents>
+            <ScratchpadContainer>
+              <svg
+                width="100%"
+                height="100%"
+                data-name="Element Frame"
+                id="Layer_1"
+                xmlns="http://www.w3.org/2000/svg"
+                ref={rectRef}
+                strokeWidth={2}
               >
-                <Frames ref={actionsRef} />
-              </ScratchPad>
-            </svg>
-          </ScratchpadContainer>
-        </Editor>
-        <SettingsForm>
-          <FlexBox direction="column" gap="md">
-            <Typography heading="h4">Settings</Typography>
-            <PropertiesForm
-              elementsControls={buildableConfigs}
-              activeElementIndex={activeElementIndex}
+                <ScratchPad
+                  width={scratchPadWidth}
+                  height={scratchPadHeight}
+                  ref={scratchPadRef}
+                >
+                  <Frames ref={actionsRef} />
+                </ScratchPad>
+              </svg>
+            </ScratchpadContainer>
+          </Editor>
+          <SettingsForm>
+            <FlexBox direction="column" gap="md">
+              <Typography heading="h4">Settings</Typography>
+              <PropertiesForm
+                elementsControls={buildableConfigs}
+                activeElementIndex={activeElementIndex}
+              />
+            </FlexBox>
+          </SettingsForm>
+          {buildableConfigs[activeElementIndex] && (
+            <AddElementModal
+              isOpen={addElementsModalOpen}
+              close={closeAddElementsModal}
+              buildable={buildableConfigs[activeElementIndex].element}
             />
-          </FlexBox>
-        </SettingsForm>
-        {buildableConfigs[activeElementIndex] && (
-          <AddElementModal
-            isOpen={addElementsModalOpen}
-            close={closeAddElementsModal}
-            buildable={buildableConfigs[activeElementIndex].element}
-          />
-        )}
-      </Wrapper>
+          )}
+        </Wrapper>
+      </BuilderContextProvider>
     );
   }
 );

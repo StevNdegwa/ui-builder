@@ -1,5 +1,5 @@
-import { FlexBox } from "@ui/components";
 import styled from "styled-components";
+import { FlexBox } from "@ui/components";
 
 export const Wrapper = styled(FlexBox)`
   height: 100%;

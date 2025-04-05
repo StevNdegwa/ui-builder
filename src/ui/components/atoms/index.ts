@@ -6,3 +6,4 @@ export * from "./Input";
 export * from "./ColorInput";
 export * from "./SliderInput";
 export * from "./TextArea";
+export * from "../molecules/FlexBox";
