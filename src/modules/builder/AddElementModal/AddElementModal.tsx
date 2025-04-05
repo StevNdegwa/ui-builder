@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { MdOutlineTextSnippet } from "react-icons/md";
-import { Modal, Typography } from "@ui/components";
+import { FlexBox, Modal } from "@ui/components";
+import { MdOutlineTextSnippet, MdAddPhotoAlternate } from "react-icons/md";
 import { BuildableControl } from "../BuildableControl";
-import { ElementCard, ElementCardIcon, ElementCardLabel } from "./styles";
+import { AddElementButton } from "./AddElementButton";
 
 export type AddElementModalProps = {
   isOpen: boolean;
@@ -22,14 +22,20 @@ export const AddElementModal: FC<AddElementModalProps> = ({
 
   return (
     <Modal isOpen={isOpen} onClose={close}>
-      <ElementCard direction="column" onClick={() => onAddElement("ui-text")}>
-        <ElementCardIcon align="center" justify="center">
-          <MdOutlineTextSnippet size={40} />
-        </ElementCardIcon>
-        <ElementCardLabel align="center" justify="center">
-          <Typography weight="bold">Text</Typography>
-        </ElementCardLabel>
-      </ElementCard>
+      <FlexBox gap="md">
+        <AddElementButton
+          icon={MdOutlineTextSnippet}
+          onAddElement={onAddElement}
+          elementName="ui-text"
+          label="Text"
+        />
+        <AddElementButton
+          icon={MdAddPhotoAlternate}
+          onAddElement={onAddElement}
+          elementName="ui-image"
+          label="Image"
+        />
+      </FlexBox>
     </Modal>
   );
 };

@@ -1,7 +1,7 @@
 import { FlexBox } from "@ui/components";
 import styled from "styled-components";
 
-export const ElementCard = styled(FlexBox)`
+export const Wrapper = styled(FlexBox)`
   width: 100px;
   height: 100px;
   cursor: pointer;
@@ -11,11 +11,11 @@ export const ElementCard = styled(FlexBox)`
   `};
 `;
 
-export const ElementCardIcon = styled(FlexBox)`
+export const Icon = styled(FlexBox)`
   width: 100%;
   height: 70px;
 `;
 
-export const ElementCardLabel = styled(FlexBox)`
+export const Label = styled(FlexBox)`
   height: 30px;
 `;

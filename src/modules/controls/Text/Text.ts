@@ -2,6 +2,7 @@ import { html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { getPropertiesAsString } from "@modules/utils/controls";
 import { UIBuildable } from "../Buildable";
+import styles from "./styles";
 
 export const TEXT_CONTENT_PROP = "text-content";
 
@@ -18,6 +19,10 @@ export class UIText extends UIBuildable implements IBuildableElement {
     ...UIBuildable.properties,
     [TEXT_CONTENT_PROP]: { type: String },
   };
+
+  static {
+    UIBuildable.styles.push(styles);
+  }
 
   connectedCallback(): void {
     super.connectedCallback();

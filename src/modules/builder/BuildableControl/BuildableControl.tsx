@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { UIBuildable, UISection } from "@modules/controls";
-import { UIText } from "@modules/controls/Text";
+import { UIBuildable, UIImage, UISection, UIText } from "@modules/controls";
 import {
   buildableControlsConfig,
   defaultBuildableControlsConfig,
@@ -24,6 +23,7 @@ export class BuildableControl {
     const buildableInstance: UIBuildable = new ({
       "ui-text": UIText,
       "ui-section": UISection,
+      "ui-image": UIImage,
     }[name] || UISection)();
 
     const childElement = new DOMParser()

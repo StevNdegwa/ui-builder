@@ -1,6 +1,6 @@
 import { Field } from "../Field";
 
-const { Length, Color, MultilineText } = Field;
+const { Length, Color, MultilineText, SinglelineText } = Field;
 
 export const buildableControlsConfig = {
   width: {
@@ -18,6 +18,10 @@ export const buildableControlsConfig = {
   "text-content": {
     component: MultilineText,
     label: "Text Content",
+  },
+  "image-source": {
+    component: SinglelineText,
+    label: "Image URL",
   },
 };
 

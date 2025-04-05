@@ -1,4 +1,4 @@
-import { LitElement } from "lit";
+import { CSSResult, LitElement } from "lit";
 
 export class UIBuildable
   extends LitElement
@@ -15,6 +15,8 @@ export class UIBuildable
   constructor() {
     super();
   }
+
+  static styles: CSSResult[] = [];
 
   connectedCallback(): void {
     super.connectedCallback();

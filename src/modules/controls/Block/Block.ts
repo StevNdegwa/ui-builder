@@ -4,6 +4,7 @@ import {
 } from "@modules/utils/controls";
 import { ELEMENT_STYLE_PROPERTIES } from "../constants";
 import { UIBuildable } from "../Buildable";
+
 import styles from "./styles";
 
 export class UIBlock
@@ -29,6 +30,10 @@ export class UIBlock
     height: { type: String },
     "background-color": { type: String, attribute: "background-color" },
   };
+
+  static {
+    UIBuildable.styles.push(styles);
+  }
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -90,5 +95,3 @@ export class UIBlock
     );
   }
 }
-
-UIBlock.styles = styles;

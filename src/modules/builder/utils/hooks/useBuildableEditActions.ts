@@ -318,7 +318,7 @@ export function useBuildableEditActions(
 
                     const { height } = getRectElementBounds();
 
-                    addActionsGroup.setAttribute(
+                    addActionsGroup?.setAttribute(
                       "transform",
                       `translate(${newXPos / 2}, ${height / 2})`
                     );
@@ -350,7 +350,7 @@ export function useBuildableEditActions(
 
                     const { width } = getRectElementBounds();
 
-                    addActionsGroup.setAttribute(
+                    addActionsGroup?.setAttribute(
                       "transform",
                       `translate(${width / 2}, ${newYPos / 2})`
                     );

@@ -16,4 +16,4 @@ interface IBuildableBlockElement {
 
 type IBuildableConfig = Record<string, string>;
 
-type BuildableElementNames = "ui-section" | "ui-text";
+type BuildableElementNames = "ui-section" | "ui-text" | "ui-image";

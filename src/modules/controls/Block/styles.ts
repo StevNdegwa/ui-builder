@@ -1,7 +1,7 @@
 import { css } from "lit";
 
 export default css`
-  :host {
+  :host(.ui-block) {
     --ui-buildable-element-width: 100%;
     --ui-buildable-element-height: 100%;
     height: var(--ui-buildable-element-height);
@@ -12,7 +12,7 @@ export default css`
     display: block;
   }
 
-  :host > .wrapper {
+  :host(.ui-block) > .wrapper {
     width: var(--ui-buildable-element-width);
     height: var(--ui-buildable-element-height);
     background-color: var(--ui-buildable-element-bg-color, transparent);
