@@ -26,6 +26,11 @@ export function getELement(
   if (elementConfig.textContent)
     element.textContent = elementConfig.textContent;
 
+  if (elementConfig.data)
+    Object.entries(elementConfig.data).forEach(([key, value]) => {
+      element.dataset[key] = value + "";
+    });
+
   elementConfig.children?.forEach((childConfig) =>
     getELement(childConfig, element)
   );

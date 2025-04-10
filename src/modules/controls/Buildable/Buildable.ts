@@ -54,4 +54,14 @@ export class UIBuildable
 
     return this.outerHTML;
   }
+
+  addEventListener(type: unknown, listener: unknown): void {
+    const uiRef = this.shadowRoot?.querySelector(".ui-ref");
+
+    console.log("uiRef", uiRef);
+
+    if (uiRef) {
+      uiRef.addEventListener(type as string, listener as EventListener);
+    }
+  }
 }

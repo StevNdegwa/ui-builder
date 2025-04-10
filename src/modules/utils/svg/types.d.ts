@@ -5,4 +5,5 @@ type ElementConfigType = {
   attributes?: { name: string; value: string | number | boolean }[];
   events?: { name: string; handler: (event?: Event) => void }[];
   children?: ElementConfigType[];
+  data?: Record<string, string | number | boolean>;
 };

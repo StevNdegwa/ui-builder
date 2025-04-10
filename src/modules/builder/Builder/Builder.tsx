@@ -5,6 +5,7 @@ import {
   forwardRef,
   PropsWithChildren,
   useEffect,
+  useMemo,
 } from "react";
 import { ScratchPad } from "../ScratchPad";
 import { useForwardRef } from "@modules/utils/hooks";
@@ -12,7 +13,7 @@ import { FlexBox, Typography } from "@ui/components";
 import { UIBuildable } from "@modules/controls";
 import { Frames } from "../Frames";
 import { BUILDER_PADDING } from "../constants";
-import { useBuildableEditActions } from "../utils/hooks/useBuildableEditActions";
+import { useBuildableEditActions } from "./useBuildableEditActions";
 import {
   Contents,
   Editor,
@@ -25,6 +26,11 @@ import { PropertiesForm } from "../PropertiesForm";
 import { BuildableControl } from "../BuildableControl";
 import { AddElementModal } from "../AddElementModal";
 import { BuilderContextProvider } from "../BuilderContext";
+import ShortUniqueId from "short-unique-id";
+
+const shortUniqueID = new ShortUniqueId({
+  length: 8,
+});
 
 export type BuilderProps = PropsWithChildren<{
   notify: (message: string) => void;
@@ -45,8 +51,16 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
       BuildableFrameConfig[]
     >([]);
 
-    const { activeElementIndex, addElementsModalOpen, closeAddElementsModal } =
+    const { activeElementID, addElementsModalOpen, closeAddElementsModal } =
       useBuildableEditActions(buildableConfigs, scratchPadRef, actionsRef);
+
+    const activeBuildableControl = useMemo(
+      () =>
+        buildableConfigs.find(
+          (config) => config.elementControl.uniqueId === activeElementID
+        ),
+      [activeElementID, buildableConfigs]
+    );
 
     useLayoutEffect(() => {
       if (rectRef.current) {
@@ -82,7 +96,10 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
                 height: box.height,
                 x: box.x - contentStart.x + BUILDER_PADDING,
                 y: box.y - contentStart.y + BUILDER_PADDING,
-                element: new BuildableControl(element as UIBuildable),
+                elementControl: new BuildableControl(
+                  element as UIBuildable,
+                  shortUniqueID.randomUUID()
+                ),
               };
             })
           );
@@ -120,15 +137,15 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
               <Typography heading="h4">Settings</Typography>
               <PropertiesForm
                 elementsControls={buildableConfigs}
-                activeElementIndex={activeElementIndex}
+                activeElementID={activeElementID}
               />
             </FlexBox>
           </SettingsForm>
-          {buildableConfigs[activeElementIndex] && (
+          {activeBuildableControl && (
             <AddElementModal
               isOpen={addElementsModalOpen}
               close={closeAddElementsModal}
-              buildable={buildableConfigs[activeElementIndex].element}
+              buildable={activeBuildableControl.elementControl}
             />
           )}
         </Wrapper>

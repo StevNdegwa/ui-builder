@@ -7,22 +7,22 @@ import { FormItems } from "./FormItems";
 
 export type PropertiesFormProps = {
   elementsControls: Array<BuildableFrameConfig>;
-  activeElementIndex: number;
+  activeElementID?: string;
 };
 
 export const PropertiesForm: FC<PropertiesFormProps> = ({
   elementsControls,
-  activeElementIndex,
+  activeElementID,
 }) => {
-  return elementsControls.map(({ element }, index) => (
+  return elementsControls.map(({ elementControl }, index) => (
     <Wrapper
-      $show={index === activeElementIndex}
+      $show={elementControl.uniqueId === activeElementID}
       direction="column"
       gap="md"
       key={index}
     >
       <FlexBox direction="column" gap="sm">
-        <FormItems element={element} />
+        <FormItems element={elementControl} />
       </FlexBox>
       <FlexBox justify="space-between" direction="row" gap="xs">
         <CopyButton
@@ -30,13 +30,13 @@ export const PropertiesForm: FC<PropertiesFormProps> = ({
               <!DOCTYPE html>
                 <html>
                   <head><title>Test UI Builder</title><script src="https://unpkg.com/@stevndegwa/ui-builder-components@0.0.3/controls-dist/ui-builder-controls.umd.js" async ></script></head>
-                  <body>${element.getElementString()}</body>
+                  <body>${elementControl.getElementString()}</body>
                 </html>
             `}
         >
           Copy Document
         </CopyButton>
-        <CopyButton getCopyString={() => element.getElementString()}>
+        <CopyButton getCopyString={() => elementControl.getElementString()}>
           Copy Section
         </CopyButton>
       </FlexBox>

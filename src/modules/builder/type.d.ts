@@ -12,7 +12,7 @@ type BuildableFrameConfig = {
   left: number;
   x: number;
   y: number;
-  element: BuildableControl;
+  elementControl: BuildableControl;
 };
 
 type BuilderFieldValue = string | number | boolean;

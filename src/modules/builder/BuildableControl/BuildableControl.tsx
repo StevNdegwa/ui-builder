@@ -9,9 +9,14 @@ import { BuilderFieldValue } from "../type";
 
 export class BuildableControl {
   element: UIBuildable;
+  uniqueId: string;
 
-  constructor(element: UIBuildable) {
+  constructor(element: UIBuildable, id: string) {
     this.element = element;
+
+    this.uniqueId = id;
+
+    this.element.dataset.uniqueId = id;
   }
 
   updateProperty(prop: string, value: BuilderFieldValue) {

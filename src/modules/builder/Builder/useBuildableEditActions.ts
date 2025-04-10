@@ -2,14 +2,16 @@ import { useEffect, useState } from "react";
 import { finalize, fromEvent, map, Subscription } from "rxjs";
 import { BuildableControl } from "@modules/builder/BuildableControl";
 import { BuildableFrameConfig } from "@modules/builder/type";
-import { generate } from "@modules/utils/svg";
+import { generate, getELement } from "@modules/utils/svg";
 
 export function useBuildableEditActions(
   elements: BuildableFrameConfig[],
   scratchPadRef: React.RefObject<SVGRectElement | null>,
   actionsRef: React.RefObject<SVGGElement | null>
 ) {
-  const [activeElementIndex, setActiveElementIndex] = useState<number>(0);
+  const [activeElementID, setActiveElementID] = useState<string | undefined>(
+    undefined
+  );
   const [addElementsModalOpen, setAddElementsModal] = useState(false);
 
   const closeAddElementsModal = () => setAddElementsModal(false);
@@ -23,7 +25,7 @@ export function useBuildableEditActions(
     if (elements.length && scratchPadEl) {
       if (actionsEl) {
         const resizeActionConfigs: ElementConfigType[] = elements.map(
-          ({ width, height, x, y, element }) => {
+          ({ width, height, x, y, elementControl }) => {
             const configType = {
               name: "g",
               attributes: [
@@ -36,6 +38,11 @@ export function useBuildableEditActions(
                   value: "0",
                 },
               ],
+              data: {
+                buildableRef: elementControl.uniqueId,
+                buildableRefType:
+                  elementControl.element.tagName.toLocaleLowerCase(),
+              },
               children: [
                 {
                   name: "rect",
@@ -142,64 +149,20 @@ export function useBuildableEditActions(
               ],
             } as ElementConfigType;
 
-            if (element.element.TAKES_CHILDREN) {
-              configType.children?.push({
-                name: "g",
-                classNames: ["add-action"],
-                attributes: [
-                  {
-                    name: "transform",
-                    value: `translate(${width / 2}, ${height / 2})`,
-                  },
-                ],
-                children: [
-                  {
-                    name: "circle",
-                    classNames: ["action"],
-                    attributes: [
-                      { name: "cx", value: 0 },
-                      { name: "cy", value: 0 },
-                      { name: "r", value: 16 },
-                    ],
-                  },
-                  {
-                    name: "line",
-                    attributes: [
-                      { name: "x1", value: 0 },
-                      { name: "y1", value: -8 },
-                      { name: "x2", value: 0 },
-                      { name: "y2", value: 8 },
-                      {
-                        name: "pointer-events",
-                        value: "none",
-                      },
-                    ],
-                  },
-                  {
-                    name: "line",
-                    attributes: [
-                      { name: "x1", value: -8 },
-                      { name: "y1", value: 0 },
-                      { name: "x2", value: 8 },
-                      { name: "y2", value: 0 },
-                      {
-                        name: "pointer-events",
-                        value: "none",
-                      },
-                    ],
-                  },
-                ],
-              });
-            }
-
             return configType;
           }
         );
 
-        generate(resizeActionConfigs).forEach((element, index) => {
+        const resizeActionElements = generate(resizeActionConfigs);
+
+        const sectionResizeActionElements = resizeActionElements.filter(
+          (element) => element.dataset.buildableRefType === "ui-section"
+        );
+
+        resizeActionElements.forEach((element, index) => {
           actionsEl.appendChild(element);
 
-          const control: BuildableControl = elements[index].element;
+          const control: BuildableControl = elements[index].elementControl;
 
           const resizeOverlay = element.querySelector(
             "rect.resize-overlay"
@@ -216,9 +179,6 @@ export function useBuildableEditActions(
           const resizeLeftThumb = element.querySelector(
             ".resize-left-thumb"
           ) as SVGLineElement;
-          const addActionsGroup = element.querySelector(
-            "g.add-action"
-          ) as SVGGElement;
           const editActions = element.querySelector(
             "g.edit-action > circle"
           ) as SVGGElement;
@@ -289,7 +249,7 @@ export function useBuildableEditActions(
 
           if (editActions) {
             fromEvent(editActions, "click").subscribe(() => {
-              setActiveElementIndex(index);
+              setActiveElementID(control.uniqueId);
             });
           }
 
@@ -316,13 +276,6 @@ export function useBuildableEditActions(
 
                     resizeOverlay?.setAttribute("width", `${newXPos}`);
 
-                    const { height } = getRectElementBounds();
-
-                    addActionsGroup?.setAttribute(
-                      "transform",
-                      `translate(${newXPos / 2}, ${height / 2})`
-                    );
-
                     control.updateProperty("width", newXPos + "px");
                   }
                 });
@@ -348,18 +301,98 @@ export function useBuildableEditActions(
 
                     resizeOverlay?.setAttribute("height", `${newYPos}`);
 
-                    const { width } = getRectElementBounds();
-
-                    addActionsGroup?.setAttribute(
-                      "transform",
-                      `translate(${width / 2}, ${newYPos / 2})`
-                    );
-
                     control.updateProperty("height", newYPos + "px");
                   }
                 });
 
               resizeOverlay?.setAttribute("pointer-events", "none");
+            });
+          }
+        });
+
+        sectionResizeActionElements.forEach((resizeElement) => {
+          const { width, height } = resizeElement.getBoundingClientRect();
+
+          const rectOverlay = resizeElement.querySelector(
+            "rect.resize-overlay"
+          ) as SVGLineElement;
+
+          const addActionGroup = getELement({
+            name: "g",
+            classNames: ["add-action"],
+            attributes: [
+              {
+                name: "transform",
+                value: `translate(${width / 2}, ${height / 2})`,
+              },
+              {
+                name: "opacity",
+                value: "0",
+              },
+            ],
+            children: [
+              {
+                name: "circle",
+                classNames: ["action"],
+                attributes: [
+                  { name: "cx", value: 0 },
+                  { name: "cy", value: 0 },
+                  { name: "r", value: 16 },
+                ],
+              },
+              {
+                name: "line",
+                attributes: [
+                  { name: "x1", value: 0 },
+                  { name: "y1", value: -8 },
+                  { name: "x2", value: 0 },
+                  { name: "y2", value: 8 },
+                  {
+                    name: "pointer-events",
+                    value: "none",
+                  },
+                ],
+              },
+              {
+                name: "line",
+                attributes: [
+                  { name: "x1", value: -8 },
+                  { name: "y1", value: 0 },
+                  { name: "x2", value: 8 },
+                  { name: "y2", value: 0 },
+                  {
+                    name: "pointer-events",
+                    value: "none",
+                  },
+                ],
+              },
+            ],
+          });
+
+          actionsEl.appendChild(addActionGroup);
+
+          fromEvent(rectOverlay, "mouseover").subscribe((event) => {
+            if (event.currentTarget) {
+              const { width: newW, height: newH } =
+                rectOverlay.getBoundingClientRect();
+
+              addActionGroup.setAttribute(
+                "transform",
+                `translate(${newW / 2}, ${newH / 2})`
+              );
+
+              addActionGroup.setAttribute("opacity", "1");
+            }
+          });
+
+          const addActionBtn = addActionGroup.querySelector(
+            "g.add-action > circle"
+          ) as SVGCircleElement;
+
+          if (addActionBtn) {
+            fromEvent(addActionBtn, "click").subscribe(() => {
+              openAddElementsModal();
+              setActiveElementID(resizeElement.dataset.buildableRef);
             });
           }
         });
@@ -373,5 +406,5 @@ export function useBuildableEditActions(
     };
   }, [elements, scratchPadRef, actionsRef]);
 
-  return { activeElementIndex, addElementsModalOpen, closeAddElementsModal };
+  return { activeElementID, addElementsModalOpen, closeAddElementsModal };
 }
