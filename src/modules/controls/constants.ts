@@ -1,5 +1,5 @@
 export const ELEMENT_STYLE_PROPERTIES = {
-  WIDTH: "--ui-buildable-element-width",
-  HEIGHT: "--ui-buildable-element-height",
-  BG_COLOR: "--ui-buildable-element-bg-color",
+  BLOCK_WIDTH: "--ui-block-width",
+  BLOCK_HEIGHT: "--ui-block-height",
+  BLOCK_BG_COLOR: "--ui-block-bg-color",
 };

@@ -20,7 +20,7 @@ export class UIBlock
 
     // Set default values
     this.propData.set("width", "100%");
-    this.propData.set("height", "200px");
+    this.propData.set("height", "auto");
     this.propData.set("background-color", "rgb(212, 212, 212)");
   }
 
@@ -39,15 +39,15 @@ export class UIBlock
     super.connectedCallback();
 
     this.style.setProperty(
-      ELEMENT_STYLE_PROPERTIES.WIDTH,
+      ELEMENT_STYLE_PROPERTIES.BLOCK_WIDTH,
       this.propData.get("width") || "100%"
     );
     this.style.setProperty(
-      ELEMENT_STYLE_PROPERTIES.HEIGHT,
+      ELEMENT_STYLE_PROPERTIES.BLOCK_HEIGHT,
       this.propData.get("height") || "100%"
     );
     this.style.setProperty(
-      ELEMENT_STYLE_PROPERTIES.BG_COLOR,
+      ELEMENT_STYLE_PROPERTIES.BLOCK_BG_COLOR,
       this.propData.get("background-color") || "transparent"
     );
 
@@ -59,7 +59,7 @@ export class UIBlock
       const newElWidth = getElementDimensionValue(
         this.width || changedProperties.get("width")
       );
-      this.style.setProperty(ELEMENT_STYLE_PROPERTIES.WIDTH, newElWidth);
+      this.style.setProperty(ELEMENT_STYLE_PROPERTIES.BLOCK_WIDTH, newElWidth);
       this.propData.set("width", newElWidth);
     }
   };
@@ -69,7 +69,10 @@ export class UIBlock
       const newElHeight = getElementDimensionValue(
         this.height || changedProperties.get("height")
       );
-      this.style.setProperty(ELEMENT_STYLE_PROPERTIES.HEIGHT, newElHeight);
+      this.style.setProperty(
+        ELEMENT_STYLE_PROPERTIES.BLOCK_HEIGHT,
+        newElHeight
+      );
       this.propData.set("height", newElHeight);
     }
   };
@@ -77,7 +80,10 @@ export class UIBlock
   updateBackgroundProperty = (changedProperties: Map<string, string>) => {
     if (changedProperties.has("background-color")) {
       const newBgColor = this["background-color"] || "transparent";
-      this.style.setProperty(ELEMENT_STYLE_PROPERTIES.BG_COLOR, newBgColor);
+      this.style.setProperty(
+        ELEMENT_STYLE_PROPERTIES.BLOCK_BG_COLOR,
+        newBgColor
+      );
       this.propData.set("background-color", newBgColor);
     }
   };

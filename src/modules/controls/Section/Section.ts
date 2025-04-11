@@ -2,12 +2,18 @@ import { html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { UIBlock } from "../Block";
 import { getPropertiesAsString } from "@modules/utils/controls";
+import { UIBuildable } from "../Buildable";
+import styles from "./styles";
 
 @customElement("ui-section")
 export class UISection extends UIBlock implements IBuildableElement {
   constructor() {
     super();
     this.TAKES_CHILDREN = true;
+  }
+
+  static {
+    UIBuildable.styles.push(styles);
   }
 
   connectedCallback(): void {
