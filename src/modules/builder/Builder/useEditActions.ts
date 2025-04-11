@@ -4,7 +4,7 @@ import { BuildableControl } from "@modules/builder/BuildableControl";
 import { BuildableFrameConfig } from "@modules/builder/type";
 import { generate, getELement } from "@modules/utils/svg";
 
-export function useBuildableEditActions(
+export default function useEditActions(
   elements: BuildableFrameConfig[],
   scratchPadRef: React.RefObject<SVGRectElement | null>,
   actionsRef: React.RefObject<SVGGElement | null>
