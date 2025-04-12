@@ -3,6 +3,7 @@ import { finalize, fromEvent, map, Subscription } from "rxjs";
 import { BuildableControl } from "@modules/builder/BuildableControl";
 import { BuildableFrameConfig } from "@modules/builder/type";
 import { generate, getELement } from "@modules/utils/svg";
+import { ResizeActionGeometry } from "../utils/ResizeActionGeometry";
 
 export default function useEditActions(
   elements: BuildableFrameConfig[],
@@ -28,16 +29,11 @@ export default function useEditActions(
           ({ width, height, x, y, elementControl }) => {
             const configType = {
               name: "g",
-              attributes: [
-                {
-                  name: "transform",
-                  value: `translate(${x}, ${y})`,
-                },
-                {
-                  name: "opacity",
-                  value: "0",
-                },
-              ],
+              classNames: [],
+              attributes: {
+                transform: `translate(${x}, ${y})`,
+                opacity: "0",
+              },
               data: {
                 buildableRef: elementControl.uniqueId,
                 buildableRefType:
@@ -47,102 +43,62 @@ export default function useEditActions(
                 {
                   name: "rect",
                   classNames: ["resize-overlay", "action"],
-                  attributes: [
-                    { name: "width", value: width },
-                    { name: "height", value: height },
-                    { name: "x", value: 0 },
-                    { name: "y", value: 0 },
-                  ],
+                  attributes: {
+                    ...ResizeActionGeometry.overlay({ width, height }),
+                  },
                 },
                 {
                   name: "line",
                   classNames: ["resize-top-thumb", "action"],
-                  attributes: [
-                    { name: "x1", value: width * 0.375 },
-                    { name: "y1", value: 2 },
-                    { name: "x2", value: width * 0.625 },
-                    { name: "y2", value: 2 },
-                  ],
+                  attributes: {
+                    ...ResizeActionGeometry.topThumb({ width, height }),
+                  },
                 },
                 {
                   name: "line",
                   classNames: ["resize-right-thumb", "action"],
-                  attributes: [
-                    { name: "x1", value: width - 2 },
-                    { name: "y1", value: height * 0.375 },
-                    { name: "x2", value: width - 2 },
-                    { name: "y2", value: height * 0.625 },
-                  ],
+                  attributes: {
+                    ...ResizeActionGeometry.rightThumb({ width, height }),
+                  },
                 },
                 {
                   name: "line",
                   classNames: ["resize-bottom-thumb", "action"],
-                  attributes: [
-                    { name: "x1", value: width * 0.375 },
-                    { name: "y1", value: height - 2 },
-                    { name: "x2", value: width * 0.625 },
-                    { name: "y2", value: height - 2 },
-                  ],
+                  attributes: {
+                    ...ResizeActionGeometry.bottomThumb({ width, height }),
+                  },
                 },
                 {
                   name: "line",
                   classNames: ["resize-left-thumb", "action"],
-                  attributes: [
-                    { name: "x1", value: 2 },
-                    { name: "y1", value: height * 0.375 },
-                    { name: "x2", value: 2 },
-                    { name: "y2", value: height * 0.625 },
-                  ],
+                  attributes: {
+                    ...ResizeActionGeometry.leftThumb({ width, height }),
+                  },
                 },
                 {
                   name: "g",
                   classNames: ["edit-action"],
-                  attributes: [
-                    {
-                      name: "transform",
-                      value: `translate(${width - 24}, 8)`,
-                    },
-                  ],
+                  attributes: {
+                    transform: `translate(${width - 24}, 8)`,
+                  },
                   children: [
                     {
                       name: "circle",
                       classNames: ["action"],
-                      attributes: [
-                        {
-                          name: "cx",
-                          value: "8",
-                        },
-                        {
-                          name: "cy",
-                          value: "8",
-                        },
-                        {
-                          name: "r",
-                          value: "14",
-                        },
-                        {
-                          name: "fill",
-                          value: "transparent",
-                        },
-                      ],
+                      attributes: {
+                        cx: 8,
+                        cy: 8,
+                        r: 14,
+                        fill: "transparent",
+                      },
                     },
                     {
                       name: "path",
-                      attributes: [
-                        {
-                          name: "d",
-                          value:
-                            "M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z",
-                        },
-                        {
-                          name: "transform",
-                          value: "scale(0.03)",
-                        },
-                        {
-                          name: "pointer-events",
-                          value: "none",
-                        },
-                      ],
+                      attributes: {
+                        d: "M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z",
+                        transform: "scale(0.03)",
+                        "pointer-events": "none",
+                      },
                     },
                   ],
                 },
@@ -320,51 +276,39 @@ export default function useEditActions(
           const addActionGroup = getELement({
             name: "g",
             classNames: ["add-action"],
-            attributes: [
-              {
-                name: "transform",
-                value: `translate(${width / 2}, ${height / 2})`,
-              },
-              {
-                name: "opacity",
-                value: "0",
-              },
-            ],
+            attributes: {
+              transform: `translate(${width / 2}, ${height / 2})`,
+              opacity: "0",
+            },
             children: [
               {
                 name: "circle",
                 classNames: ["action"],
-                attributes: [
-                  { name: "cx", value: 0 },
-                  { name: "cy", value: 0 },
-                  { name: "r", value: 16 },
-                ],
+                attributes: {
+                  cx: 0,
+                  cy: 0,
+                  r: 16,
+                },
               },
               {
                 name: "line",
-                attributes: [
-                  { name: "x1", value: 0 },
-                  { name: "y1", value: -8 },
-                  { name: "x2", value: 0 },
-                  { name: "y2", value: 8 },
-                  {
-                    name: "pointer-events",
-                    value: "none",
-                  },
-                ],
+                attributes: {
+                  x1: 0,
+                  y1: -8,
+                  x2: 0,
+                  y2: 8,
+                  "pointer-events": "none",
+                },
               },
               {
                 name: "line",
-                attributes: [
-                  { name: "x1", value: -8 },
-                  { name: "y1", value: 0 },
-                  { name: "x2", value: 8 },
-                  { name: "y2", value: 0 },
-                  {
-                    name: "pointer-events",
-                    value: "none",
-                  },
-                ],
+                attributes: {
+                  x1: -8,
+                  y1: 0,
+                  x2: 8,
+                  y2: 0,
+                  "pointer-events": "none",
+                },
               },
             ],
           });

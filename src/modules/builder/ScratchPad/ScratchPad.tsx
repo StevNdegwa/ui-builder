@@ -61,14 +61,11 @@ export const ScratchPad = forwardRef<SVGRectElement, ScratchPadProps>(
         const xTextConfigs: ElementConfigType[] = percentageArr.map((data) => ({
           name: "text",
           textContent: data + "%",
-          attributes: [
-            {
-              name: "x",
-              value: (data * (width - BUILDER_PADDING * 2)) / 100 + "px",
-            },
-            { name: "font-size", value: "10" },
-            { name: "fill", value: "black" },
-          ],
+          attributes: {
+            x: (data * (width - BUILDER_PADDING * 2)) / 100 + "px",
+            "font-size": 10,
+            fill: "black",
+          },
         }));
 
         generate(xTextConfigs).forEach((element) => {

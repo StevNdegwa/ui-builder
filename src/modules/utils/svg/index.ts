@@ -11,9 +11,13 @@ export function getELement(
     elementConfig.name
   ) as SVGElement;
 
-  elementConfig.attributes?.forEach((attribute) => {
-    element.setAttribute(attribute.name, attribute.value + "");
-  });
+  if (elementConfig.attributes) {
+    for (const prop in elementConfig.attributes) {
+      if (elementConfig.attributes[prop]) {
+        element.setAttribute(prop, elementConfig.attributes[prop] + "");
+      }
+    }
+  }
 
   elementConfig.classNames?.forEach((className) => {
     element.classList.add(className);
@@ -41,3 +45,12 @@ export function getELement(
 
   return element;
 }
+
+export const setElementAttributes = (
+  element: SVGElement,
+  attributes: Record<string, string | number>
+) => {
+  for (const [key, value] of Object.entries(attributes)) {
+    element.setAttribute(key, value.toString());
+  }
+};

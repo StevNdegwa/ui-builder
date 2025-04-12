@@ -16,6 +16,7 @@ import { AddElementModal } from "../AddElementModal";
 import { BuilderContextProvider } from "../BuilderContext";
 import useBuildableConfigsInit from "./useBuildableConfigsInit";
 import useScratchPad from "./useScratchPad";
+import useEditActionsResize from "./useEditActionsResize";
 
 export type BuilderProps = PropsWithChildren<{
   notify: (message: string) => void;
@@ -34,6 +35,8 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
     const { buildableConfigs } = useBuildableConfigsInit(contentsWrapperRef);
     const { activeElementID, addElementsModalOpen, closeAddElementsModal } =
       useEditActions(buildableConfigs, scratchPadRef, actionsRef);
+
+    useEditActionsResize(buildableConfigs);
 
     const activeBuildableControl = useMemo(
       () =>

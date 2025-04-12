@@ -1,19 +1,19 @@
 import { BuildableControl } from "./BuildableControl";
 
+type ElementBox = {
+  width: number;
+  height: number;
+};
+
 type Pos = {
   x: number;
   y: number;
 };
 
-type BuildableFrameConfig = {
-  width: number;
-  height: number;
-  top: number;
-  left: number;
-  x: number;
-  y: number;
-  elementControl: BuildableControl;
-};
+type BuildableFrameConfig = ElementBox &
+  Pos & {
+    elementControl: BuildableControl;
+  };
 
 type BuilderFieldValue = string | number | boolean;
 
