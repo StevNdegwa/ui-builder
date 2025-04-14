@@ -30,7 +30,7 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
     const editorSVGRef = useRef<SVGSVGElement>(null);
 
     const { width: scratchPadWidth, height: scratchPadHeight } =
-      useScratchPad(editorSVGRef);
+      useScratchPad(contentsWrapperRef);
 
     const { buildableConfigs } = useBuildableConfigsInit(contentsWrapperRef);
     const { activeElementID, addElementsModalOpen, closeAddElementsModal } =
@@ -53,13 +53,14 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
             <Contents ref={contentsWrapperRef}>{children}</Contents>
             <ScratchpadContainer>
               <svg
-                width="100%"
-                height="100%"
+                width={scratchPadWidth}
+                height={scratchPadHeight}
                 data-name="Element Frame"
                 id="Layer_1"
                 xmlns="http://www.w3.org/2000/svg"
                 ref={editorSVGRef}
                 strokeWidth={2}
+                display={"block"}
               >
                 <ScratchPad
                   width={scratchPadWidth}

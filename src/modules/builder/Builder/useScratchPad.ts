@@ -1,20 +1,41 @@
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 
 export default function useScratchPad(
-  editorSVGRef: React.RefObject<SVGSVGElement | null>
+  contentsWrapperRef: React.RefObject<HTMLDivElement | null>
 ) {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
 
   useLayoutEffect(() => {
-    const editorSVGEl = editorSVGRef.current;
+    const contentsWrapperEL = contentsWrapperRef.current;
 
-    if (editorSVGEl) {
-      const boundingRect = editorSVGEl.getBoundingClientRect();
+    if (contentsWrapperEL) {
+      const boundingRect = contentsWrapperEL.getBoundingClientRect();
       setWidth(boundingRect.width);
       setHeight(boundingRect.height);
     }
-  }, [editorSVGRef]);
+  }, [contentsWrapperRef]);
+
+  useEffect(() => {
+    const contentsWrapperEL = contentsWrapperRef.current;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
+        const contentWrapper = entry.target as HTMLDivElement;
+        const boundingRect = contentWrapper.getBoundingClientRect();
+        setWidth(boundingRect.width + 20);
+        setHeight(boundingRect.height + 20);
+      });
+    });
+
+    if (contentsWrapperEL) {
+      resizeObserver.observe(contentsWrapperEL);
+    }
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [contentsWrapperRef]);
 
   return {
     width,

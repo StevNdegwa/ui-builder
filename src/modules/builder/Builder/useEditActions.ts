@@ -278,7 +278,6 @@ export default function useEditActions(
             classNames: ["add-action"],
             attributes: {
               transform: `translate(${width / 2}, ${height / 2})`,
-              opacity: "0",
             },
             children: [
               {
