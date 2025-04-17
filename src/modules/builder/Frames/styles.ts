@@ -20,13 +20,16 @@ export const Actions = styled.g`
   ${({
     theme: {
       colorSchemes: {
-        palette: { secondary },
+        palette: { secondary, primary },
       },
     },
   }) => `
   & rect {
     cursor: all-scroll;
     fill: ${rgba(secondary[50], 0.2)};
+    &.ui-section-action{
+      fill: ${rgba(primary[50], 0.2)};
+    }
   }
   & line {
     stroke: ${secondary[500]};
@@ -37,12 +40,19 @@ export const Actions = styled.g`
     &.resize-top-thumb, &.resize-bottom-thumb{
         cursor: row-resize;
     }
+
+    &.ui-section-action{
+      stroke: ${primary[50]};
+    }
   }
     & g.add-action {
         cursor: pointer;
       & circle {
         fill: ${secondary[500]};
         cursor: pointer;
+        &.ui-section-action{
+          fill: ${primary[500]};
+        }
       }
       & line {
         stroke: white;
@@ -59,12 +69,17 @@ export const Actions = styled.g`
       & path {
         fill: ${secondary[500]};
       }
-    }
-
-    &:hover{
-      & rect {
-        fill: ${rgba(secondary[50], 0.3)};
+      &.ui-section-action{
+        & path {
+          fill: ${primary[500]};
+        }
       }
     }
+
+    /** &:hover{
+       & rect {
+         fill: ${rgba(secondary[50], 0.3)};
+       }
+    **/ }
   `}
 `;

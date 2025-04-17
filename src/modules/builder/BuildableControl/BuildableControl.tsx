@@ -40,16 +40,16 @@ export class BuildableControl {
     this.element.appendChild(childElement);
   }
 
-  getElementString() {
+  get elementString() {
     return this.element.serializeELement();
   }
 
-  getElementProperties() {
+  get elementProperties() {
     return Array.from(this.element.propData.keys()).filter((prop) => !!prop);
   }
 
-  getElementPropertiesConfigs() {
-    return this.getElementProperties().map((prop: string, index) => {
+  get elementPropertiesConfigs() {
+    return this.elementProperties.map((prop: string, index) => {
       const config =
         buildableControlsConfig[prop as keyof typeof buildableControlsConfig] ||
         defaultBuildableControlsConfig;
@@ -70,4 +70,14 @@ export class BuildableControl {
       return null;
     });
   }
+
+  get elementName() {
+    return this.element.tagName.toLowerCase();
+  }
+
+  is = {
+    text: () => this.element instanceof UIText,
+    section: () => this.element instanceof UISection,
+    image: () => this.element instanceof UIImage,
+  };
 }

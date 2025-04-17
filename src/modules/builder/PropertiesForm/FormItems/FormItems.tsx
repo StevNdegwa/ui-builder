@@ -8,7 +8,7 @@ export type FormItemsProps = {
 
 export const FormItems: FC<FormItemsProps> = ({ element }) => {
   const items = useMemo(
-    () => element?.getElementPropertiesConfigs() || [],
+    () => element?.elementPropertiesConfigs || [],
     [element]
   );
 
