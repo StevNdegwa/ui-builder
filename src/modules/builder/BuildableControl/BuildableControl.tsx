@@ -10,11 +10,14 @@ import { BuilderFieldValue } from "../type";
 export class BuildableControl {
   element: UIBuildable;
   uniqueId: string;
+  uniqueIdClassName: string;
 
   constructor(element: UIBuildable, id: string) {
     this.element = element;
 
     this.uniqueId = id;
+
+    this.uniqueIdClassName = `c${this.uniqueId}`;
 
     this.element.dataset.uniqueId = id;
   }
@@ -79,5 +82,6 @@ export class BuildableControl {
     text: () => this.element instanceof UIText,
     section: () => this.element instanceof UISection,
     image: () => this.element instanceof UIImage,
+    empty: () => this.element.children.length === 0,
   };
 }

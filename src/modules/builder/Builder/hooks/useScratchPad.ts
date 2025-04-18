@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 
-export default function useScratchPad(
+export function useScratchPad(
   contentsWrapperRef: React.RefObject<HTMLDivElement | null>
 ) {
   const [width, setWidth] = useState(0);

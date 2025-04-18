@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import ShortUniqueId from "short-unique-id";
-import { BuildableFrameConfig } from "../type";
+import { BuildableFrameConfig } from "../../type";
 import { UIBuildable } from "@modules/controls";
-import { BUILDER_PADDING } from "../constants";
-import { BuildableControl } from "../BuildableControl";
+import { BUILDER_PADDING } from "../../constants";
+import { BuildableControl } from "../../BuildableControl";
 
 const shortUniqueID = new ShortUniqueId({
   length: 8,
 });
 
-export default function useBuildableConfigsInit(
+export function useBuildableConfigsInit(
   contentsWrapperRef: React.RefObject<HTMLDivElement | null>
 ) {
   const [buildableConfigs, setBuildableConfigs] = useState<

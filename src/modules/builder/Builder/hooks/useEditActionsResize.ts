@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { BuildableFrameConfig } from "../type";
+import { BuildableFrameConfig } from "../../type";
 import { UIBuildable } from "@modules/controls";
-import { ResizeActionGeometry } from "../utils/ResizeActionGeometry";
+import { ResizeActionGeometry } from "../../utils/ResizeActionGeometry";
 import { setElementAttributes } from "@modules/utils/svg";
 
-export default function useEditActionsResize(elements: BuildableFrameConfig[]) {
+export function useEditActionsResize(elements: BuildableFrameConfig[]) {
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
@@ -72,10 +72,10 @@ export default function useEditActionsResize(elements: BuildableFrameConfig[]) {
       elements.forEach(({ elementControl }) => {
         resizeObserver.observe(elementControl.element);
       });
-
-      return () => {
-        resizeObserver.disconnect();
-      };
     }
+
+    return () => {
+      resizeObserver.disconnect();
+    };
   }, [elements]);
 }

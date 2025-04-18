@@ -2,8 +2,6 @@ import { useRef, forwardRef, PropsWithChildren, useMemo } from "react";
 import { ScratchPad } from "../ScratchPad";
 import { useForwardRef } from "@modules/utils/hooks";
 import { FlexBox, Typography } from "@ui/components";
-import { Frames } from "../Frames";
-import useEditActions from "./useEditActions";
 import {
   Contents,
   Editor,
@@ -14,9 +12,8 @@ import {
 import { PropertiesForm } from "../PropertiesForm";
 import { AddElementModal } from "../AddElementModal";
 import { BuilderContextProvider } from "../BuilderContext";
-import useBuildableConfigsInit from "./useBuildableConfigsInit";
-import useScratchPad from "./useScratchPad";
-import useEditActionsResize from "./useEditActionsResize";
+import { useActions, useBuildableConfigsInit, useScratchPad } from "./hooks";
+import { Add, Edit, Resize } from "../Actions";
 
 export type BuilderProps = PropsWithChildren<{
   notify: (message: string) => void;
@@ -25,7 +22,9 @@ export type BuilderProps = PropsWithChildren<{
 export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
   ({ children, notify }, ref) => {
     const contentsWrapperRef = useForwardRef<HTMLDivElement>(ref);
-    const actionsRef = useRef<SVGGElement>(null);
+    const resizeActionsRef = useRef<SVGGElement>(null);
+    const editActionsRef = useRef<SVGGElement>(null);
+    const addActionsRef = useRef<SVGGElement>(null);
     const scratchPadRef = useRef<SVGRectElement>(null);
     const editorSVGRef = useRef<SVGSVGElement>(null);
 
@@ -33,17 +32,21 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
       useScratchPad(contentsWrapperRef);
 
     const { buildableConfigs } = useBuildableConfigsInit(contentsWrapperRef);
-    const { activeElementID, addElementsModalOpen, closeAddElementsModal } =
-      useEditActions(buildableConfigs, scratchPadRef, actionsRef);
-
-    useEditActionsResize(buildableConfigs);
+    const { activeElementId, addElementsModalOpen, closeAddElementsModal } =
+      useActions(
+        buildableConfigs,
+        scratchPadRef,
+        resizeActionsRef,
+        editActionsRef,
+        addActionsRef
+      );
 
     const activeBuildableControl = useMemo(
       () =>
         buildableConfigs.find(
-          (config) => config.elementControl.uniqueId === activeElementID
+          (config) => config.elementControl.uniqueId === activeElementId
         ),
-      [activeElementID, buildableConfigs]
+      [activeElementId, buildableConfigs]
     );
 
     return (
@@ -67,7 +70,9 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
                   height={scratchPadHeight}
                   ref={scratchPadRef}
                 >
-                  <Frames ref={actionsRef} />
+                  <Resize ref={resizeActionsRef} />
+                  <Edit ref={editActionsRef} />
+                  <Add ref={addActionsRef} />
                 </ScratchPad>
               </svg>
             </ScratchpadContainer>
@@ -77,7 +82,7 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
               <Typography heading="h4">Settings</Typography>
               <PropertiesForm
                 elementsControls={buildableConfigs}
-                activeElementID={activeElementID}
+                activeElementID={activeElementId}
               />
             </FlexBox>
           </SettingsForm>

@@ -36,6 +36,10 @@ const colorSchemes = {
       "800": "#626262",
       "900": "#505050",
     },
+    builder: {
+      section: "#D4AF37",
+      common: "#ACE1AF",
+    },
   },
   bg: "white",
   textOnLight: "#0f0f0f",

@@ -30,13 +30,13 @@ export const PropertiesForm: FC<PropertiesFormProps> = ({
               <!DOCTYPE html>
                 <html>
                   <head><title>Test UI Builder</title><script src="https://unpkg.com/@stevndegwa/ui-builder-components@0.0.3/controls-dist/ui-builder-controls.umd.js" async ></script></head>
-                  <body>${elementControl.getElementString()}</body>
+                  <body>${elementControl.elementString}</body>
                 </html>
             `}
         >
           Copy Document
         </CopyButton>
-        <CopyButton getCopyString={() => elementControl.getElementString()}>
+        <CopyButton getCopyString={() => elementControl.elementString}>
           Copy Section
         </CopyButton>
       </FlexBox>
