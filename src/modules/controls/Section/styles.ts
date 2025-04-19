@@ -9,7 +9,7 @@ export default css`
   }
 
   :host(.ui-section) > .wrapper {
-    min-height: 120px;
+    min-height: 48px;
     height: auto;
   }
 `;

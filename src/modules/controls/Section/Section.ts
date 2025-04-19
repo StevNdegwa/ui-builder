@@ -31,9 +31,22 @@ export class UISection extends UIBlock implements IBuildableElement {
     );
   }
 
+  // protected firstUpdated(): void {
+  //   const contentSlot = this.renderRoot?.querySelector(
+  //     "#content-slot"
+  //   ) as HTMLSlotElement;
+
+  //   if (contentSlot) {
+  //     contentSlot.addEventListener("slotchange", (event) => {
+  //       // Set height
+  //       console.log("slotchange", event, contentSlot.assignedNodes().length);
+  //     });
+  //   }
+  // }
+
   render() {
     return html`<div class="wrapper ui-ref">
-      <slot name="contents"></slot>
+      <slot name="contents" id="content-slot"></slot>
     </div>`;
   }
 }
