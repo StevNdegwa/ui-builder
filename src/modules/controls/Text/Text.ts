@@ -10,6 +10,9 @@ export const TEXT_CONTENT_PROP = "text-content";
 export class UIText extends UIBuildable implements IBuildableElement {
   declare [TEXT_CONTENT_PROP]: string;
 
+  TAKES_CHILDREN = false;
+  TITLE = "Text";
+
   constructor() {
     super();
     this.propData.set(TEXT_CONTENT_PROP, "A very simple text");

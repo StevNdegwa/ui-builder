@@ -11,13 +11,15 @@ export class UIBlock
   extends UIBuildable
   implements IBuildableBlockElement, IBuildableElement
 {
+  TAKES_CHILDREN = false;
+  TITLE = "Block";
+
   declare width: string | number;
   declare height: string | number;
   declare "background-color": string;
 
   constructor() {
     super();
-
     // Set default values
     this.propData.set("width", "100%");
     this.propData.set("height", "auto");

@@ -2,6 +2,7 @@ interface IBuildable {
   props: string;
   serializeELement(): void;
   TAKES_CHILDREN: boolean;
+  TITLE: string;
   propData: Map<string, string>;
 }
 

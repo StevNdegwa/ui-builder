@@ -7,9 +7,11 @@ import styles from "./styles";
 
 @customElement("ui-section")
 export class UISection extends UIBlock implements IBuildableElement {
+  TAKES_CHILDREN = true;
+  TITLE = "Section";
+
   constructor() {
     super();
-    this.TAKES_CHILDREN = true;
   }
 
   static {

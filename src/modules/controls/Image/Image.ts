@@ -11,6 +11,9 @@ export const DEFAULT_IMAGE_SOURCE =
 
 @customElement("ui-image")
 export class UIImage extends UIBlock implements IBuildableElement {
+  TAKES_CHILDREN = false;
+  TITLE = "Image";
+
   declare [IMAGE_SOURCE_PROP]: string;
 
   constructor() {
