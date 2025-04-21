@@ -1,7 +1,12 @@
 import { createContext, FC, PropsWithChildren, useContext } from "react";
+import { BuildableFrameConfig } from "../type";
 
 export type BuilderContextType = {
   notify: (message: string) => void;
+  buildableConfigs: BuildableFrameConfig[];
+  getBuildableConfigById: (id: string) => BuildableFrameConfig | undefined;
+  activeBuildableId?: string;
+  activeBuildableControl?: BuildableFrameConfig;
 };
 
 const BuilderContext = createContext<BuilderContextType>(

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ShortUniqueId from "short-unique-id";
 import { BuildableFrameConfig } from "../../type";
 import { UIBuildable } from "@modules/controls";
@@ -17,6 +17,37 @@ export function useBuildableConfigsInit(
   >([]);
   const uiBuildableElementsLen =
     contentsWrapperRef.current?.querySelectorAll(".ui-buildable").length || 0;
+
+  const getBuildableConfigById = useCallback(
+    (uniqueId: string) => {
+      return buildableConfigs.find(
+        (config) => config.elementControl.uniqueId === uniqueId
+      );
+    },
+    [buildableConfigs]
+  );
+
+  const computeBuildableConfig = useCallback(
+    (element: UIBuildable, contentsWrapperEl: HTMLDivElement) => {
+      const contentStart = contentsWrapperEl.getBoundingClientRect();
+
+      const box = element.getBoundingClientRect();
+      const uniqueId = shortUniqueID.randomUUID();
+
+      return {
+        uniqueId,
+        left: box.left,
+        top: box.top,
+        width: box.width,
+        height: box.height,
+        x: box.x - contentStart.x + BUILDER_PADDING,
+        y: box.y - contentStart.y + BUILDER_PADDING,
+        elementControl: new BuildableControl(element, uniqueId),
+      };
+    },
+    []
+  );
+
   useEffect(() => {
     // Add setTimeout to allow the DOM to update
 
@@ -27,31 +58,15 @@ export function useBuildableConfigsInit(
       const contentsWrapperEl = contentsWrapperRef.current;
 
       if (contentsWrapperEl && uiBuildableElementsLen > 0) {
-        const contentStart = contentsWrapperEl.getBoundingClientRect();
-
         setBuildableConfigs(
-          Array.from(
-            contentsWrapperRef.current?.querySelectorAll(".ui-buildable") || []
-          ).map((element) => {
-            const box = element.getBoundingClientRect();
-
-            return {
-              left: box.left,
-              top: box.top,
-              width: box.width,
-              height: box.height,
-              x: box.x - contentStart.x + BUILDER_PADDING,
-              y: box.y - contentStart.y + BUILDER_PADDING,
-              elementControl: new BuildableControl(
-                element as UIBuildable,
-                shortUniqueID.randomUUID()
-              ),
-            };
-          })
+          Array.from(contentsWrapperEl.querySelectorAll(".ui-buildable")).map(
+            (element) =>
+              computeBuildableConfig(element as UIBuildable, contentsWrapperEl) // Cast to UIBuildable
+          )
         );
       }
     }, 1);
-  }, [contentsWrapperRef, uiBuildableElementsLen]);
+  }, [computeBuildableConfig, contentsWrapperRef, uiBuildableElementsLen]);
 
-  return { buildableConfigs };
+  return { buildableConfigs, getBuildableConfigById, computeBuildableConfig };
 }

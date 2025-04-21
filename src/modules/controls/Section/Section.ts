@@ -1,9 +1,13 @@
 import { html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { UIBlock } from "../Block";
-import { getPropertiesAsString } from "@modules/utils/controls";
+import {
+  getElementDimensionValue,
+  getPropertiesAsString,
+} from "@modules/utils/controls";
 import { UIBuildable } from "../Buildable";
 import styles from "./styles";
+import { ELEMENT_STYLE_PROPERTIES } from "../constants";
 
 @customElement("ui-section")
 export class UISection extends UIBlock implements IBuildableElement {
@@ -22,6 +26,27 @@ export class UISection extends UIBlock implements IBuildableElement {
     super.connectedCallback();
     this.classList.add("ui-section");
   }
+
+  updatedHeightProperty = (changedProperties: Map<string, string>) => {
+    if (changedProperties.has("height")) {
+      let newElHeight = getElementDimensionValue(
+        this.height || changedProperties.get("height")
+      );
+
+      const isPercentHeight = newElHeight.includes("%");
+
+      newElHeight = isPercentHeight
+        ? newElHeight.replace("%", "vh")
+        : newElHeight;
+
+      this.style.setProperty(
+        ELEMENT_STYLE_PROPERTIES.BLOCK_HEIGHT,
+        newElHeight
+      );
+
+      this.propData.set("height", newElHeight);
+    }
+  };
 
   updated(changedProperties: Map<string, string>) {
     super.updated(changedProperties);

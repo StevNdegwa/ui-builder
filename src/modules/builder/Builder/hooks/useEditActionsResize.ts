@@ -1,68 +1,125 @@
 import { useEffect } from "react";
 import { BuildableFrameConfig } from "../../type";
 import { UIBuildable } from "@modules/controls";
-import { ResizeActionGeometry } from "../../utils/ResizeActionGeometry";
+import { BuilderElementsGeometry } from "../../utils/BuilderElementsGeometry";
 import { setElementAttributes } from "@modules/utils/svg";
 
-export function useEditActionsResize(elements: BuildableFrameConfig[]) {
+export function useEditActionsResize(
+  elements: BuildableFrameConfig[],
+  getBuildableConfigById: (id: string) => BuildableFrameConfig | undefined
+) {
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
         const { target } = entry;
 
-        if (target instanceof UIBuildable) {
-          const editAction = document.querySelector(
-            `[data-buildable-ref='${target.dataset.uniqueId}']`
-          );
+        if (target instanceof UIBuildable && target.dataset.uniqueId) {
+          try {
+            const { width, height } = target.getBoundingClientRect();
 
-          if (editAction) {
-            const overlay = editAction.querySelector(
-              "rect.resize-overlay"
-            ) as SVGRectElement;
-            const bottomThumb = editAction.querySelector(
-              "line.resize-bottom-thumb"
-            ) as SVGLineElement;
-            const topThumb = editAction.querySelector(
-              "line.resize-top-thumb"
-            ) as SVGLineElement;
-            const leftThumb = editAction.querySelector(
-              "line.resize-left-thumb"
-            ) as SVGLineElement;
-            const rightThumb = editAction.querySelector(
-              "line.resize-right-thumb"
-            ) as SVGLineElement;
+            const uniqueId = target.dataset.uniqueId;
 
-            if (overlay && bottomThumb && topThumb && leftThumb && rightThumb) {
-              const { width, height } = target.getBoundingClientRect();
+            const elementConfig = getBuildableConfigById(
+              uniqueId
+            ) as BuildableFrameConfig;
 
-              const newOverlayRect = ResizeActionGeometry.overlay({
-                width,
-                height,
-              });
+            const resizeActions = document.querySelector(
+              `[data-buildable-ref='${uniqueId}'].resize-actions-group`
+            ) as SVGGElement;
 
-              const newBottomThumb = ResizeActionGeometry.bottomThumb({
-                width,
-                height,
-              });
-              const newTopThumb = ResizeActionGeometry.topThumb({
-                height,
-                width,
-              });
-              const newLeftThumb = ResizeActionGeometry.leftThumb({
-                width,
-                height,
-              });
-              const newRightThumb = ResizeActionGeometry.rightThumb({
-                width,
-                height,
-              });
-              setElementAttributes(topThumb, newTopThumb);
-              setElementAttributes(leftThumb, newLeftThumb);
-              setElementAttributes(rightThumb, newRightThumb);
+            const addActions = document.querySelector(
+              `[data-buildable-ref='${uniqueId}'].add-action`
+            ) as SVGGElement;
 
-              setElementAttributes(overlay, newOverlayRect);
-              setElementAttributes(bottomThumb, newBottomThumb);
+            const editActions = document.querySelector(
+              `[data-buildable-ref='${uniqueId}'].edit-actions-group`
+            ) as SVGGElement;
+
+            if (resizeActions) {
+              const overlay = resizeActions.querySelector(
+                "rect.resize-overlay"
+              ) as SVGRectElement;
+              const bottomThumb = resizeActions.querySelector(
+                "line.resize-bottom-thumb"
+              ) as SVGLineElement;
+              const topThumb = resizeActions.querySelector(
+                "line.resize-top-thumb"
+              ) as SVGLineElement;
+              const leftThumb = resizeActions.querySelector(
+                "line.resize-left-thumb"
+              ) as SVGLineElement;
+              const rightThumb = resizeActions.querySelector(
+                "line.resize-right-thumb"
+              ) as SVGLineElement;
+
+              setElementAttributes(
+                rightThumb,
+                BuilderElementsGeometry.rightThumb({
+                  width,
+                  height,
+                })
+              );
+
+              setElementAttributes(
+                leftThumb,
+                BuilderElementsGeometry.leftThumb({
+                  width,
+                  height,
+                })
+              );
+
+              setElementAttributes(
+                topThumb,
+                BuilderElementsGeometry.topThumb({
+                  height,
+                  width,
+                })
+              );
+
+              setElementAttributes(
+                bottomThumb,
+                BuilderElementsGeometry.bottomThumb({
+                  width,
+                  height,
+                })
+              );
+
+              setElementAttributes(
+                overlay,
+                BuilderElementsGeometry.overlay({
+                  width,
+                  height,
+                })
+              );
             }
+
+            if (addActions) {
+              setElementAttributes(
+                addActions,
+                BuilderElementsGeometry.addButton({ width, height })
+              );
+            }
+
+            if (editActions) {
+              const { y, x, elementControl } = elementConfig;
+
+              setElementAttributes(
+                editActions,
+                BuilderElementsGeometry.editButton({
+                  width,
+                  height,
+                  x,
+                  y,
+                  leftPadding:
+                    !elementControl.is.empty() && elementControl.is.section()
+                      ? 32
+                      : 12,
+                  topPadding: 2,
+                })
+              );
+            }
+          } catch (error) {
+            console.error("Error resizing element:", error);
           }
         }
       });
@@ -77,5 +134,5 @@ export function useEditActionsResize(elements: BuildableFrameConfig[]) {
     return () => {
       resizeObserver.disconnect();
     };
-  }, [elements]);
+  }, [elements, getBuildableConfigById]);
 }

@@ -5,11 +5,13 @@ import { useBuilderContext } from "@modules/builder/BuilderContext";
 
 export type CopyButtonProps = PropsWithChildren<{
   getCopyString: () => string;
+  title?: string;
 }>;
 
 export const CopyButton: FC<CopyButtonProps> = ({
   children,
   getCopyString,
+  title,
 }) => {
   const { notify } = useBuilderContext();
 
@@ -19,11 +21,11 @@ export const CopyButton: FC<CopyButtonProps> = ({
       .then(() => {
         console.log("Copied section::", sectionString);
 
-        notify("Section copied to clipboard");
+        notify(`${title} copied to clipboard`);
       })
       .catch((error) => {
         console.error("Error copying section to clipboard:", error);
-        notify("Failed to copy section");
+        notify(`Failed to copy ${title} to clipboard`);
       });
   };
 

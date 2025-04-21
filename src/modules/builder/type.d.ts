@@ -3,6 +3,10 @@ import { BuildableControl } from "./BuildableControl";
 type ElementBox = {
   width: number;
   height: number;
+  leftPadding?: number;
+  topPadding?: number;
+  rightPadding?: number;
+  bottomPadding?: number;
 };
 
 type Pos = {
@@ -12,6 +16,7 @@ type Pos = {
 
 type BuildableFrameConfig = ElementBox &
   Pos & {
+    uniqueId: string;
     elementControl: BuildableControl;
   };
 

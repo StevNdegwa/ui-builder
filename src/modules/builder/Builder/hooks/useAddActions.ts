@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { fromEvent } from "rxjs";
 import { BuildableFrameConfig } from "@modules/builder/type";
 import { getELement } from "@modules/utils/svg";
-
-const ADD_ACTION_BUTTON_HEIGHT = 32;
+import { ADD_ACTION_BUTTON_HEIGHT } from "@modules/builder/constants";
+import { BuilderElementsGeometry } from "@modules/builder/utils/BuilderElementsGeometry";
 
 export function useAddActions(
   elements: BuildableFrameConfig[],
@@ -26,9 +26,10 @@ export function useAddActions(
               name: "g",
               classNames: ["add-action", "action"],
               attributes: {
-                transform: `translate(${width / 2}, ${
-                  height - ADD_ACTION_BUTTON_HEIGHT / 2
-                })`,
+                ...BuilderElementsGeometry.addButton({
+                  width,
+                  height,
+                }),
               },
               data: {
                 buildableRef: elementControl.uniqueId,

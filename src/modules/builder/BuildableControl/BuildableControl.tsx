@@ -6,6 +6,7 @@ import {
 } from "./configs";
 import { Field } from "../Field";
 import { BuilderFieldValue } from "../type";
+import { ReactNode } from "react";
 
 export class BuildableControl {
   element: UIBuildable;
@@ -52,26 +53,59 @@ export class BuildableControl {
   }
 
   get elementPropertiesConfigs() {
-    return this.elementProperties.map((prop: string, index) => {
-      const config =
-        buildableControlsConfig[prop as keyof typeof buildableControlsConfig] ||
-        defaultBuildableControlsConfig;
+    const fields: Array<ReactNode> = [];
 
-      const InputField = config.component;
+    const containsWidthHeight =
+      this.elementProperties.includes("width") &&
+      this.elementProperties.includes("height");
 
-      if (InputField) {
-        return (
-          <Field label={config.label} key={`${prop}-${index}`} name={prop}>
-            <InputField
-              name={prop}
-              onChange={(newValue) => this.updateProperty(prop, newValue)}
-            />
-          </Field>
-        );
-      }
+    if (containsWidthHeight) {
+      const sizeConfig = buildableControlsConfig.size;
 
-      return null;
-    });
+      const InputField = sizeConfig.component;
+
+      fields.push(
+        <Field label={sizeConfig.label} key={`size-x`} name={"size"}>
+          <InputField
+            name={"size"}
+            onChange={(value) => {
+              if (typeof value !== "string") return;
+
+              const [prop, newValue] = value.split(":");
+
+              this.updateProperty(prop, newValue);
+            }}
+          />
+        </Field>
+      );
+    }
+
+    return fields.concat(
+      this.elementProperties.map((prop: string, index) => {
+        if (containsWidthHeight && (prop === "width" || prop === "height"))
+          return null;
+
+        const config =
+          buildableControlsConfig[
+            prop as keyof typeof buildableControlsConfig
+          ] || defaultBuildableControlsConfig;
+
+        const InputField = config.component;
+
+        if (InputField) {
+          return (
+            <Field label={config.label} key={`${prop}-${index}`} name={prop}>
+              <InputField
+                name={prop}
+                onChange={(newValue) => this.updateProperty(prop, newValue)}
+              />
+            </Field>
+          );
+        }
+
+        return null;
+      })
+    );
   }
 
   get elementName() {

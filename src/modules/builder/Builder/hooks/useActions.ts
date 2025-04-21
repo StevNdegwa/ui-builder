@@ -10,9 +10,10 @@ export function useActions(
   scratchPadRef: React.RefObject<SVGRectElement | null>,
   resizeActionsRef: React.RefObject<SVGGElement | null>,
   editActionsRef: React.RefObject<SVGGElement | null>,
-  addActionsRef: React.RefObject<SVGGElement | null>
+  addActionsRef: React.RefObject<SVGGElement | null>,
+  getBuildableConfigById: (id: string) => BuildableFrameConfig | undefined
 ) {
-  const [activeElementId, setActiveElementId] = useState<string | undefined>(
+  const [activeBuildableId, setActiveElementId] = useState<string | undefined>(
     undefined
   );
   const [addElementsModalOpen, setAddElementsModal] = useState(false);
@@ -30,10 +31,10 @@ export function useActions(
     setActiveElementId
   );
 
-  useEditActionsResize(elements);
+  useEditActionsResize(elements, getBuildableConfigById);
 
   return {
-    activeElementId,
+    activeBuildableId,
     setActiveElementId,
     addElementsModalOpen,
     closeAddElementsModal,

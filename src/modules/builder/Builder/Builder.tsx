@@ -1,7 +1,7 @@
 import { useRef, forwardRef, PropsWithChildren, useMemo } from "react";
-import { ScratchPad } from "../ScratchPad";
+import { rgba } from "polished";
 import { useForwardRef } from "@modules/utils/hooks";
-import { FlexBox, Typography } from "@ui/components";
+import { FlexBox } from "@ui/components";
 import {
   Contents,
   Editor,
@@ -14,6 +14,7 @@ import { AddElementModal } from "../AddElementModal";
 import { BuilderContextProvider } from "../BuilderContext";
 import { useActions, useBuildableConfigsInit, useScratchPad } from "./hooks";
 import { Add, Edit, Resize } from "../Actions";
+import { ScratchPad } from "../ScratchPad";
 
 export type BuilderProps = PropsWithChildren<{
   notify: (message: string) => void;
@@ -31,26 +32,36 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
     const { width: scratchPadWidth, height: scratchPadHeight } =
       useScratchPad(contentsWrapperRef);
 
-    const { buildableConfigs } = useBuildableConfigsInit(contentsWrapperRef);
-    const { activeElementId, addElementsModalOpen, closeAddElementsModal } =
+    const { buildableConfigs, getBuildableConfigById } =
+      useBuildableConfigsInit(contentsWrapperRef);
+    const { activeBuildableId, addElementsModalOpen, closeAddElementsModal } =
       useActions(
         buildableConfigs,
         scratchPadRef,
         resizeActionsRef,
         editActionsRef,
-        addActionsRef
+        addActionsRef,
+        getBuildableConfigById
       );
 
     const activeBuildableControl = useMemo(
       () =>
-        buildableConfigs.find(
-          (config) => config.elementControl.uniqueId === activeElementId
-        ),
-      [activeElementId, buildableConfigs]
+        activeBuildableId
+          ? getBuildableConfigById(activeBuildableId)
+          : undefined,
+      [activeBuildableId, getBuildableConfigById]
     );
 
     return (
-      <BuilderContextProvider value={{ notify }}>
+      <BuilderContextProvider
+        value={{
+          notify,
+          buildableConfigs,
+          getBuildableConfigById,
+          activeBuildableId,
+          activeBuildableControl,
+        }}
+      >
         <Wrapper gap="sm">
           <Editor>
             <Contents ref={contentsWrapperRef}>{children}</Contents>
@@ -65,6 +76,16 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
                 strokeWidth={2}
                 display={"block"}
               >
+                <defs>
+                  <filter id="shadow-filter">
+                    <feDropShadow
+                      dx="0"
+                      dy="0"
+                      stdDeviation="1"
+                      floodColor={rgba("#848482", 0.5)}
+                    />
+                  </filter>
+                </defs>
                 <ScratchPad
                   width={scratchPadWidth}
                   height={scratchPadHeight}
@@ -79,20 +100,13 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
           </Editor>
           <SettingsForm>
             <FlexBox direction="column" gap="md">
-              <Typography heading="h4">Settings</Typography>
-              <PropertiesForm
-                elementsControls={buildableConfigs}
-                activeElementID={activeElementId}
-              />
+              <PropertiesForm />
             </FlexBox>
           </SettingsForm>
-          {activeBuildableControl && (
-            <AddElementModal
-              isOpen={addElementsModalOpen}
-              close={closeAddElementsModal}
-              buildable={activeBuildableControl.elementControl}
-            />
-          )}
+          <AddElementModal
+            isOpen={addElementsModalOpen}
+            close={closeAddElementsModal}
+          />
         </Wrapper>
       </BuilderContextProvider>
     );

@@ -1,24 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { finalize, fromEvent, map, Subscription } from "rxjs";
 import { BuildableControl } from "@modules/builder/BuildableControl";
 import { BuildableFrameConfig } from "@modules/builder/type";
 import { generate } from "@modules/utils/svg";
-import { ResizeActionGeometry } from "../../utils/ResizeActionGeometry";
+import { BuilderElementsGeometry } from "../../utils/BuilderElementsGeometry";
 
 export function useResizeActions(
   elements: BuildableFrameConfig[],
   scratchPadRef: React.RefObject<SVGRectElement | null>,
   resizeActionsRef: React.RefObject<SVGGElement | null>
 ) {
-  const [activeElementID, setActiveElementID] = useState<string | undefined>(
-    undefined
-  );
-  const [addElementsModalOpen, setAddElementsModal] = useState(false);
-
-  const closeAddElementsModal = () => setAddElementsModal(false);
-
-  const openAddElementsModal = () => setAddElementsModal(true);
-
   useEffect(() => {
     const scratchPadEl = scratchPadRef.current;
     const resizeActionsEL = resizeActionsRef.current;
@@ -50,7 +41,7 @@ export function useResizeActions(
                     `${elementControl.elementName}-resize-overlay`,
                   ],
                   attributes: {
-                    ...ResizeActionGeometry.overlay({ width, height }),
+                    ...BuilderElementsGeometry.overlay({ width, height }),
                   },
                 },
                 {
@@ -62,7 +53,7 @@ export function useResizeActions(
                     `${elementControl.elementName}-resize-top-thumb`,
                   ],
                   attributes: {
-                    ...ResizeActionGeometry.topThumb({ width, height }),
+                    ...BuilderElementsGeometry.topThumb({ width, height }),
                   },
                 },
                 {
@@ -74,7 +65,7 @@ export function useResizeActions(
                     `${elementControl.elementName}-resize-right-thumb`,
                   ],
                   attributes: {
-                    ...ResizeActionGeometry.rightThumb({ width, height }),
+                    ...BuilderElementsGeometry.rightThumb({ width, height }),
                   },
                 },
                 {
@@ -86,7 +77,7 @@ export function useResizeActions(
                     `${elementControl.elementName}-resize-bottom-thumb`,
                   ],
                   attributes: {
-                    ...ResizeActionGeometry.bottomThumb({ width, height }),
+                    ...BuilderElementsGeometry.bottomThumb({ width, height }),
                   },
                 },
                 {
@@ -98,7 +89,7 @@ export function useResizeActions(
                     `${elementControl.elementName}-resize-left-thumb`,
                   ],
                   attributes: {
-                    ...ResizeActionGeometry.leftThumb({ width, height }),
+                    ...BuilderElementsGeometry.leftThumb({ width, height }),
                   },
                 },
               ],
@@ -118,7 +109,7 @@ export function useResizeActions(
           const resizeOverlay = element.querySelector(
             "rect.resize-overlay"
           ) as SVGLineElement;
-          const resizeRightLine = element.querySelector(
+          const resizeRightThumb = element.querySelector(
             "line.resize-right-thumb"
           ) as SVGLineElement;
           const resizeTopThumb = element.querySelector(
@@ -130,18 +121,15 @@ export function useResizeActions(
           const resizeLeftThumb = element.querySelector(
             ".resize-left-thumb"
           ) as SVGLineElement;
-          const editActions = element.querySelector(
-            "g.edit-action > circle"
-          ) as SVGGElement;
-          const editActionGroup = element.querySelector(
-            "g.edit-action"
-          ) as SVGGElement;
-          const addActionBtn = element.querySelector(
-            "g.add-action > circle"
-          ) as SVGCircleElement;
 
           const getRectElementBounds = () =>
             resizeOverlay.getBoundingClientRect();
+
+          let bottomThumbMouseMoveEvtSubscription: Subscription | null = null;
+          let rightThumbMouseMoveEvtSubscription: Subscription | null = null;
+
+          let bottomThumbMouseMoveEvtTimeout: ReturnType<typeof setTimeout>;
+          let rightThumbMouseMoveEvtTimeout: ReturnType<typeof setTimeout>;
 
           const scratchPadMouseMoveEvt = fromEvent(
             scratchPadEl,
@@ -157,101 +145,121 @@ export function useResizeActions(
               ];
             }),
             finalize(() => {
-              resizeOverlay?.setAttribute("pointer-events", "all");
+              resizeActionElements.forEach((el) => {
+                const elResizeOverlay = el.querySelector(
+                  "rect.resize-overlay"
+                ) as SVGLineElement;
+
+                elResizeOverlay?.setAttribute("pointer-events", "all");
+              });
+
+              rightThumbMouseMoveEvtSubscription = null;
+              bottomThumbMouseMoveEvtSubscription = null;
+
+              console.log("Resize action mouse move event unsubscribed");
             })
           );
 
-          let scratchPadMouseMoveEvtSubscription: Subscription | null = null;
-
           fromEvent(
-            [resizeRightLine, resizeBottomThumb, scratchPadEl],
+            [resizeBottomThumb, scratchPadEl, resizeOverlay],
             "mouseup"
-          ).subscribe(() => scratchPadMouseMoveEvtSubscription?.unsubscribe());
+          ).subscribe(() => bottomThumbMouseMoveEvtSubscription?.unsubscribe());
+
+          fromEvent([resizeRightThumb, scratchPadEl], "mouseup").subscribe(() =>
+            rightThumbMouseMoveEvtSubscription?.unsubscribe()
+          );
 
           fromEvent(
-            [resizeBottomThumb, resizeRightLine, scratchPadEl, element],
+            [resizeBottomThumb, scratchPadEl, element],
             "click"
+          ).subscribe(() => bottomThumbMouseMoveEvtSubscription?.unsubscribe());
+
+          fromEvent(
+            [resizeRightThumb, scratchPadEl, element],
+            "click"
+          ).subscribe(() => rightThumbMouseMoveEvtSubscription?.unsubscribe());
+
+          fromEvent(
+            [
+              resizeOverlay,
+              resizeRightThumb,
+              resizeTopThumb,
+              resizeLeftThumb,
+              resizeBottomThumb,
+            ],
+            "mouseover"
           ).subscribe(() => {
-            scratchPadMouseMoveEvtSubscription?.unsubscribe();
+            element.setAttribute("opacity", "1");
           });
 
-          if (addActionBtn) {
-            fromEvent(addActionBtn, "click").subscribe(() => {
-              openAddElementsModal();
+          fromEvent(resizeOverlay, "mouseleave").subscribe(() => {
+            element.setAttribute("opacity", "0");
+          });
+
+          fromEvent(resizeRightThumb, "mousedown").subscribe(() => {
+            rightThumbMouseMoveEvtSubscription =
+              scratchPadMouseMoveEvt.subscribe((getPosition) => {
+                clearTimeout(rightThumbMouseMoveEvtTimeout);
+
+                if (rightThumbMouseMoveEvtSubscription) {
+                  const [newXPos] = getPosition();
+
+                  resizeRightThumb?.setAttribute("x1", `${newXPos - 2}`);
+                  resizeRightThumb?.setAttribute("x2", `${newXPos - 2}`);
+
+                  resizeTopThumb?.setAttribute("x1", `${newXPos * 0.375}`);
+                  resizeTopThumb?.setAttribute("x2", `${newXPos * 0.625}`);
+
+                  resizeBottomThumb?.setAttribute("x1", `${newXPos * 0.375}`);
+                  resizeBottomThumb?.setAttribute("x2", `${newXPos * 0.625}`);
+
+                  resizeOverlay?.setAttribute("width", `${newXPos}`);
+
+                  control.updateProperty("width", newXPos + "px");
+                }
+
+                rightThumbMouseMoveEvtTimeout = setTimeout(() => {
+                  rightThumbMouseMoveEvtSubscription?.unsubscribe();
+                }, 40);
+              });
+
+            resizeActionElements.forEach((el) => {
+              const elResizeOverlay = el.querySelector(
+                "rect.resize-overlay"
+              ) as SVGLineElement;
+
+              elResizeOverlay?.setAttribute("pointer-events", "none");
             });
-          }
+          });
 
-          if (resizeOverlay) {
-            fromEvent(resizeOverlay, "mouseover").subscribe(() => {
-              element.setAttribute("opacity", "1");
-            });
+          fromEvent(resizeBottomThumb, "mousedown").subscribe(() => {
+            bottomThumbMouseMoveEvtSubscription =
+              scratchPadMouseMoveEvt.subscribe((getPosition) => {
+                if (bottomThumbMouseMoveEvtSubscription) {
+                  clearTimeout(bottomThumbMouseMoveEvtTimeout);
 
-            fromEvent(resizeOverlay, "mouseleave").subscribe(() => {
-              element.setAttribute("opacity", "0");
-            });
-          }
+                  const [, newYPos] = getPosition();
+                  resizeBottomThumb?.setAttribute("y1", `${newYPos - 2}`);
+                  resizeBottomThumb?.setAttribute("y2", `${newYPos - 2}`);
 
-          if (editActions) {
-            fromEvent(editActions, "click").subscribe(() => {
-              setActiveElementID(control.uniqueId);
-            });
-          }
+                  resizeRightThumb?.setAttribute("y1", `${newYPos * 0.375}`);
+                  resizeRightThumb?.setAttribute("y2", `${newYPos * 0.625}`);
 
-          if (resizeRightLine) {
-            fromEvent(resizeRightLine, "mousedown").subscribe(() => {
-              scratchPadMouseMoveEvtSubscription =
-                scratchPadMouseMoveEvt.subscribe((getPosition) => {
-                  if (!scratchPadMouseMoveEvtSubscription?.closed) {
-                    const [newXPos] = getPosition();
+                  resizeLeftThumb?.setAttribute("y1", `${newYPos * 0.375}`);
+                  resizeLeftThumb?.setAttribute("y2", `${newYPos * 0.625}`);
 
-                    resizeRightLine?.setAttribute("x1", `${newXPos - 2}`);
-                    resizeRightLine?.setAttribute("x2", `${newXPos - 2}`);
+                  resizeOverlay?.setAttribute("height", `${newYPos}`);
 
-                    resizeTopThumb?.setAttribute("x1", `${newXPos * 0.375}`);
-                    resizeTopThumb?.setAttribute("x2", `${newXPos * 0.625}`);
+                  control.updateProperty("height", newYPos + "px");
 
-                    resizeBottomThumb?.setAttribute("x1", `${newXPos * 0.375}`);
-                    resizeBottomThumb?.setAttribute("x2", `${newXPos * 0.625}`);
+                  bottomThumbMouseMoveEvtTimeout = setTimeout(() => {
+                    bottomThumbMouseMoveEvtSubscription?.unsubscribe();
+                  }, 40);
+                }
+              });
 
-                    editActionGroup.setAttribute(
-                      "transform",
-                      `translate(${newXPos - 24}, 8)`
-                    );
-
-                    resizeOverlay?.setAttribute("width", `${newXPos}`);
-
-                    control.updateProperty("width", newXPos + "px");
-                  }
-                });
-
-              resizeOverlay?.setAttribute("pointer-events", "none");
-            });
-          }
-
-          if (resizeBottomThumb) {
-            fromEvent(resizeBottomThumb, "mousedown").subscribe(() => {
-              scratchPadMouseMoveEvtSubscription =
-                scratchPadMouseMoveEvt.subscribe((getPosition) => {
-                  if (!scratchPadMouseMoveEvtSubscription?.closed) {
-                    const [, newYPos] = getPosition();
-                    resizeBottomThumb?.setAttribute("y1", `${newYPos - 2}`);
-                    resizeBottomThumb?.setAttribute("y2", `${newYPos - 2}`);
-
-                    resizeRightLine?.setAttribute("y1", `${newYPos * 0.375}`);
-                    resizeRightLine?.setAttribute("y2", `${newYPos * 0.625}`);
-
-                    resizeLeftThumb?.setAttribute("y1", `${newYPos * 0.375}`);
-                    resizeLeftThumb?.setAttribute("y2", `${newYPos * 0.625}`);
-
-                    resizeOverlay?.setAttribute("height", `${newYPos}`);
-
-                    control.updateProperty("height", newYPos + "px");
-                  }
-                });
-
-              resizeOverlay?.setAttribute("pointer-events", "none");
-            });
-          }
+            resizeOverlay?.setAttribute("pointer-events", "none");
+          });
         });
       }
     }
@@ -262,6 +270,4 @@ export function useResizeActions(
       }
     };
   }, [elements, scratchPadRef, resizeActionsRef]);
-
-  return { activeElementID, addElementsModalOpen, closeAddElementsModal };
 }
