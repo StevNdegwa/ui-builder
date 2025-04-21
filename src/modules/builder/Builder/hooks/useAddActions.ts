@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { fromEvent } from "rxjs";
-import { BuildableFrameConfig } from "@modules/builder/type";
-import { getELement } from "@modules/utils/svg";
 import { ADD_ACTION_BUTTON_HEIGHT } from "@modules/builder/constants";
 import { BuilderElementsGeometry } from "@modules/builder/utils/BuilderElementsGeometry";
+import { BuildableControl } from "@modules/builder/BuildableControl";
+import { getELement } from "@modules/builder/elements";
 
 export function useAddActions(
-  elements: BuildableFrameConfig[],
+  elements: BuildableFrameConfig<BuildableControl>[],
   addActionsRef: React.RefObject<SVGGElement | null>,
   openAddElementsModal: () => void,
   setActiveElementId: (id: string) => void

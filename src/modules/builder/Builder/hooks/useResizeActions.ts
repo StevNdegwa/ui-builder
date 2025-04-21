@@ -1,12 +1,11 @@
 import { useEffect } from "react";
 import { finalize, fromEvent, map, Subscription } from "rxjs";
 import { BuildableControl } from "@modules/builder/BuildableControl";
-import { BuildableFrameConfig } from "@modules/builder/type";
-import { generate } from "@modules/utils/svg";
 import { BuilderElementsGeometry } from "../../utils/BuilderElementsGeometry";
+import { generate } from "@modules/builder/elements";
 
 export function useResizeActions(
-  elements: BuildableFrameConfig[],
+  elements: BuildableFrameConfig<BuildableControl>[],
   scratchPadRef: React.RefObject<SVGRectElement | null>,
   resizeActionsRef: React.RefObject<SVGGElement | null>
 ) {

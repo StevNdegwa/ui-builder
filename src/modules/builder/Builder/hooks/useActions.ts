@@ -3,15 +3,17 @@ import { useAddActions } from "./useAddActions";
 import { useEditActions } from "./useEditActions";
 import { useResizeActions } from "./useResizeActions";
 import { useEditActionsResize } from "./useEditActionsResize";
-import { BuildableFrameConfig } from "@modules/builder/type";
+import { BuildableControl } from "@modules/builder/BuildableControl";
 
 export function useActions(
-  elements: BuildableFrameConfig[],
+  elements: BuildableFrameConfig<BuildableControl>[],
   scratchPadRef: React.RefObject<SVGRectElement | null>,
   resizeActionsRef: React.RefObject<SVGGElement | null>,
   editActionsRef: React.RefObject<SVGGElement | null>,
   addActionsRef: React.RefObject<SVGGElement | null>,
-  getBuildableConfigById: (id: string) => BuildableFrameConfig | undefined
+  getBuildableConfigById: (
+    id: string
+  ) => BuildableFrameConfig<BuildableControl> | undefined
 ) {
   const [activeBuildableId, setActiveElementId] = useState<string | undefined>(
     undefined

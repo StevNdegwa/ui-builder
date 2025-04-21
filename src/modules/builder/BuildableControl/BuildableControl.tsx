@@ -5,7 +5,6 @@ import {
   defaultBuildableControlsConfig,
 } from "./configs";
 import { Field } from "../Field";
-import { BuilderFieldValue } from "../type";
 import { ReactNode } from "react";
 
 export class BuildableControl {
@@ -44,6 +43,10 @@ export class BuildableControl {
     this.element.appendChild(childElement);
   }
 
+  deleteElement() {
+    this.element.remove();
+  }
+
   get elementString() {
     return this.element.serializeELement();
   }
@@ -68,7 +71,7 @@ export class BuildableControl {
         <Field label={sizeConfig.label} key={`size-x`} name={"size"}>
           <InputField
             name={"size"}
-            onChange={(value) => {
+            onChange={(value: string) => {
               if (typeof value !== "string") return;
 
               const [prop, newValue] = value.split(":");
@@ -97,7 +100,9 @@ export class BuildableControl {
             <Field label={config.label} key={`${prop}-${index}`} name={prop}>
               <InputField
                 name={prop}
-                onChange={(newValue) => this.updateProperty(prop, newValue)}
+                onChange={(newValue: string) =>
+                  this.updateProperty(prop, newValue)
+                }
               />
             </Field>
           );

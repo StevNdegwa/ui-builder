@@ -1,12 +1,14 @@
 import { useEffect } from "react";
-import { BuildableFrameConfig } from "../../type";
 import { UIBuildable } from "@modules/controls";
 import { BuilderElementsGeometry } from "../../utils/BuilderElementsGeometry";
-import { setElementAttributes } from "@modules/utils/svg";
+import { BuildableControl } from "@modules/builder/BuildableControl";
+import { setElementAttributes } from "@modules/builder/elements";
 
 export function useEditActionsResize(
-  elements: BuildableFrameConfig[],
-  getBuildableConfigById: (id: string) => BuildableFrameConfig | undefined
+  elements: BuildableFrameConfig<BuildableControl>[],
+  getBuildableConfigById: (
+    id: string
+  ) => BuildableFrameConfig<BuildableControl> | undefined
 ) {
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
@@ -21,7 +23,7 @@ export function useEditActionsResize(
 
             const elementConfig = getBuildableConfigById(
               uniqueId
-            ) as BuildableFrameConfig;
+            ) as BuildableFrameConfig<BuildableControl>;
 
             const resizeActions = document.querySelector(
               `[data-buildable-ref='${uniqueId}'].resize-actions-group`

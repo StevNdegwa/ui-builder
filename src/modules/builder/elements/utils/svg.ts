@@ -23,9 +23,13 @@ export function getELement(
     element.classList.add(className);
   });
 
-  elementConfig.events?.forEach(({ name, handler }) =>
-    element.addEventListener(name, handler)
-  );
+  if (elementConfig.events) {
+    for (const name in elementConfig.events) {
+      if (elementConfig.events[name]) {
+        element.addEventListener(name, elementConfig.events[name]);
+      }
+    }
+  }
 
   if (elementConfig.textContent)
     element.textContent = elementConfig.textContent;

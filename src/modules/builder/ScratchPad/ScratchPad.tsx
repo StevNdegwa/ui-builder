@@ -7,11 +7,11 @@ import {
   forwardRef,
 } from "react";
 import range from "lodash/range";
-import { GridLabelsX, GridLabelsY, Wrapper, XYIndicator } from "./style";
-import { generate } from "@modules/utils/svg";
-import { BUILDER_PADDING } from "../constants";
 import { useForwardRef } from "@modules/utils/hooks";
-import { Pos } from "../type";
+import { GridLabelsX, GridLabelsY, Wrapper, XYIndicator } from "./style";
+import { BUILDER_PADDING } from "../constants";
+
+import { generate } from "../elements";
 
 export type ScratchPadProps = PropsWithChildren<{
   height: number;

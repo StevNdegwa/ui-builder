@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import ShortUniqueId from "short-unique-id";
-import { BuildableFrameConfig } from "../../type";
 import { UIBuildable } from "@modules/controls";
 import { BUILDER_PADDING } from "../../constants";
 import { BuildableControl } from "../../BuildableControl";
@@ -13,7 +12,7 @@ export function useBuildableConfigsInit(
   contentsWrapperRef: React.RefObject<HTMLDivElement | null>
 ) {
   const [buildableConfigs, setBuildableConfigs] = useState<
-    BuildableFrameConfig[]
+    BuildableFrameConfig<BuildableControl>[]
   >([]);
   const uiBuildableElementsLen =
     contentsWrapperRef.current?.querySelectorAll(".ui-buildable").length || 0;
@@ -26,6 +25,8 @@ export function useBuildableConfigsInit(
     },
     [buildableConfigs]
   );
+
+  console.log("buildableConfigs", uiBuildableElementsLen);
 
   const computeBuildableConfig = useCallback(
     (element: UIBuildable, contentsWrapperEl: HTMLDivElement) => {

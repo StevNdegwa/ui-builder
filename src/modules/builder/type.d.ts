@@ -1,5 +1,3 @@
-import { BuildableControl } from "./BuildableControl";
-
 type ElementBox = {
   width: number;
   height: number;
@@ -14,10 +12,10 @@ type Pos = {
   y: number;
 };
 
-type BuildableFrameConfig = ElementBox &
+type BuildableFrameConfig<ControlType> = ElementBox &
   Pos & {
     uniqueId: string;
-    elementControl: BuildableControl;
+    elementControl: ControlType;
   };
 
 type BuilderFieldValue = string | number | boolean;
@@ -25,4 +23,14 @@ type BuilderFieldValue = string | number | boolean;
 type BuilderFieldProps = {
   name: string;
   onChange: (newValue: BuilderFieldValue) => void;
+};
+
+type ElementConfigType = {
+  name: string;
+  classNames?: string[];
+  textContent?: string;
+  attributes?: Record<string, string | number | boolean>;
+  events?: Record<string, EventListener>;
+  children?: ElementConfigType[];
+  data?: Record<string, string | number | boolean>;
 };
