@@ -71,7 +71,7 @@ export class BuildableControl {
         <Field label={sizeConfig.label} key={`size-x`} name={"size"}>
           <InputField
             name={"size"}
-            onChange={(value: string) => {
+            onChange={(value: BuilderFieldValue) => {
               if (typeof value !== "string") return;
 
               const [prop, newValue] = value.split(":");
@@ -100,7 +100,7 @@ export class BuildableControl {
             <Field label={config.label} key={`${prop}-${index}`} name={prop}>
               <InputField
                 name={prop}
-                onChange={(newValue: string) =>
+                onChange={(newValue: BuilderFieldValue) =>
                   this.updateProperty(prop, newValue)
                 }
               />

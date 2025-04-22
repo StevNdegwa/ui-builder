@@ -1,7 +1,6 @@
 import { FlexBox, Input, SliderInput } from "@ui/components";
 import { Control, InputsWrapper } from "./style";
 import { FC, FormEventHandler, useState } from "react";
-import { BuilderFieldProps } from "@modules/builder/type";
 
 const SizeInput: FC<{
   onChange: (newValue: string) => void;

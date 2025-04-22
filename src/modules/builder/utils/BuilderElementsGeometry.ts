@@ -1,6 +1,4 @@
 import { ADD_ACTION_BUTTON_HEIGHT } from "../constants";
-import { ElementBox, Pos } from "../type";
-
 export class BuilderElementsGeometry {
   static overlay = ({
     width,

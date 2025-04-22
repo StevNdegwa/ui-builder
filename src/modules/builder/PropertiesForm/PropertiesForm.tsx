@@ -1,14 +1,14 @@
 import { Divider, FlexBox, Typography } from "@ui/components";
 import { FC } from "react";
 import { MdOutlineSettings } from "react-icons/md";
-import { BuildableFrameConfig } from "../type";
 import { Wrapper } from "./styles";
 import { CopyButton } from "./CopyButton";
 import { FormItems } from "./FormItems";
 import { useBuilderContext } from "../BuilderContext";
+import { BuildableControl } from "../BuildableControl";
 
 export type PropertiesFormProps = {
-  elementsControls: Array<BuildableFrameConfig>;
+  elementsControls: Array<BuildableFrameConfig<BuildableControl>>;
   activeElementID?: string;
 };
 

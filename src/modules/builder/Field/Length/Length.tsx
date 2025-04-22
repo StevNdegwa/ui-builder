@@ -1,7 +1,6 @@
 import { Input, SliderInput, FlexBox } from "@ui/components";
 import { FC, FormEventHandler, useState } from "react";
 import { Control, InputsWrapper } from "./styles";
-import { BuilderFieldProps } from "@modules/builder/type";
 
 export const Length: FC<BuilderFieldProps> = ({ onChange }) => {
   const [inputType, setInputType] = useState<"px" | "%">("px");

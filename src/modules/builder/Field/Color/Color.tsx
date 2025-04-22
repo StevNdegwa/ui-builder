@@ -1,4 +1,3 @@
-import { BuilderFieldProps } from "@modules/builder/type";
 import { ColorInput } from "@ui/components";
 import { FC } from "react";
 

@@ -1,4 +1,3 @@
-import { BuilderFieldProps } from "@modules/builder/type";
 import { TextArea } from "@ui/components";
 import { FC } from "react";
 
