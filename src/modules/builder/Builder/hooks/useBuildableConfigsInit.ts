@@ -26,8 +26,6 @@ export function useBuildableConfigsInit(
     [buildableConfigs]
   );
 
-  console.log("buildableConfigs", uiBuildableElementsLen);
-
   const computeBuildableConfig = useCallback(
     (element: UIBuildable, contentsWrapperEl: HTMLDivElement) => {
       const contentStart = contentsWrapperEl.getBoundingClientRect();

@@ -18,22 +18,41 @@ export function useActions(
   const [activeBuildableId, setActiveElementId] = useState<string | undefined>(
     undefined
   );
+
   const [addElementsModalOpen, setAddElementsModal] = useState(false);
 
   const closeAddElementsModal = () => setAddElementsModal(false);
 
   const openAddElementsModal = () => setAddElementsModal(true);
 
-  useResizeActions(elements, scratchPadRef, resizeActionsRef);
-  useEditActions(elements, editActionsRef, setActiveElementId);
-  useAddActions(
+  const { removeResizeActionById } = useResizeActions(
+    elements,
+    scratchPadRef,
+    resizeActionsRef
+  );
+
+  const { removeAddActionById } = useAddActions(
     elements,
     addActionsRef,
     openAddElementsModal,
     setActiveElementId
   );
 
+  const { removeEditActionById } = useEditActions(
+    elements,
+    editActionsRef,
+    setActiveElementId,
+    removeResizeActionById,
+    removeAddActionById
+  );
+
   useEditActionsResize(elements, getBuildableConfigById);
+
+  const removeActionsById = (id: string) => {
+    removeResizeActionById(id);
+    removeEditActionById(id);
+    removeAddActionById(id);
+  };
 
   return {
     activeBuildableId,
@@ -41,5 +60,6 @@ export function useActions(
     addElementsModalOpen,
     closeAddElementsModal,
     openAddElementsModal,
+    removeActionsById,
   };
 }

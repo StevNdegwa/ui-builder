@@ -11,6 +11,19 @@ export function useAddActions(
   openAddElementsModal: () => void,
   setActiveElementId: (id: string) => void
 ) {
+  const removeAddActionById = (id: string) => {
+    const addActionsEl = addActionsRef.current;
+
+    if (addActionsEl) {
+      const addAction = addActionsEl.querySelector(
+        `g.add-action[data-buildable-ref="${id}"]`
+      ) as SVGGElement;
+      if (addAction) {
+        addAction.remove();
+      }
+    }
+  };
+
   useEffect(() => {
     const addActionsEl = addActionsRef.current;
 
@@ -24,7 +37,7 @@ export function useAddActions(
 
             const addActionGroup = getELement({
               name: "g",
-              classNames: ["add-action", "action"],
+              classNames: ["add-action", "add-action-group", "action"],
               attributes: {
                 ...BuilderElementsGeometry.addButton({
                   width,
@@ -110,4 +123,6 @@ export function useAddActions(
       }
     };
   }, [elements, addActionsRef, openAddElementsModal, setActiveElementId]);
+
+  return { removeAddActionById };
 }

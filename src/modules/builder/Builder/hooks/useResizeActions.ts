@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { finalize, fromEvent, map, Subscription } from "rxjs";
 import { BuildableControl } from "@modules/builder/BuildableControl";
 import { BuilderElementsGeometry } from "../../utils/BuilderElementsGeometry";
@@ -9,6 +9,113 @@ export function useResizeActions(
   scratchPadRef: React.RefObject<SVGRectElement | null>,
   resizeActionsRef: React.RefObject<SVGGElement | null>
 ) {
+  const removeResizeActionById = useCallback(
+    (id: string) => {
+      const resizeActionsEl = resizeActionsRef.current;
+
+      if (resizeActionsEl) {
+        const resizeAction = resizeActionsEl.querySelector(
+          `g.resize-actions-group[data-buildable-ref="${id}"]`
+        ) as SVGGElement;
+
+        if (resizeAction) {
+          resizeAction.remove();
+        }
+      }
+    },
+    [resizeActionsRef]
+  );
+
+  const getResizeActionConfig = useCallback(
+    ({
+      width,
+      height,
+      x,
+      y,
+      elementControl,
+    }: BuildableFrameConfig<BuildableControl>) => {
+      const configType = {
+        name: "g",
+        classNames: [
+          "resize-actions-group",
+          `${elementControl.elementName}-resize-action-group`,
+          `${elementControl.uniqueIdClassName}-resize-action-group`,
+        ],
+        attributes: {
+          transform: `translate(${x}, ${y})`,
+          opacity: "0",
+        },
+        data: {
+          buildableRef: elementControl.uniqueId,
+          buildableRefType: elementControl.elementName,
+        },
+        children: [
+          {
+            name: "rect",
+            classNames: [
+              "resize-overlay",
+              `${elementControl.elementName}-resize-overlay`,
+            ],
+            attributes: {
+              ...BuilderElementsGeometry.overlay({ width, height }),
+            },
+          },
+          {
+            name: "line",
+            classNames: [
+              "resize-thumb",
+              "resize-top-thumb",
+              `${elementControl.elementName}-resize-thumb`,
+              `${elementControl.elementName}-resize-top-thumb`,
+            ],
+            attributes: {
+              ...BuilderElementsGeometry.topThumb({ width, height }),
+            },
+          },
+          {
+            name: "line",
+            classNames: [
+              "resize-thumb",
+              "resize-right-thumb",
+              `${elementControl.elementName}-resize-thumb`,
+              `${elementControl.elementName}-resize-right-thumb`,
+            ],
+            attributes: {
+              ...BuilderElementsGeometry.rightThumb({ width, height }),
+            },
+          },
+          {
+            name: "line",
+            classNames: [
+              "resize-thumb",
+              "resize-bottom-thumb",
+              `${elementControl.elementName}-resize-thumb`,
+              `${elementControl.elementName}-resize-bottom-thumb`,
+            ],
+            attributes: {
+              ...BuilderElementsGeometry.bottomThumb({ width, height }),
+            },
+          },
+          {
+            name: "line",
+            classNames: [
+              "resize-thumb",
+              "resize-left-thumb",
+              `${elementControl.elementName}-resize-thumb`,
+              `${elementControl.elementName}-resize-left-thumb`,
+            ],
+            attributes: {
+              ...BuilderElementsGeometry.leftThumb({ width, height }),
+            },
+          },
+        ],
+      } as ElementConfigType;
+
+      return configType;
+    },
+    []
+  );
+
   useEffect(() => {
     const scratchPadEl = scratchPadRef.current;
     const resizeActionsEL = resizeActionsRef.current;
@@ -16,86 +123,7 @@ export function useResizeActions(
     if (elements.length && scratchPadEl) {
       if (resizeActionsEL) {
         const resizeActionConfigs: ElementConfigType[] = elements.map(
-          ({ width, height, x, y, elementControl }) => {
-            const configType = {
-              name: "g",
-              classNames: [
-                "resize-actions-group",
-                `${elementControl.elementName}-resize-action-group`,
-                `${elementControl.uniqueIdClassName}-resize-action-group`,
-              ],
-              attributes: {
-                transform: `translate(${x}, ${y})`,
-                opacity: "0",
-              },
-              data: {
-                buildableRef: elementControl.uniqueId,
-                buildableRefType: elementControl.elementName,
-              },
-              children: [
-                {
-                  name: "rect",
-                  classNames: [
-                    "resize-overlay",
-                    `${elementControl.elementName}-resize-overlay`,
-                  ],
-                  attributes: {
-                    ...BuilderElementsGeometry.overlay({ width, height }),
-                  },
-                },
-                {
-                  name: "line",
-                  classNames: [
-                    "resize-thumb",
-                    "resize-top-thumb",
-                    `${elementControl.elementName}-resize-thumb`,
-                    `${elementControl.elementName}-resize-top-thumb`,
-                  ],
-                  attributes: {
-                    ...BuilderElementsGeometry.topThumb({ width, height }),
-                  },
-                },
-                {
-                  name: "line",
-                  classNames: [
-                    "resize-thumb",
-                    "resize-right-thumb",
-                    `${elementControl.elementName}-resize-thumb`,
-                    `${elementControl.elementName}-resize-right-thumb`,
-                  ],
-                  attributes: {
-                    ...BuilderElementsGeometry.rightThumb({ width, height }),
-                  },
-                },
-                {
-                  name: "line",
-                  classNames: [
-                    "resize-thumb",
-                    "resize-bottom-thumb",
-                    `${elementControl.elementName}-resize-thumb`,
-                    `${elementControl.elementName}-resize-bottom-thumb`,
-                  ],
-                  attributes: {
-                    ...BuilderElementsGeometry.bottomThumb({ width, height }),
-                  },
-                },
-                {
-                  name: "line",
-                  classNames: [
-                    "resize-thumb",
-                    "resize-left-thumb",
-                    `${elementControl.elementName}-resize-thumb`,
-                    `${elementControl.elementName}-resize-left-thumb`,
-                  ],
-                  attributes: {
-                    ...BuilderElementsGeometry.leftThumb({ width, height }),
-                  },
-                },
-              ],
-            } as ElementConfigType;
-
-            return configType;
-          }
+          getResizeActionConfig
         );
 
         const resizeActionElements = generate(resizeActionConfigs);
@@ -268,5 +296,7 @@ export function useResizeActions(
         resizeActionsEL.innerHTML = "";
       }
     };
-  }, [elements, scratchPadRef, resizeActionsRef]);
+  }, [elements, scratchPadRef, resizeActionsRef, getResizeActionConfig]);
+
+  return { removeResizeActionById };
 }
