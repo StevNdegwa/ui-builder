@@ -1,30 +1,25 @@
-import settings from "./settings.svg";
-import square from "./square.svg";
-import bin from "./bin.svg";
-import editSquare from "./edit-square.svg";
-
-const mapping = {
-  settings,
-  square,
-  bin,
-  "edit-square": editSquare,
-};
-
-type MappingType = keyof typeof mapping;
+const materialIconsUrl = new URL("./material.svg?no-inline", import.meta.url)
+  .pathname;
 
 export function icon({
-  name,
+  name = "square",
   attributes,
-}: ElementConfigType): ElementConfigType {
-  const href = mapping[name as MappingType] || mapping.square;
+  title = name,
+}: ElementConfigType & { title?: string }): ElementConfigType {
+  const href = `${materialIconsUrl}#${name}-icon`;
 
   return {
-    name: "image",
-    classNames: [`${name}-icon`],
+    name: "use",
+    classNames: [`${name}-icon`, "builder-icon"],
     attributes: {
       href,
-      "pointer-events": "none",
       ...attributes,
     },
+    children: [
+      {
+        name: "title",
+        textContent: title,
+      },
+    ],
   };
 }

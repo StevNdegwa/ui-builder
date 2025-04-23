@@ -1,4 +1,5 @@
 import { rgba } from "polished";
+import { icon } from "../icons";
 
 export function iconButton({
   name,
@@ -7,9 +8,15 @@ export function iconButton({
   popupMenu,
   events,
   closePopupMenu,
+  title,
+  icon: btnIcon,
 }: ElementConfigType & {
   popupMenu?: ElementConfigType;
   closePopupMenu?: boolean;
+  title?: string;
+  icon?: {
+    name: string;
+  };
 }): ElementConfigType {
   const groupSelector = `${name}-button`;
 
@@ -78,6 +85,12 @@ export function iconButton({
         width: 20,
         height: 20,
       },
+      children: [
+        {
+          name: "title",
+          textContent: title,
+        },
+      ],
     },
   ];
 
@@ -87,6 +100,17 @@ export function iconButton({
 
   if (popupMenu) {
     childrenList.push(popupMenu);
+  }
+
+  if (btnIcon) {
+    childrenList.push(
+      icon({
+        name: btnIcon.name,
+        attributes: {
+          "pointer-events": "none",
+        },
+      })
+    );
   }
 
   return {

@@ -14,6 +14,10 @@ export const Editor = styled(Box)`
   user-select: none;
   background-color: white;
   overflow: auto;
+
+  & .builder-icon {
+    fill: currentColor;
+  }
 `;
 
 export const ScratchpadContainer = styled(Box)`

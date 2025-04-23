@@ -1,11 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { BuilderElementsGeometry } from "@modules/builder/utils/BuilderElementsGeometry";
-import {
-  icon,
-  popupMenu,
-  generate,
-  iconButton,
-} from "@modules/builder/elements";
+import { popupMenu, generate, iconButton } from "@modules/builder/elements";
 import { BuildableControl } from "@modules/builder/BuildableControl";
 
 export function useEditActions(
@@ -17,17 +12,9 @@ export function useEditActions(
 ) {
   const removeEditActionById = useCallback(
     (id: string) => {
-      const editActionsEl = editActionsRef.current;
-
-      if (editActionsEl) {
-        const editAction = editActionsEl.querySelector(
-          `g.edit-actions-group[data-buildable-ref="${id}"]`
-        );
-
-        if (editAction) {
-          editAction.remove();
-        }
-      }
+      editActionsRef.current
+        ?.querySelector(`g.edit-actions-group[data-buildable-ref="${id}"]`)
+        ?.remove();
     },
     [editActionsRef]
   );
@@ -44,6 +31,7 @@ export function useEditActions(
         name: "g",
         classNames: [
           "edit-actions-group",
+          `${elementControl.elementName}-edit-actions-group`,
           `${elementControl.elementName}-edit-actions-group`,
           `${elementControl.uniqueIdClassName}-edit-actions-group`,
         ],
@@ -73,35 +61,23 @@ export function useEditActions(
             },
             events: {
               mousemove: () => {
-                const resizeGroup = document.querySelector(
-                  `g.${elementControl.uniqueIdClassName}-resize-action-group`
-                );
-
-                if (resizeGroup) {
-                  resizeGroup.setAttribute("opacity", "1");
-                }
+                document
+                  .querySelector(
+                    `g.${elementControl.uniqueIdClassName}-resize-action-group`
+                  )
+                  ?.setAttribute("opacity", "1");
               },
               mouseleave: () => {
-                const resizeGroup = document.querySelector(
-                  `g.${elementControl.uniqueIdClassName}-resize-action-group`
-                );
-
-                if (resizeGroup) {
-                  resizeGroup.setAttribute("opacity", "0");
-                }
+                document
+                  .querySelector(
+                    `g.${elementControl.uniqueIdClassName}-resize-action-group`
+                  )
+                  ?.setAttribute("opacity", "0");
               },
             },
-            children: [
-              icon({
-                attributes: {
-                  width: 16,
-                  height: 16,
-                  x: 2,
-                  y: 2,
-                },
-                name: "edit-square",
-              }),
-            ],
+            icon: {
+              name: "edit",
+            },
             popupMenu: popupMenu({
               name: "edit-actions",
               title: elementControl.element.TITLE,
@@ -109,28 +85,22 @@ export function useEditActions(
                 iconButton({
                   name: "settings",
                   closePopupMenu: true,
+                  title: "Settings",
                   events: {
                     click: () => {
                       setActiveElementId(elementControl.uniqueId);
                     },
                   },
-                  children: [
-                    icon({
-                      attributes: {
-                        width: 16,
-                        height: 16,
-                        x: 2,
-                        y: 2,
-                      },
-                      name: "settings",
-                    }),
-                  ],
+                  icon: {
+                    name: "settings",
+                  },
                 }),
                 !elementControl.is.section()
                   ? iconButton({
                       name: "delete",
+                      title: "Delete",
                       attributes: {
-                        transform: "translate(24,0)",
+                        transform: "translate(20,0)",
                       },
                       events: {
                         click: () => {
@@ -147,17 +117,9 @@ export function useEditActions(
                           setActiveElementId(undefined);
                         },
                       },
-                      children: [
-                        icon({
-                          attributes: {
-                            width: 16,
-                            height: 16,
-                            x: 2,
-                            y: 2,
-                          },
-                          name: "bin",
-                        }),
-                      ],
+                      icon: {
+                        name: "delete",
+                      },
                     })
                   : ({} as ElementConfigType),
               ],

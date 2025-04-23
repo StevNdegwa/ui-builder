@@ -1,9 +1,8 @@
 import { useEffect } from "react";
 import { fromEvent } from "rxjs";
-import { ADD_ACTION_BUTTON_HEIGHT } from "@modules/builder/constants";
 import { BuilderElementsGeometry } from "@modules/builder/utils/BuilderElementsGeometry";
 import { BuildableControl } from "@modules/builder/BuildableControl";
-import { getELement } from "@modules/builder/elements";
+import { getELement, iconButton } from "@modules/builder/elements";
 
 export function useAddActions(
   elements: BuildableFrameConfig<BuildableControl>[],
@@ -12,16 +11,9 @@ export function useAddActions(
   setActiveElementId: (id: string) => void
 ) {
   const removeAddActionById = (id: string) => {
-    const addActionsEl = addActionsRef.current;
-
-    if (addActionsEl) {
-      const addAction = addActionsEl.querySelector(
-        `g.add-action[data-buildable-ref="${id}"]`
-      ) as SVGGElement;
-      if (addAction) {
-        addAction.remove();
-      }
-    }
+    addActionsRef.current
+      ?.querySelector(`g.add-action[data-buildable-ref="${id}"]`)
+      ?.remove();
   };
 
   useEffect(() => {
@@ -49,35 +41,20 @@ export function useAddActions(
                 buildableRefType: elementControl.elementName,
               },
               children: [
-                {
-                  name: "circle",
-                  classNames: ["action", "add-action-btn"],
-                  attributes: {
-                    cx: 0,
-                    cy: 0,
-                    r: ADD_ACTION_BUTTON_HEIGHT / 2,
+                iconButton({
+                  name: "add-element",
+                  closePopupMenu: true,
+                  events: {
+                    click: () => {
+                      openAddElementsModal();
+                      setActiveElementId(elementControl.uniqueId);
+                    },
                   },
-                },
-                {
-                  name: "line",
-                  attributes: {
-                    x1: 0,
-                    y1: -8,
-                    x2: 0,
-                    y2: 8,
-                    "pointer-events": "none",
+                  icon: {
+                    name: "add",
                   },
-                },
-                {
-                  name: "line",
-                  attributes: {
-                    x1: -8,
-                    y1: 0,
-                    x2: 8,
-                    y2: 0,
-                    "pointer-events": "none",
-                  },
-                },
+                  title: "Add element",
+                }),
               ],
             });
 
@@ -89,23 +66,19 @@ export function useAddActions(
 
             if (addActionBtn) {
               fromEvent(addActionBtn, "mousemove").subscribe(() => {
-                const resizeGroup = document.querySelector(
-                  `g.${elementControl.uniqueIdClassName}-resize-action-group`
-                );
-
-                if (resizeGroup) {
-                  resizeGroup.setAttribute("opacity", "1");
-                }
+                document
+                  .querySelector(
+                    `g.${elementControl.uniqueIdClassName}-resize-action-group`
+                  )
+                  ?.setAttribute("opacity", "1");
               });
 
               fromEvent(addActionBtn, "mouseleave").subscribe(() => {
-                const resizeGroup = document.querySelector(
-                  `g.${elementControl.uniqueIdClassName}-resize-action-group`
-                );
-
-                if (resizeGroup) {
-                  resizeGroup.setAttribute("opacity", "0");
-                }
+                document
+                  .querySelector(
+                    `g.${elementControl.uniqueIdClassName}-resize-action-group`
+                  )
+                  ?.setAttribute("opacity", "0");
               });
 
               fromEvent(addActionBtn, "click").subscribe(() => {

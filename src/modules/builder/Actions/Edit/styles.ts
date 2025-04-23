@@ -15,11 +15,11 @@ export const Wrapper = styled.g`
     & circle {
       cursor: pointer;
     }
-    & path.edit-action {
+    & .builder-icon{
       fill: ${common};
     }
     &.ui-section-edit-actions-group{
-      & path.edit-action {
+      & .builder-icon {
         fill: ${section};
       }
     }
