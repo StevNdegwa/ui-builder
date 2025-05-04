@@ -53,7 +53,7 @@ export class BuilderElementsGeometry {
     height,
   }: ElementBox): Record<string, string | number> => ({
     transform: `translate(${width / 2}, ${
-      height - ADD_ACTION_BUTTON_HEIGHT / 2
+      height - ADD_ACTION_BUTTON_HEIGHT * 0.75
     })`,
   });
 

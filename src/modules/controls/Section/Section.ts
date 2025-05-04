@@ -10,7 +10,10 @@ import styles from "./styles";
 import { ELEMENT_STYLE_PROPERTIES } from "../constants";
 
 @customElement("ui-section")
-export class UISection extends UIBlock implements IBuildableElement {
+export class UISection
+  extends UIBlock
+  implements IBuildableElement, IAppendableElement
+{
   TAKES_CHILDREN = true;
   TITLE = "Section";
 
@@ -70,6 +73,12 @@ export class UISection extends UIBlock implements IBuildableElement {
   //     });
   //   }
   // }
+
+  addContent(content: Element) {
+    content.setAttribute("slot", "contents");
+
+    this.appendChild(content);
+  }
 
   render() {
     return html`<div class="wrapper ui-ref">

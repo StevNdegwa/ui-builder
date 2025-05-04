@@ -2,8 +2,6 @@ import { Dashboard } from "./Dashboard";
 import { GlobalStyle, ThemeProvider } from "@ui/styles";
 import { Builder } from "@modules/builder";
 
-import "@modules/controls/Section/Section";
-import "@modules/controls/Text/Text";
 import { Toast } from "@ui/components";
 import { useHandleNotification } from "./hooks/useHandleNotification";
 

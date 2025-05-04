@@ -1,11 +1,10 @@
-import { forwardRef, HTMLAttributes, PropsWithChildren } from "react";
+import { forwardRef, HTMLProps } from "react";
 import clsx from "clsx";
 import { Wrapper } from "./styles";
 import { AtomComponentProps } from "../types";
 
-export type BoxProps = PropsWithChildren<
-  AtomComponentProps & HTMLAttributes<HTMLDivElement>
-> &
+export type BoxProps = AtomComponentProps &
+  HTMLProps<HTMLDivElement> &
   Partial<{
     padding: "xs" | "sm" | "md" | "lg" | "xl";
     margin: "xs" | "sm" | "md" | "lg" | "xl";

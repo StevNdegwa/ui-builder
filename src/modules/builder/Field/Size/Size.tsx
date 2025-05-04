@@ -37,7 +37,7 @@ const SizeInput: FC<{
   );
 };
 
-export const Size: FC<BuilderFieldProps> = ({ onChange }) => {
+export const Size: FC<BuilderFieldProps<string>> = ({ onChange }) => {
   const [inputType, setInputType] = useState<"px" | "%">("px");
   const setPXInputType = () => setInputType("px");
   const setPercentageInputType = () => setInputType("%");

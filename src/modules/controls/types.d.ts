@@ -8,6 +8,11 @@ interface IBuildable {
 
 interface IBuildableElement {
   elementPropertiesAsString?: () => string;
+  getValue: (prop: string) => unknown;
+}
+
+interface IAppendableElement {
+  addContent: (content: Element) => void;
 }
 
 interface IBuildableBlockElement {
@@ -15,6 +20,28 @@ interface IBuildableBlockElement {
   height: string | number;
 }
 
+interface IChartElement<T> {
+  initChart: () => void;
+  svg: Selection<SVGSVGElement>;
+  chartWidth: number;
+  chartHeight: number;
+  chartData: T;
+  chartPadding: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
+  chartWrapper: Selection<SVGGElement>;
+  getChartData: () => T;
+}
+
 type IBuildableConfig = Record<string, string>;
 
-type BuildableElementNames = "ui-section" | "ui-text" | "ui-image";
+type BuildableElementNames =
+  | "ui-section"
+  | "ui-text"
+  | "ui-image"
+  | "ui-bar-chart";
+
+type BarChartData = { id: string; label: string; value: number };

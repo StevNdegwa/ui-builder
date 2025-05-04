@@ -3,7 +3,7 @@ import { BoxProps } from "@ui/components/atoms";
 import { Wrapper } from "./styles";
 import clsx from "clsx";
 
-export type FlexBoxProps = BoxProps &
+export type FlexBoxProps = Omit<BoxProps, "wrap"> &
   Partial<{
     direction: "row" | "column";
     wrap: boolean;

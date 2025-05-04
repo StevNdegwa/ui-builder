@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { UIBuildable, UIImage, UISection, UIText } from "@modules/controls";
+import {
+  UIBuildable,
+  UIImage,
+  UISection,
+  UIText,
+  UIBarChart,
+} from "@modules/controls";
 import {
   buildableControlsConfig,
   defaultBuildableControlsConfig,
@@ -28,19 +34,22 @@ export class BuildableControl {
   }
 
   insertChildElement(name: BuildableElementNames) {
-    const buildableInstance: UIBuildable = new ({
+    if (!this.element.TAKES_CHILDREN) return;
+
+    const parent = this.element as UISection;
+
+    const buildableInstance = new ({
       "ui-text": UIText,
       "ui-section": UISection,
       "ui-image": UIImage,
+      "ui-bar-chart": UIBarChart,
     }[name] || UISection)();
 
     const childElement = new DOMParser()
       .parseFromString(buildableInstance.serializeELement(), "text/html")
       .body.firstElementChild?.cloneNode(true) as Element;
 
-    childElement.setAttribute("slot", "contents");
-
-    this.element.appendChild(childElement);
+    parent.addContent(childElement);
   }
 
   deleteElement() {
@@ -95,11 +104,16 @@ export class BuildableControl {
 
         const InputField = config.component;
 
+        const initialValue = this.element.getValue(prop);
+
         if (InputField) {
           return (
             <Field label={config.label} key={`${prop}-${index}`} name={prop}>
               <InputField
                 name={prop}
+                initialValue={
+                  initialValue as (string & DataTableRow[]) | undefined
+                }
                 onChange={(newValue: BuilderFieldValue) =>
                   this.updateProperty(prop, newValue)
                 }

@@ -18,11 +18,12 @@ type BuildableFrameConfig<ControlType> = ElementBox &
     elementControl: ControlType;
   };
 
-type BuilderFieldValue = string | number | boolean;
+type BuilderFieldValue = string | number | boolean | DataTableRow[];
 
-type BuilderFieldProps = {
+type BuilderFieldProps<T> = {
   name: string;
-  onChange: (newValue: BuilderFieldValue) => void;
+  onChange: (newValue: T) => void;
+  initialValue?: T;
 };
 
 type ElementConfigType = {
@@ -33,4 +34,10 @@ type ElementConfigType = {
   events?: Record<string, EventListener>;
   children?: ElementConfigType[];
   data?: Record<string, string | number | boolean>;
+};
+
+type DataTableRow = {
+  label: string;
+  value: string;
+  id: string;
 };

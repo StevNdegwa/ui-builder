@@ -82,8 +82,9 @@ export function iconButton({
       attributes: {
         fill: buttonColor,
         stroke: "none",
-        width: 20,
-        height: 20,
+        width: 24,
+        height: 24,
+        rx: 4,
       },
       children: [
         {
@@ -108,6 +109,7 @@ export function iconButton({
         name: btnIcon.name,
         attributes: {
           "pointer-events": "none",
+          transform: `translate(2,2)`,
         },
       })
     );
@@ -115,7 +117,7 @@ export function iconButton({
 
   return {
     name: "g",
-    classNames: [groupSelector, "button"],
+    classNames: [groupSelector, "button", "icon-button"],
     attributes: {
       fill: "currentColor",
       ...attributes,

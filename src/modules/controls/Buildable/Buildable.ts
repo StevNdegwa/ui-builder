@@ -1,4 +1,5 @@
 import { CSSResult, LitElement } from "lit";
+import { PropsDataMap } from "../PropsDataMap";
 import styles from "./styles";
 
 export class UIBuildable
@@ -9,7 +10,7 @@ export class UIBuildable
 
   static properties = { props: { type: String } };
 
-  propData: Map<string, string> = new Map();
+  propData = new PropsDataMap();
 
   TAKES_CHILDREN = false;
   TITLE = "Element";
@@ -55,6 +56,10 @@ export class UIBuildable
     this.setAttribute("props", this.elementPropertiesAsString());
 
     return this.outerHTML;
+  }
+
+  getValue(prop: string): unknown {
+    return this.propData.get(prop);
   }
 
   addEventListener(type: unknown, listener: unknown): void {

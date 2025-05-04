@@ -17,7 +17,7 @@ export function useForwardRef<T>(ref: ForwardedRef<T>, initialValue?: T) {
 }
 
 export function useObserverChildrenList() {
-  return useCallback((ref: Element) => {
+  const observe = useCallback((ref: Element) => {
     const observer = new MutationObserver((mutationsList) => {
       for (const mutation of mutationsList) {
         if (mutation.type === "childList") {
@@ -28,4 +28,6 @@ export function useObserverChildrenList() {
 
     observer.observe(ref, { childList: true });
   }, []);
+
+  return observe;
 }

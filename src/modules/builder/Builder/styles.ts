@@ -18,6 +18,18 @@ export const Editor = styled(Box)`
   & .builder-icon {
     fill: currentColor;
   }
+
+  ${({
+    theme: {
+      colorSchemes: {
+        palette: { gray },
+      },
+    },
+  }) => `
+    & .icon-button rect.button:hover {
+      fill: ${gray[50]};
+    }
+  `}
 `;
 
 export const ScratchpadContainer = styled(Box)`

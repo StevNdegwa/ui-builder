@@ -1,13 +1,10 @@
-import { FC } from "react";
+import { FC, HTMLProps } from "react";
 import { Wrapper } from "./style";
 import clsx from "clsx";
 
-export type SliderInputProps = React.HTMLAttributes<HTMLInputElement> &
+export type SliderInputProps = HTMLProps<HTMLInputElement> &
   Partial<{
     size: "sm" | "md" | "lg";
-    max: number;
-    min: number;
-    step: number;
   }>;
 
 export const SliderInput: FC<SliderInputProps> = ({

@@ -100,7 +100,7 @@ export function useEditActions(
                       name: "delete",
                       title: "Delete",
                       attributes: {
-                        transform: "translate(20,0)",
+                        transform: "translate(24,0)",
                       },
                       events: {
                         click: () => {

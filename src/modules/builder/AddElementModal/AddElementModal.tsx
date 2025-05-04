@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { FlexBox, Modal } from "@ui/components";
 import { MdOutlineTextSnippet, MdAddPhotoAlternate } from "react-icons/md";
+import { BiSolidBarChartSquare } from "react-icons/bi";
 import { AddElementButton } from "./AddElementButton";
 import { useBuilderContext } from "../BuilderContext";
 
@@ -38,6 +39,12 @@ export const AddElementModal: FC<AddElementModalProps> = ({
           onAddElement={onAddElement}
           elementName="ui-image"
           label="Image"
+        />
+        <AddElementButton
+          icon={BiSolidBarChartSquare}
+          onAddElement={onAddElement}
+          elementName="ui-bar-chart"
+          label="Bar Chart"
         />
       </FlexBox>
     </Modal>

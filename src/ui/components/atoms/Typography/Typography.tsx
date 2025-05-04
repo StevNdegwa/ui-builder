@@ -1,11 +1,10 @@
-import React, { PropsWithChildren } from "react";
+import { HTMLProps } from "react";
 import clsx from "clsx";
 import { Wrapper } from "./styles";
 import { AtomComponentProps } from "../types";
 
-export type TypographyProps = PropsWithChildren<
-  React.HTMLAttributes<HTMLSpanElement> & AtomComponentProps
-> &
+export type TypographyProps = Omit<HTMLProps<HTMLSpanElement>, "size"> &
+  AtomComponentProps &
   Partial<{
     variant: "solid" | "outline";
     weight: "light" | "regular" | "medium" | "bold";

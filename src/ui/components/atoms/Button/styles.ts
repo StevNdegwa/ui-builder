@@ -11,7 +11,7 @@ export const Wrapper = styled.button<{
   ${({
     theme: {
       colorSchemes: {
-        palette: { secondary, primary, gray },
+        palette: { secondary, primary, gray, success },
         textOnDark,
       },
       spacings: { padding },
@@ -60,6 +60,30 @@ export const Wrapper = styled.button<{
         &.text-variant {
             background-color: transparent;
             color: ${gray[500]};
+        }
+    }
+    &.danger-color {
+        background-color: red;
+        &.outlined-variant {
+            background-color: transparent;
+            color: red;
+            border: 1px solid red;
+        }
+        &.text-variant {
+            background-color: transparent;
+            color: red;
+        }
+    }
+    &.success-color {
+        background-color: ${success[500]};
+        &.outlined-variant {
+            background-color: transparent;
+            color: ${success[500]};
+            border: 1px solid ${success[500]};
+        }
+        &.text-variant {
+            background-color: transparent;
+            color: ${success[500]};
         }
     }
     &.xs-size {

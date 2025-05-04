@@ -9,7 +9,7 @@ export function popupMenu({
     classNames: ["popup-menu-group", "popup-menu", `${name}-popup-menu`],
     attributes: {
       fill: "white",
-      transform: "translate(-104, 0)",
+      transform: "translate(-124, 0)",
       filter: "url(#shadow-filter)",
       opacity: "0",
       "pointer-events": "none",
@@ -19,7 +19,7 @@ export function popupMenu({
       {
         name: "path",
         attributes: {
-          d: "M99 1 L104 5 L99 9",
+          d: "M119 1 L125 5 L119 9",
           "stroke-linejoin": "round",
         },
       },
@@ -27,8 +27,8 @@ export function popupMenu({
         name: "rect",
         classNames: ["popup-menu"],
         attributes: {
-          width: 100,
-          height: 44,
+          width: 120,
+          height: 64,
           rx: 4,
         },
       },
@@ -36,15 +36,15 @@ export function popupMenu({
         name: "g",
         classNames: ["popup-menu-content"],
         attributes: {
-          transform: "translate(4, 4)",
+          transform: "translate(8, 8)",
         },
         children: [
           {
             name: "text",
             classNames: ["popup-menu-text"],
             attributes: {
-              y: 8,
-              "font-size": 12,
+              y: 12,
+              "font-size": 14,
               fill: "black",
               "font-weight": 600,
             },
@@ -54,7 +54,7 @@ export function popupMenu({
             name: "g",
             classNames: ["popup-menu-buttons"],
             attributes: {
-              transform: "translate(0, 16)",
+              transform: "translate(0, 22)",
             },
             children,
           },

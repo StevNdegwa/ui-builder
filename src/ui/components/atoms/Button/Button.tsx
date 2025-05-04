@@ -1,16 +1,15 @@
 import clsx from "clsx";
-import { forwardRef, HTMLAttributes, PropsWithChildren } from "react";
+import { forwardRef, HTMLProps } from "react";
 import { Wrapper } from "./styles";
 
-export type ButtonProps = PropsWithChildren<
-  HTMLAttributes<HTMLButtonElement> & {
-    variant?: "solid" | "outlined" | "text";
-    color?: "primary" | "secondary" | "gray";
-    size?: "xs" | "sm" | "md" | "lg" | "xl";
-    loading?: boolean;
-    disabled?: boolean;
-  }
->;
+export type ButtonProps = Omit<HTMLProps<HTMLButtonElement>, "size"> &
+  Partial<{
+    variant: "solid" | "outlined" | "text";
+    color: "primary" | "secondary" | "gray" | "danger" | "success";
+    size: "xs" | "sm" | "md" | "lg" | "xl";
+    loading: boolean;
+    type: "button" | "submit" | "reset";
+  }>;
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ children, variant, color, size, loading, className, ...props }, ref) => {

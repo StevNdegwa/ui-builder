@@ -20,10 +20,11 @@ export class UIBlock
 
   constructor() {
     super();
+
     // Set default values
     this.propData.set("width", "100%");
     this.propData.set("height", "auto");
-    this.propData.set("background-color", "rgb(212, 212, 212)");
+    this.propData.set("background-color", "#f0f3f4");
   }
 
   static properties = {

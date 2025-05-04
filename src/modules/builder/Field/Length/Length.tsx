@@ -2,7 +2,7 @@ import { Input, SliderInput, FlexBox } from "@ui/components";
 import { FC, FormEventHandler, useState } from "react";
 import { Control, InputsWrapper } from "./styles";
 
-export const Length: FC<BuilderFieldProps> = ({ onChange }) => {
+export const Length: FC<BuilderFieldProps<string>> = ({ onChange }) => {
   const [inputType, setInputType] = useState<"px" | "%">("px");
 
   const setPXInputType = () => setInputType("px");

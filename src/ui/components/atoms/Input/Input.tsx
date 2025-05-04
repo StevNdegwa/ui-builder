@@ -1,12 +1,10 @@
 import clsx from "clsx";
-import React, { forwardRef } from "react";
+import { forwardRef, HTMLProps } from "react";
 import { Wrapper } from "./styles";
 
-export type TextInputProps = React.HTMLAttributes<HTMLInputElement> &
+export type TextInputProps = Omit<HTMLProps<HTMLInputElement>, "size"> &
   Partial<{
     size: "sm" | "md" | "lg";
-    type: "text" | "password" | "email" | "number";
-    placeholder: string;
   }>;
 
 export const Input = forwardRef<HTMLInputElement, TextInputProps>(

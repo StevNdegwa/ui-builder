@@ -1,5 +1,6 @@
 import { _Field } from "./_Field";
 import { Color } from "./Color";
+import { DataTable } from "./DataTable";
 import { Length } from "./Length";
 import { MultilineText } from "./MultilineText";
 import { SinglelineText } from "./SinglelineText";
@@ -11,4 +12,5 @@ export const Field = Object.assign(_Field, {
   MultilineText,
   SinglelineText,
   Size,
+  DataTable,
 });
