@@ -1,6 +1,16 @@
 export class PropsDataMap extends Map<string, string> {
-  constructor() {
+  constructor(initialValue?: string) {
     super();
+
+    if (initialValue) {
+      const propData = initialValue.split(";");
+
+      propData.forEach((prop) => {
+        const [key, value] = prop.split(":");
+
+        this.set(key, decodeURIComponent(value));
+      });
+    }
   }
 
   get(key: string): string | undefined {
@@ -19,5 +29,13 @@ export class PropsDataMap extends Map<string, string> {
 
   delete(key: string): boolean {
     return super.delete(key);
+  }
+
+  init(key: string, value: string): this {
+    if (this.has(key)) {
+      return this;
+    }
+
+    return this.set(key, value);
   }
 }

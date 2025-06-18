@@ -22,9 +22,9 @@ export class UIBlock
     super();
 
     // Set default values
-    this.propData.set("width", "100%");
-    this.propData.set("height", "auto");
-    this.propData.set("background-color", "#f0f3f4");
+    this.propData.init("width", "100%");
+    this.propData.init("height", "auto");
+    this.propData.init("background-color", "#f0f3f4");
   }
 
   static properties = {
@@ -41,61 +41,58 @@ export class UIBlock
   connectedCallback(): void {
     super.connectedCallback();
 
-    this.style.setProperty(
-      ELEMENT_STYLE_PROPERTIES.BLOCK_WIDTH,
-      this.propData.get("width") || "100%"
-    );
-    this.style.setProperty(
-      ELEMENT_STYLE_PROPERTIES.BLOCK_HEIGHT,
-      this.propData.get("height") || "100%"
-    );
-    this.style.setProperty(
-      ELEMENT_STYLE_PROPERTIES.BLOCK_BG_COLOR,
-      this.propData.get("background-color") || "transparent"
-    );
-
     this.classList.add("ui-block");
   }
 
-  updatedWidthProperty = (changedProperties: Map<string, string>) => {
-    if (changedProperties.has("width")) {
-      const newElWidth = getElementDimensionValue(
-        this.width || changedProperties.get("width")
-      );
-      this.style.setProperty(ELEMENT_STYLE_PROPERTIES.BLOCK_WIDTH, newElWidth);
-      this.propData.set("width", newElWidth);
-    }
+  updatedWidthProperty = () => {
+    const newElWidth = getElementDimensionValue(this.getNewValue("width"));
+    this.style.setProperty(ELEMENT_STYLE_PROPERTIES.BLOCK_WIDTH, newElWidth);
+    this.propData.set("width", newElWidth);
   };
 
-  updatedHeightProperty = (changedProperties: Map<string, string>) => {
-    if (changedProperties.has("height")) {
-      const newElHeight = getElementDimensionValue(
-        this.height || changedProperties.get("height")
-      );
-      this.style.setProperty(
-        ELEMENT_STYLE_PROPERTIES.BLOCK_HEIGHT,
-        newElHeight
-      );
-      this.propData.set("height", newElHeight);
-    }
+  updatedHeightProperty = () => {
+    const newElHeight = getElementDimensionValue(this.getNewValue("height"));
+    this.style.setProperty(ELEMENT_STYLE_PROPERTIES.BLOCK_HEIGHT, newElHeight);
+    this.propData.set("height", newElHeight);
   };
 
-  updateBackgroundProperty = (changedProperties: Map<string, string>) => {
-    if (changedProperties.has("background-color")) {
-      const newBgColor = this["background-color"] || "transparent";
-      this.style.setProperty(
-        ELEMENT_STYLE_PROPERTIES.BLOCK_BG_COLOR,
-        newBgColor
-      );
-      this.propData.set("background-color", newBgColor);
-    }
+  updateBackgroundProperty = () => {
+    const newBgColor = this.getNewValue("background-color");
+
+    if (!newBgColor) return;
+
+    this.style.setProperty(ELEMENT_STYLE_PROPERTIES.BLOCK_BG_COLOR, newBgColor);
+
+    this.propData.set("background-color", newBgColor);
   };
 
   updated(changedProperties: Map<string, string>): void {
     super.updated(changedProperties);
-    this.updatedWidthProperty(changedProperties);
-    this.updatedHeightProperty(changedProperties);
-    this.updateBackgroundProperty(changedProperties);
+    this.updateFn(changedProperties, "width", this.updatedWidthProperty);
+    this.updateFn(changedProperties, "height", this.updatedHeightProperty);
+    this.updateFn(
+      changedProperties,
+      "background-color",
+      this.updateBackgroundProperty
+    );
+  }
+
+  protected firstUpdated(changedProperties: Map<string, string>): void {
+    super.firstUpdated(changedProperties);
+
+    this.updateFn(changedProperties, "width", this.updatedWidthProperty, true);
+    this.updateFn(
+      changedProperties,
+      "height",
+      this.updatedHeightProperty,
+      true
+    );
+    this.updateFn(
+      changedProperties,
+      "background-color",
+      this.updateBackgroundProperty,
+      true
+    );
   }
 
   elementPropertiesAsString() {

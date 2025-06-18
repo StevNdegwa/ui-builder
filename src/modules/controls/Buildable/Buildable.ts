@@ -10,7 +10,7 @@ export class UIBuildable
 
   static properties = { props: { type: String } };
 
-  propData = new PropsDataMap();
+  protected propData = new PropsDataMap();
 
   TAKES_CHILDREN = false;
   TITLE = "Element";
@@ -24,16 +24,9 @@ export class UIBuildable
   connectedCallback(): void {
     super.connectedCallback();
 
-    if (this.props) {
-      const propData = this.props.split(";");
-
-      propData.forEach((prop) => {
-        const [key, value] = prop.split(":");
-        this.propData.set(key, value);
-      });
-    }
-
     this.classList.add("ui-buildable");
+
+    // this.propData = new PropsDataMap(this.props);
   }
 
   disconnectedCallback() {
@@ -62,13 +55,33 @@ export class UIBuildable
     return this.propData.get(prop);
   }
 
+  protected getNewValue(prop: string): string | undefined {
+    return (
+      (this as unknown as Record<string, string>)[prop] ||
+      this.propData.get(prop)
+    );
+  }
+
   addEventListener(type: unknown, listener: unknown): void {
     const uiRef = this.shadowRoot?.querySelector(".ui-ref");
-
-    console.log("uiRef", uiRef);
 
     if (uiRef) {
       uiRef.addEventListener(type as string, listener as EventListener);
     }
+  }
+
+  updateFn = (
+    changedProperties: Map<string, string>,
+    propName: string,
+    cb: (changedProperties: Map<string, string>) => void,
+    isInit?: boolean
+  ) => {
+    if (changedProperties.has(propName) || isInit) {
+      cb(changedProperties);
+    }
+  };
+
+  getProperties() {
+    return Array.from(this.propData.keys()).filter((prop) => !!prop);
   }
 }

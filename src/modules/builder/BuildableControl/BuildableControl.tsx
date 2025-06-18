@@ -61,7 +61,7 @@ export class BuildableControl {
   }
 
   get elementProperties() {
-    return Array.from(this.element.propData.keys()).filter((prop) => !!prop);
+    return this.element.getProperties();
   }
 
   get elementPropertiesConfigs() {

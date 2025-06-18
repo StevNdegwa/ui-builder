@@ -19,6 +19,8 @@ export class UISection
 
   constructor() {
     super();
+
+    this.propData.set("background-color", "transparent");
   }
 
   static {
@@ -30,25 +32,18 @@ export class UISection
     this.classList.add("ui-section");
   }
 
-  updatedHeightProperty = (changedProperties: Map<string, string>) => {
-    if (changedProperties.has("height")) {
-      let newElHeight = getElementDimensionValue(
-        this.height || changedProperties.get("height")
-      );
+  updatedHeightProperty = () => {
+    let newElHeight = getElementDimensionValue(this.getNewValue("height"));
 
-      const isPercentHeight = newElHeight.includes("%");
+    const isPercentHeight = newElHeight.includes("%");
 
-      newElHeight = isPercentHeight
-        ? newElHeight.replace("%", "vh")
-        : newElHeight;
+    newElHeight = isPercentHeight
+      ? newElHeight.replace("%", "vh")
+      : newElHeight;
 
-      this.style.setProperty(
-        ELEMENT_STYLE_PROPERTIES.BLOCK_HEIGHT,
-        newElHeight
-      );
+    this.style.setProperty(ELEMENT_STYLE_PROPERTIES.BLOCK_HEIGHT, newElHeight);
 
-      this.propData.set("height", newElHeight);
-    }
+    this.propData.set("height", newElHeight);
   };
 
   updated(changedProperties: Map<string, string>) {
@@ -60,19 +55,6 @@ export class UISection
       getPropertiesAsString(this.propData) + super.elementPropertiesAsString()
     );
   }
-
-  // protected firstUpdated(): void {
-  //   const contentSlot = this.renderRoot?.querySelector(
-  //     "#content-slot"
-  //   ) as HTMLSlotElement;
-
-  //   if (contentSlot) {
-  //     contentSlot.addEventListener("slotchange", (event) => {
-  //       // Set height
-  //       console.log("slotchange", event, contentSlot.assignedNodes().length);
-  //     });
-  //   }
-  // }
 
   addContent(content: Element) {
     content.setAttribute("slot", "contents");

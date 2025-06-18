@@ -1,4 +1,3 @@
-import { PropertyValues } from "lit";
 import { create } from "d3-selection";
 import { UIBlock } from "../Block";
 import { getPropertiesAsString } from "@modules/utils/controls";
@@ -61,7 +60,7 @@ export class UIChart<T>
     super.updated(changedProperties);
   }
 
-  protected firstUpdated(changedProperties: PropertyValues): void {
+  protected firstUpdated(changedProperties: Map<string, string>): void {
     super.firstUpdated(changedProperties);
 
     const wrapper = this.shadowRoot?.querySelector(

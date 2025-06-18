@@ -1,3 +1,4 @@
+import { PropsDataMap } from "@modules/controls/PropsDataMap";
 import * as O from "fp-ts/Option";
 import { pipe } from "fp-ts/function";
 
@@ -27,9 +28,7 @@ export function getElementDimensionValue(
   );
 }
 
-export function getPropertiesAsString(
-  propsMap: Map<string, string | number | undefined>
-): string {
+export function getPropertiesAsString(propsMap: PropsDataMap): string {
   let properties = "";
 
   propsMap.forEach((value, key) => {

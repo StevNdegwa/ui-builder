@@ -3,12 +3,11 @@ interface IBuildable {
   serializeELement(): void;
   TAKES_CHILDREN: boolean;
   TITLE: string;
-  propData: Map<string, string>;
+  getValue: (prop: string) => unknown;
 }
 
 interface IBuildableElement {
   elementPropertiesAsString?: () => string;
-  getValue: (prop: string) => unknown;
 }
 
 interface IAppendableElement {

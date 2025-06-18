@@ -19,7 +19,7 @@ export class UIImage extends UIBlock implements IBuildableElement {
   constructor() {
     super();
 
-    this.propData.set(IMAGE_SOURCE_PROP, DEFAULT_IMAGE_SOURCE);
+    this.propData.init(IMAGE_SOURCE_PROP, DEFAULT_IMAGE_SOURCE);
   }
 
   static properties = {
@@ -38,22 +38,24 @@ export class UIImage extends UIBlock implements IBuildableElement {
 
   updated(changedProperties: Map<string, string>) {
     super.updated(changedProperties);
-    this.updatedContentProperty(changedProperties);
+    this.updateFn(
+      changedProperties,
+      IMAGE_SOURCE_PROP,
+      this.updatedImageSrcProperty
+    );
   }
 
-  updatedContentProperty = (changedProperties: Map<string, string>) => {
-    if (changedProperties.has(IMAGE_SOURCE_PROP)) {
-      const newImageUrl = this[IMAGE_SOURCE_PROP] || ("" as string);
+  updatedImageSrcProperty = () => {
+    const src = this.getNewValue(IMAGE_SOURCE_PROP);
 
-      const imageContainer = this.shadowRoot?.querySelector(
-        ".image-wrapper"
-      ) as HTMLImageElement;
+    const imageContainer = this.shadowRoot?.querySelector(
+      ".image-wrapper"
+    ) as HTMLImageElement;
 
-      if (imageContainer) {
-        imageContainer.src = newImageUrl;
-      }
+    if (src) {
+      imageContainer.src = src;
 
-      this.propData.set(IMAGE_SOURCE_PROP, newImageUrl);
+      this.propData.set(IMAGE_SOURCE_PROP, src);
     }
   };
 
@@ -63,8 +65,19 @@ export class UIImage extends UIBlock implements IBuildableElement {
     );
   }
 
+  protected firstUpdated(changedProperties: Map<string, string>): void {
+    super.firstUpdated(changedProperties);
+
+    this.updateFn(
+      changedProperties,
+      IMAGE_SOURCE_PROP,
+      this.updatedImageSrcProperty,
+      true
+    );
+  }
+
   render() {
-    return html`<img class="image-wrapper" src="${DEFAULT_IMAGE_SOURCE}" />`;
+    return html`<img class="image-wrapper" />`;
   }
 }
 

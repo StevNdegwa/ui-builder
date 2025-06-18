@@ -15,7 +15,7 @@ export class UIText extends UIBuildable implements IBuildableElement {
 
   constructor() {
     super();
-    this.propData.set(TEXT_CONTENT_PROP, "A very simple text");
+    this.propData.init(TEXT_CONTENT_PROP, "Your text here...");
   }
 
   static properties = {
@@ -34,21 +34,23 @@ export class UIText extends UIBuildable implements IBuildableElement {
 
   updated(changedProperties: Map<string, string>) {
     super.updated(changedProperties);
-    this.updatedContentProperty(changedProperties);
+    this.updateFn(
+      changedProperties,
+      "text-content",
+      this.updatedContentProperty
+    );
   }
 
-  updatedContentProperty = (changedProperties: Map<string, string>) => {
-    if (changedProperties.has(TEXT_CONTENT_PROP)) {
-      const newContent = this[TEXT_CONTENT_PROP] || ("" as string);
+  updatedContentProperty = () => {
+    const newContent = this.getNewValue(TEXT_CONTENT_PROP) || ("" as string);
 
-      const textContainer = this.shadowRoot?.querySelector(".text-wrapper");
+    const textContainer = this.shadowRoot?.querySelector(".text-wrapper");
 
-      if (textContainer) {
-        textContainer.innerHTML = newContent;
-      }
-
-      this.propData.set(TEXT_CONTENT_PROP, newContent);
+    if (textContainer) {
+      textContainer.innerHTML = newContent;
     }
+
+    this.propData.set(TEXT_CONTENT_PROP, newContent);
   };
 
   elementPropertiesAsString(): string {
@@ -57,8 +59,18 @@ export class UIText extends UIBuildable implements IBuildableElement {
     );
   }
 
+  protected firstUpdated(changedProperties: Map<string, string>): void {
+    super.firstUpdated(changedProperties);
+    this.updateFn(
+      changedProperties,
+      "text-content",
+      this.updatedContentProperty,
+      true
+    );
+  }
+
   render() {
-    return html`<span class="text-wrapper">Sample Content</span>`;
+    return html`<span class="text-wrapper"></span>`;
   }
 }
 
