@@ -26,7 +26,7 @@ export class UIBuildable
 
     this.classList.add("ui-buildable");
 
-    // this.propData = new PropsDataMap(this.props);
+    this.propData = new PropsDataMap(this.props);
   }
 
   disconnectedCallback() {
