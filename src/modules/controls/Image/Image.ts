@@ -1,6 +1,5 @@
 import { html } from "lit";
 import { customElement } from "lit/decorators.js";
-import { getPropertiesAsString } from "@modules/utils/controls";
 import { UIBuildable } from "../Buildable";
 import styles from "./styles";
 import { UIBlock } from "../Block";
@@ -57,13 +56,9 @@ export class UIImage extends UIBlock implements IBuildableElement {
 
       this.propData.set(IMAGE_SOURCE_PROP, src);
     }
-  };
 
-  elementPropertiesAsString(): string {
-    return (
-      getPropertiesAsString(this.propData) + super.elementPropertiesAsString()
-    );
-  }
+    return src || DEFAULT_IMAGE_SOURCE;
+  };
 
   protected firstUpdated(changedProperties: Map<string, string>): void {
     super.firstUpdated(changedProperties);

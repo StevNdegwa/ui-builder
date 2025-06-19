@@ -26,7 +26,9 @@ export class UIBuildable
 
     this.classList.add("ui-buildable");
 
-    this.propData = new PropsDataMap(this.props);
+    if (this.props) {
+      this.propData.setFromString(this.props);
+    }
   }
 
   disconnectedCallback() {
@@ -41,13 +43,7 @@ export class UIBuildable
     super.updated(changedProperties);
   }
 
-  elementPropertiesAsString(): string {
-    return "";
-  }
-
   serializeELement(): string {
-    this.setAttribute("props", this.elementPropertiesAsString());
-
     return this.outerHTML;
   }
 
@@ -73,11 +69,17 @@ export class UIBuildable
   updateFn = (
     changedProperties: Map<string, string>,
     propName: string,
-    cb: (changedProperties: Map<string, string>) => void,
+    cb: (changedProperties: Map<string, string>) => string | undefined,
     isInit?: boolean
   ) => {
     if (changedProperties.has(propName) || isInit) {
-      cb(changedProperties);
+      const newValue = cb(changedProperties);
+
+      if (newValue) {
+        this.propData.set(propName, newValue);
+
+        this.setAttribute("props", this.propData.getAsString());
+      }
     }
   };
 

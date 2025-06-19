@@ -1,10 +1,7 @@
 import { html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { UIBlock } from "../Block";
-import {
-  getElementDimensionValue,
-  getPropertiesAsString,
-} from "@modules/utils/controls";
+import { getElementDimensionValue } from "@modules/utils/controls";
 import { UIBuildable } from "../Buildable";
 import styles from "./styles";
 import { ELEMENT_STYLE_PROPERTIES } from "../constants";
@@ -20,7 +17,7 @@ export class UISection
   constructor() {
     super();
 
-    this.propData.set("background-color", "transparent");
+    this.propData.init("background-color", "transparent");
   }
 
   static {
@@ -43,17 +40,11 @@ export class UISection
 
     this.style.setProperty(ELEMENT_STYLE_PROPERTIES.BLOCK_HEIGHT, newElHeight);
 
-    this.propData.set("height", newElHeight);
+    return newElHeight;
   };
 
   updated(changedProperties: Map<string, string>) {
     super.updated(changedProperties);
-  }
-
-  elementPropertiesAsString(): string {
-    return (
-      getPropertiesAsString(this.propData) + super.elementPropertiesAsString()
-    );
   }
 
   addContent(content: Element) {

@@ -1,6 +1,5 @@
 import { html } from "lit";
 import { customElement } from "lit/decorators.js";
-import { getPropertiesAsString } from "@modules/utils/controls";
 import { UIBuildable } from "../Buildable";
 import styles from "./styles";
 
@@ -36,7 +35,7 @@ export class UIText extends UIBuildable implements IBuildableElement {
     super.updated(changedProperties);
     this.updateFn(
       changedProperties,
-      "text-content",
+      TEXT_CONTENT_PROP,
       this.updatedContentProperty
     );
   }
@@ -50,20 +49,14 @@ export class UIText extends UIBuildable implements IBuildableElement {
       textContainer.innerHTML = newContent;
     }
 
-    this.propData.set(TEXT_CONTENT_PROP, newContent);
+    return newContent;
   };
-
-  elementPropertiesAsString(): string {
-    return (
-      getPropertiesAsString(this.propData) + super.elementPropertiesAsString()
-    );
-  }
 
   protected firstUpdated(changedProperties: Map<string, string>): void {
     super.firstUpdated(changedProperties);
     this.updateFn(
       changedProperties,
-      "text-content",
+      TEXT_CONTENT_PROP,
       this.updatedContentProperty,
       true
     );

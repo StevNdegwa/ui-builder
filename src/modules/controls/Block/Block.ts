@@ -1,7 +1,4 @@
-import {
-  getElementDimensionValue,
-  getPropertiesAsString,
-} from "@modules/utils/controls";
+import { getElementDimensionValue } from "@modules/utils/controls";
 import { ELEMENT_STYLE_PROPERTIES } from "../constants";
 import { UIBuildable } from "../Buildable";
 
@@ -47,13 +44,13 @@ export class UIBlock
   updatedWidthProperty = () => {
     const newElWidth = getElementDimensionValue(this.getNewValue("width"));
     this.style.setProperty(ELEMENT_STYLE_PROPERTIES.BLOCK_WIDTH, newElWidth);
-    this.propData.set("width", newElWidth);
+    return newElWidth;
   };
 
   updatedHeightProperty = () => {
     const newElHeight = getElementDimensionValue(this.getNewValue("height"));
     this.style.setProperty(ELEMENT_STYLE_PROPERTIES.BLOCK_HEIGHT, newElHeight);
-    this.propData.set("height", newElHeight);
+    return newElHeight;
   };
 
   updateBackgroundProperty = () => {
@@ -63,7 +60,7 @@ export class UIBlock
 
     this.style.setProperty(ELEMENT_STYLE_PROPERTIES.BLOCK_BG_COLOR, newBgColor);
 
-    this.propData.set("background-color", newBgColor);
+    return newBgColor;
   };
 
   updated(changedProperties: Map<string, string>): void {
@@ -92,12 +89,6 @@ export class UIBlock
       "background-color",
       this.updateBackgroundProperty,
       true
-    );
-  }
-
-  elementPropertiesAsString() {
-    return (
-      getPropertiesAsString(this.propData) + super.elementPropertiesAsString()
     );
   }
 }

@@ -6,9 +6,7 @@ interface IBuildable {
   getValue: (prop: string) => unknown;
 }
 
-interface IBuildableElement {
-  elementPropertiesAsString?: () => string;
-}
+type IBuildableElement = object;
 
 interface IAppendableElement {
   addContent: (content: Element) => void;

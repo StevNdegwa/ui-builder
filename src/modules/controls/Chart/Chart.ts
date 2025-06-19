@@ -1,6 +1,5 @@
 import { create } from "d3-selection";
 import { UIBlock } from "../Block";
-import { getPropertiesAsString } from "@modules/utils/controls";
 
 export class UIChart<T>
   extends UIBlock
@@ -91,11 +90,5 @@ export class UIChart<T>
     }
 
     return super.getValue(prop);
-  }
-
-  elementPropertiesAsString() {
-    return (
-      getPropertiesAsString(this.propData) + super.elementPropertiesAsString()
-    );
   }
 }

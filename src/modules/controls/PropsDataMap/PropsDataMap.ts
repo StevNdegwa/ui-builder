@@ -19,12 +19,34 @@ export class PropsDataMap extends Map<string, string> {
     return value ? decodeURIComponent(value) : undefined;
   }
 
+  getAsString(): string {
+    let properties = "";
+
+    this.forEach((value, key) => {
+      properties += `${key}:${value};`;
+    });
+
+    return properties;
+  }
+
   set(key: string, value: string): this {
     const currValue = super.get(key);
 
     return currValue === value
       ? this
       : super.set(key, encodeURIComponent(value));
+  }
+
+  setFromString(propString: string): void {
+    const propData = propString.split(";");
+
+    propData.forEach((prop) => {
+      const [key, value] = prop.split(":");
+
+      if (!!key && !!value) {
+        this.set(key, decodeURIComponent(value));
+      }
+    });
   }
 
   delete(key: string): boolean {
