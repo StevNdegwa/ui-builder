@@ -17,14 +17,14 @@ export class UIBarChart
   constructor() {
     super();
 
-    this.chartData = [
+    const data = [
       { id: "sZx1", label: "Jan", value: 10030 },
       { id: "Ed71", label: "Feb", value: 22150 },
       { id: "I819", label: "Mar", value: 16205 },
       { id: "V562", label: "Apr", value: 18115 },
     ];
 
-    this.propData.set("chartData", JSON.stringify(this.chartData));
+    this.propData.set("chartData", JSON.stringify(data));
   }
 
   static properties = {
@@ -38,37 +38,40 @@ export class UIBarChart
 
   updated(changedProperties: Map<string, string>): void {
     super.updated(changedProperties);
-    this.updateChartData(changedProperties);
+
+    this.updateFn(
+      changedProperties,
+      "chartData",
+      this.updateChartData.bind(this)
+    );
   }
 
-  updateChartData(changedProperties: Map<string, string>) {
-    if (changedProperties.has("chartData")) {
-      const newData = this.chartData;
+  updateChartData() {
+    const newData = (this.getNewValue("chartData") || []) as BarChartData[];
 
-      const realChartHeight =
-        this.chartHeight - this.chartPadding.top - this.chartPadding.bottom;
+    const realChartHeight =
+      this.chartHeight - this.chartPadding.top - this.chartPadding.bottom;
 
-      this.yScale.domain([0, max(newData, (d) => d.value) as number]);
-      this.xScale.domain(newData.map((d) => d.label));
+    this.yScale.domain([0, max(newData, (d) => d.value) as number]);
+    this.xScale.domain(newData.map((d) => d.label));
 
-      this.chartWrapper
-        .selectAll("rect")
-        .data(newData)
-        .join("rect")
-        .attr("width", this.xScale.bandwidth)
-        .attr("fill", "orange")
-        .attr("height", (d) => this.yScale(d.value))
-        .attr("y", (d) => realChartHeight - this.yScale(d.value))
-        .attr("x", (d) => this.xScale(d.label) as number);
+    this.chartWrapper
+      .selectAll("rect")
+      .data(newData)
+      .join("rect")
+      .attr("width", this.xScale.bandwidth)
+      .attr("fill", "orange")
+      .attr("height", (d) => this.yScale(d.value))
+      .attr("y", (d) => realChartHeight - this.yScale(d.value))
+      .attr("x", (d) => this.xScale(d.label) as number);
 
-      this.propData.set("chartData", JSON.stringify(newData));
-    }
+    return JSON.stringify(newData);
   }
 
   initChart() {
     super.initChart();
 
-    const chartData = this.getChartData();
+    const chartData = this.getChartData() as BarChartData[];
 
     const realChartWidth =
       this.chartWidth - this.chartPadding.left - this.chartPadding.right;
@@ -96,8 +99,13 @@ export class UIBarChart
       .attr("x", (d) => this.xScale(d.label) as number);
   }
 
+  protected firstUpdated(changedProperties: Map<string, string>): void {
+    super.firstUpdated(changedProperties);
+    this.initChart();
+  }
+
   render() {
-    return html`<div class="wrapper"></div>`;
+    return html`<div class="chart-wrapper"></div>`;
   }
 }
 

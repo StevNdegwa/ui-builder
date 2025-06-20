@@ -29,7 +29,7 @@ export class UIChart<T>
     this.propData.set("width", "100%");
     this.propData.set("height", "500px");
     this.propData.set("background-color", "white");
-    this.propData.set("chartData", JSON.stringify([]));
+    this.propData.init("chartData", JSON.stringify([]));
   }
 
   static properties = {
@@ -45,6 +45,30 @@ export class UIChart<T>
 
   initChart() {
     this.svg.classed("ui-chart-svg", true);
+
+    const wrapper = this.shadowRoot?.querySelector(
+      ".chart-wrapper"
+    ) as HTMLDivElement;
+
+    wrapper.style.width = this.propData.get("width") || "100%";
+    wrapper.style.height = this.propData.get("height") || "500px";
+
+    const { width, height } = wrapper.getBoundingClientRect();
+
+    this.chartWidth = width;
+    this.chartHeight = height;
+
+    this.svg
+      .attr("width", width)
+      .attr("height", height)
+      .attr("viewBox", [0, 0, width, height]);
+
+    this.chartWrapper.attr(
+      "transform",
+      `translate(${this.chartPadding.left}, ${this.chartPadding.top})`
+    );
+
+    wrapper?.appendChild(this.svg.node() as SVGSVGElement);
   }
 
   getChartData(): T {
@@ -61,27 +85,7 @@ export class UIChart<T>
 
   protected firstUpdated(changedProperties: Map<string, string>): void {
     super.firstUpdated(changedProperties);
-
-    const wrapper = this.shadowRoot?.querySelector(
-      ".wrapper"
-    ) as HTMLDivElement;
-
-    this.chartWidth = wrapper.getBoundingClientRect().width;
-    this.chartHeight = 500;
-
-    this.svg
-      .attr("width", this.chartWidth)
-      .attr("height", this.chartHeight)
-      .attr("viewBox", [0, 0, this.chartWidth, this.chartHeight]);
-
-    this.chartWrapper.attr(
-      "transform",
-      `translate(${this.chartPadding.left}, ${this.chartPadding.top})`
-    );
-
     this.initChart();
-
-    wrapper?.appendChild(this.svg.node() as SVGSVGElement);
   }
 
   getValue(prop: string): unknown {
