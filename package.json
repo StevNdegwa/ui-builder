@@ -25,6 +25,7 @@
     "chromatic": "npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN --exit-once-uploaded"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "d3-array": "^3.2.4",
     "d3-scale": "^4.0.2",
     "d3-selection": "^3.0.0",
@@ -40,6 +41,7 @@
     "@storybook/react": "^8.6.2",
     "@storybook/react-vite": "^8.6.2",
     "@storybook/test": "^8.6.2",
+    "@types/d3-array": "^3.2.1",
     "@types/d3-scale": "^4.0.9",
     "@types/d3-selection": "^3.0.11",
     "@types/lodash": "^4.17.16",
@@ -71,8 +73,7 @@
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0",
     "vite-plugin-dts": "^4.5.3",
-    "vitest": "^3.0.7",
-    "@types/d3-array": "^3.2.1"
+    "vitest": "^3.0.7"
   },
   "eslintConfig": {
     "extends": [

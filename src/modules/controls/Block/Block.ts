@@ -48,6 +48,8 @@ export class UIBlock
   };
 
   updatedHeightProperty = () => {
+    console.log("Updating height property");
+
     const newElHeight = getElementDimensionValue(this.getNewValue("height"));
     this.style.setProperty(ELEMENT_STYLE_PROPERTIES.BLOCK_HEIGHT, newElHeight);
     return newElHeight;

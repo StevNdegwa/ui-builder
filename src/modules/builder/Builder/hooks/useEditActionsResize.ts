@@ -114,8 +114,8 @@ export function useEditActionsResize(
                   y,
                   leftPadding:
                     !elementControl.is.empty() && elementControl.is.section()
-                      ? 32
-                      : 12,
+                      ? 38
+                      : 18,
                   topPadding: 2,
                 })
               );

@@ -1,72 +1,28 @@
-import { FlexBox, Input, SliderInput } from "@ui/components";
-import { Control, InputsWrapper } from "./style";
-import { FC, FormEventHandler, useState } from "react";
+import { FlexBox } from "@ui/components";
+import { FC } from "react";
+import { Length } from "../Length";
 
-const SizeInput: FC<{
-  onChange: (newValue: string) => void;
-  inputType: "px" | "%";
-  name: "width" | "height";
-}> = ({ onChange, inputType, name }) => {
-  const handleChange: FormEventHandler<HTMLInputElement> = (event) => {
-    const newValue = event.currentTarget.value;
+export const Size: FC<BuilderFieldProps<string>> = ({ onChange }) => {
+  const handleHeightChange = (newValue: string) => {
+    console.log("NewSize height change", newValue);
 
-    if (newValue && onChange) {
-      onChange(
-        `${name}:${
-          inputType === "px"
-            ? `${event.currentTarget.value}px`
-            : `${event.currentTarget.value}%`
-        }`
-      );
-    }
+    onChange(`height:${newValue}`);
+  };
+
+  const handlerWidthChange = (newValue: string) => {
+    console.log("NewSize width change", newValue);
+
+    onChange(`width:${newValue}`);
   };
 
   return (
     <FlexBox direction="column" gap="xs">
-      <FlexBox>
-        <InputsWrapper>
-          {inputType === "px" && (
-            <Input type="number" onChange={handleChange} placeholder={"0"} />
-          )}
-          {inputType === "%" && (
-            <SliderInput min={0} max={100} onChange={handleChange} />
-          )}
-        </InputsWrapper>
-      </FlexBox>
-    </FlexBox>
-  );
-};
-
-export const Size: FC<BuilderFieldProps<string>> = ({ onChange }) => {
-  const [inputType, setInputType] = useState<"px" | "%">("px");
-  const setPXInputType = () => setInputType("px");
-  const setPercentageInputType = () => setInputType("%");
-
-  const getVariant = (i: string): "outlined" | "solid" =>
-    inputType === i ? "solid" : "outlined";
-
-  return (
-    <FlexBox direction="column" gap="xs">
-      <FlexBox>
-        <Control
-          onClick={setPXInputType}
-          variant={getVariant("px")}
-          color="secondary"
-        >
-          PX
-        </Control>
-        <Control
-          onClick={setPercentageInputType}
-          variant={getVariant("%")}
-          color="secondary"
-        >
-          %
-        </Control>
-      </FlexBox>
-      <FlexBox gap="xs">
-        <SizeInput inputType={inputType} name="width" onChange={onChange} />
-        <SizeInput inputType={inputType} name="height" onChange={onChange} />
-      </FlexBox>
+      <Length onChange={handlerWidthChange} name="">
+        Width
+      </Length>
+      <Length onChange={handleHeightChange} name="">
+        Height
+      </Length>
     </FlexBox>
   );
 };

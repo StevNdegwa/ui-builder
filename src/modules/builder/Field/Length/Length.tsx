@@ -1,54 +1,69 @@
-import { Input, SliderInput, FlexBox } from "@ui/components";
-import { FC, FormEventHandler, useState } from "react";
-import { Control, InputsWrapper } from "./styles";
+import { FlexBox } from "@ui/components";
+import { ChangeEventHandler, FC, PropsWithChildren, useState } from "react";
+import { DropDownWrapper, SizeInput, TextWrapper } from "./styles";
 
-export const Length: FC<BuilderFieldProps<string>> = ({ onChange }) => {
+export const Length: FC<PropsWithChildren<BuilderFieldProps<string>>> = ({
+  onChange,
+  children,
+}) => {
+  const [maxSize, setMaxSize] = useState(Infinity);
   const [inputType, setInputType] = useState<"px" | "%">("px");
+  const [value, setValue] = useState(0);
 
-  const setPXInputType = () => setInputType("px");
-  const setPercentageInputType = () => setInputType("%");
+  const handleInputTypeChange: ChangeEventHandler<HTMLSelectElement> = (
+    event
+  ) => {
+    const newValue = event.target.value;
 
-  const getVariant = (i: string): "outlined" | "solid" =>
-    inputType === i ? "solid" : "outlined";
+    setInputType(() => {
+      if (newValue === "px") {
+        setMaxSize(Infinity);
+      } else if (newValue === "%") {
+        setMaxSize(100);
+        if (value > 100) {
+          setValue(100);
+        }
+      }
 
-  const handleChange: FormEventHandler<HTMLInputElement> = (event) => {
-    const newValue = event.currentTarget.value;
+      return newValue as "px" | "%";
+    });
 
-    if (newValue && onChange) {
-      onChange(
-        inputType === "px"
-          ? `${event.currentTarget.value}px`
-          : `${event.currentTarget.value}%`
-      );
+    setValue((prevValue) => {
+      onChange(value + newValue);
+      return prevValue;
+    });
+  };
+
+  const handleValueChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    const newValue = parseInt(event.target.value, 10);
+
+    if (!isNaN(newValue) && newValue <= maxSize) {
+      setValue(newValue);
+      onChange(newValue + inputType);
     }
   };
 
   return (
-    <FlexBox direction="column" gap="xs">
-      <FlexBox>
-        <Control
-          onClick={setPXInputType}
-          variant={getVariant("px")}
-          color="secondary"
-        >
-          PX
-        </Control>
-        <Control
-          onClick={setPercentageInputType}
-          variant={getVariant("%")}
-          color="secondary"
-        >
-          %
-        </Control>
+    <FlexBox align="center" gap="sm">
+      <TextWrapper size="lg" weight="light">
+        {children || "Length"}
+      </TextWrapper>
+      <FlexBox gap="xs">
+        <SizeInput
+          size="sm"
+          max={maxSize}
+          value={value}
+          onChange={handleValueChange}
+        />
+        <DropDownWrapper
+          onChange={handleInputTypeChange}
+          size="sm"
+          options={[
+            { label: "Px", value: "px" },
+            { label: "%", value: "%" },
+          ]}
+        />
       </FlexBox>
-      <InputsWrapper>
-        {inputType === "px" && (
-          <Input type="number" onChange={handleChange} placeholder={"0"} />
-        )}
-        {inputType === "%" && (
-          <SliderInput min={0} max={100} onChange={handleChange} />
-        )}
-      </InputsWrapper>
     </FlexBox>
   );
 };

@@ -44,8 +44,8 @@ export function useEditActions(
             topPadding: 2,
             leftPadding:
               !elementControl.is.empty() && elementControl.is.section()
-                ? 32
-                : 12,
+                ? 36
+                : 16,
           }),
         },
         data: {

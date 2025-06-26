@@ -4,7 +4,7 @@ import { Wrapper } from "./styles";
 
 export type TextInputProps = Omit<HTMLProps<HTMLInputElement>, "size"> &
   Partial<{
-    size: "sm" | "md" | "lg";
+    size: "xs" | "sm" | "md" | "lg";
   }>;
 
 export const Input = forwardRef<HTMLInputElement, TextInputProps>(

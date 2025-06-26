@@ -1,6 +1,6 @@
 import { Field } from "../Field";
 
-const { Length, Color, MultilineText, SinglelineText, Size, DataTable } = Field;
+const { Length, Color, MultilineText, SinglelineText, DataTable, Size } = Field;
 
 export const buildableControlsConfig = {
   width: {
@@ -25,7 +25,7 @@ export const buildableControlsConfig = {
   },
   size: {
     component: Size,
-    label: "Size (Width x Height)",
+    label: "Size",
   },
   chartData: {
     component: DataTable,

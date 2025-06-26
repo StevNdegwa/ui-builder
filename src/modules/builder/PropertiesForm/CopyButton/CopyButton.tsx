@@ -1,4 +1,5 @@
 import { FC, PropsWithChildren } from "react";
+import { ClipboardDocumentIcon } from "@heroicons/react/24/solid";
 import { Clipboard } from "@modules/system/Clipboard";
 import { Wrapper } from "./styles";
 import { useBuilderContext } from "@modules/builder/BuilderContext";
@@ -29,5 +30,14 @@ export const CopyButton: FC<CopyButtonProps> = ({
       });
   };
 
-  return <Wrapper onClick={handleClick}>{children}</Wrapper>;
+  return (
+    <Wrapper
+      icon={<ClipboardDocumentIcon width={24} />}
+      color="gray"
+      onClick={handleClick}
+      size="md"
+    >
+      {children}
+    </Wrapper>
+  );
 };

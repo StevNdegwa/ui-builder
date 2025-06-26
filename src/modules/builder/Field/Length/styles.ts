@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { Box, Button } from "@ui/components/atoms";
+import { Box, Button, Input, Typography } from "@ui/components/atoms";
+import { DropDown } from "@ui/components";
 
 export const Control = styled(Button)<{ $active?: boolean }>`
   max-height: 20px !important;
@@ -20,4 +21,17 @@ export const Control = styled(Button)<{ $active?: boolean }>`
 export const InputsWrapper = styled(Box)`
   min-height: 48px;
   max-height: 48px;
+`;
+
+export const DropDownWrapper = styled(DropDown)`
+  width: 50px;
+`;
+
+export const SizeInput = styled(Input)`
+  width: 80px;
+`;
+
+export const TextWrapper = styled(Typography)`
+  display: block;
+  width: 80px;
 `;

@@ -7,7 +7,7 @@ export const Wrapper = styled.button<{
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   ${({
     theme: {
       colorSchemes: {
@@ -51,7 +51,7 @@ export const Wrapper = styled.button<{
         }
     }
     &.gray-color {
-        background-color: ${gray[500]};
+        background-color: ${gray[100]};
         &.outlined-variant {
             background-color: transparent;
             color: ${gray[500]};

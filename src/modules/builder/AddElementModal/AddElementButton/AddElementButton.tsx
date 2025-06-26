@@ -22,7 +22,7 @@ export const AddElementButton: FC<AddElementButtonProps> = ({
         <ElementIcon size={40} />
       </Icon>
       <Label align="center" justify="center">
-        <Typography weight="bold">{label}</Typography>
+        <Typography weight="medium">{label}</Typography>
       </Label>
     </Wrapper>
   );

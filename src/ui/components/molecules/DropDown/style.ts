@@ -1,29 +1,22 @@
 import styled from "styled-components";
 
-export const Wrapper = styled.input`
-  display: inline-block;
+export const Wrapper = styled.select`
+  display: block;
   width: 100%;
   height: 48px;
-  box-sizing: border-box;
   ${({
     theme: {
+      borderRadius: { md },
       colorSchemes: {
         palette: { gray },
-        textOnLight,
       },
-      spacings: { padding },
-      borderRadius,
     },
   }) => `
     background-color: ${gray[50]};
-    color: ${textOnLight};
-    padding: ${padding.md};
-    border-radius: ${borderRadius.md};
+    border-radius: ${md};
     border: 1px solid ${gray[100]};
-    &:disabled {
-        opacity: 0.8;
-        cursor: not-allowed;
-    }
+    padding: 0 4px;
+    cursor: pointer;
     &.xs-size {
         height: 24px;
     }
