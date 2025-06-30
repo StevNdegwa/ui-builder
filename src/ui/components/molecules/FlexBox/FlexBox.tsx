@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { forwardRef } from "react";
 import { BoxProps } from "@ui/components/atoms";
 import { Wrapper } from "./styles";
 import clsx from "clsx";
@@ -12,22 +12,16 @@ export type FlexBoxProps = Omit<BoxProps, "wrap"> &
     gap: "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
   }>;
 
-export const FlexBox: FC<FlexBoxProps> = ({
-  direction,
-  justify,
-  className,
-  wrap,
-  align,
-  gap,
-  ...props
-}) => {
-  const elementClasses = clsx(className, {
-    "flex-wrap": wrap,
-    [`align-${align}`]: !!align,
-    [`justify-${justify}`]: !!justify,
-    [`flex-${direction}`]: !!direction,
-    [`gap-${gap}`]: !!gap,
-  });
+export const FlexBox = forwardRef<HTMLDivElement, FlexBoxProps>(
+  ({ direction, justify, className, wrap, align, gap, ...props }, ref) => {
+    const elementClasses = clsx(className, {
+      "flex-wrap": wrap,
+      [`align-${align}`]: !!align,
+      [`justify-${justify}`]: !!justify,
+      [`flex-${direction}`]: !!direction,
+      [`gap-${gap}`]: !!gap,
+    });
 
-  return <Wrapper {...props} className={elementClasses} />;
-};
+    return <Wrapper {...props} className={elementClasses} ref={ref} />;
+  }
+);

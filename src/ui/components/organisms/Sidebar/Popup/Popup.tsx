@@ -14,9 +14,7 @@ export const Popup: FC<PopupProps> = ({ icon, children }) => {
 
   return (
     <Wrapper>
-      <PopupButton ref={buttonRef} onClick={toggle} size="sm" color="secondary">
-        {icon}
-      </PopupButton>
+      <PopupButton icon={icon} ref={buttonRef} onClick={toggle} size="xs" />
       <PopupContent ref={wrapperRef} $show={popupOpen}>
         {children}
       </PopupContent>

@@ -4,11 +4,11 @@ import { Button } from "../../atoms/Button";
 export const Wrapper = styled(Button)`
   ${({
     theme: {
-      borderRadius: { xs },
+      borderRadius: { sm },
     },
   }) => `
     color: inherit;
-    border-radius: ${xs};
+    border-radius: ${sm};
   `}
 `;
 

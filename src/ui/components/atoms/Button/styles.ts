@@ -28,6 +28,9 @@ export const Wrapper = styled.button<{
         opacity: 0.8;
         cursor: not-allowed;
     }
+    &:hover {
+        box-shadow: 0 0 5px ${gray[100]};
+    }
     &.text-variant {
         background-color: transparent;
         color: ${primary[500]};
@@ -64,6 +67,7 @@ export const Wrapper = styled.button<{
     }
     &.danger-color {
         background-color: red;
+        color: white;
         &.outlined-variant {
             background-color: transparent;
             color: red;

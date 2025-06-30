@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { forwardRef } from "react";
 import { BoxProps } from "@ui/components";
 import { Item } from "./Item";
 import { Wrapper } from "./styles";
@@ -32,25 +32,31 @@ export type GridProps = BoxProps & {
   templateAreas?: string;
 };
 
-const _Grid: FC<GridProps> = ({
-  children,
-  element,
-  templateColumns,
-  templateAreas,
-  templateRows,
-  ...props
-}) => {
-  return (
-    <Wrapper
-      element={element}
-      $templateColumns={templateColumns}
-      $templateArea={templateAreas}
-      $templateRows={templateRows}
-      {...props}
-    >
-      {children}
-    </Wrapper>
-  );
-};
+const _Grid = forwardRef<HTMLDivElement, GridProps>(
+  (
+    {
+      children,
+      element,
+      templateColumns,
+      templateAreas,
+      templateRows,
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <Wrapper
+        {...props}
+        element={element}
+        $templateColumns={templateColumns}
+        $templateArea={templateAreas}
+        $templateRows={templateRows}
+        ref={ref}
+      >
+        {children}
+      </Wrapper>
+    );
+  }
+);
 
 export const Grid = Object.assign(_Grid, { Item });

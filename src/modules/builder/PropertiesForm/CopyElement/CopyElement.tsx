@@ -1,19 +1,15 @@
-import { FC, PropsWithChildren } from "react";
+import { FC } from "react";
 import { ClipboardDocumentIcon } from "@heroicons/react/24/solid";
 import { Clipboard } from "@modules/system/Clipboard";
-import { Wrapper } from "./styles";
 import { useBuilderContext } from "@modules/builder/BuilderContext";
+import { IconButton } from "@ui/components";
 
-export type CopyButtonProps = PropsWithChildren<{
+export type CopyButtonProps = {
   getCopyString: () => string;
   title?: string;
-}>;
+};
 
-export const CopyButton: FC<CopyButtonProps> = ({
-  children,
-  getCopyString,
-  title,
-}) => {
+export const CopyElement: FC<CopyButtonProps> = ({ getCopyString, title }) => {
   const { notify } = useBuilderContext();
 
   const handleClick = () => {
@@ -31,13 +27,10 @@ export const CopyButton: FC<CopyButtonProps> = ({
   };
 
   return (
-    <Wrapper
+    <IconButton
       icon={<ClipboardDocumentIcon width={24} />}
       color="gray"
       onClick={handleClick}
-      size="md"
-    >
-      {children}
-    </Wrapper>
+    />
   );
 };

@@ -1,13 +1,14 @@
 import { FC } from "react";
-import { MdOutlineControlPoint, MdBackupTable } from "react-icons/md";
+import { SquaresPlusIcon } from "@heroicons/react/24/solid";
 import { Popup } from "./Popup";
 import { Wrapper } from "./styles";
 
 export const Sidebar: FC = () => {
   return (
     <Wrapper element="aside" align="center" direction="column" gap={"xs"}>
-      <Popup icon={<MdBackupTable size={18} />}>My Sections</Popup>
-      <Popup icon={<MdOutlineControlPoint size={18} />}>Controls</Popup>
+      <Popup icon={<SquaresPlusIcon width={24} height={24} />}>
+        My Sections
+      </Popup>
     </Wrapper>
   );
 };

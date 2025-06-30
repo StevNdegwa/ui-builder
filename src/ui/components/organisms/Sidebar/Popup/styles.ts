@@ -1,4 +1,4 @@
-import { Box, Button } from "@ui/components";
+import { Box, IconButton } from "@ui/components";
 import styled from "styled-components";
 
 export const Wrapper = styled(Box)`
@@ -31,7 +31,7 @@ export const PopupContent = styled(Box)<{ $show: boolean }>`
 `}
 `;
 
-export const PopupButton = styled(Button)`
+export const PopupButton = styled(IconButton)`
   position: relative;
   margin: auto;
 `;

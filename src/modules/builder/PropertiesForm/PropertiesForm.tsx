@@ -2,10 +2,11 @@ import { FlexBox, IconButton, Typography } from "@ui/components";
 import { FC } from "react";
 import { TrashIcon, BookmarkIcon } from "@heroicons/react/24/solid";
 import { FormTitle, Wrapper } from "./styles";
-import { CopyButton } from "./CopyButton";
+import { CopyElement } from "./CopyElement";
 import { FormItems } from "./FormItems";
 import { useBuilderContext } from "../BuilderContext";
 import { BuildableControl } from "../BuildableControl";
+import { CopyPage } from "./CopyPage";
 
 export type PropertiesFormProps = {
   elementsControls: Array<BuildableFrameConfig<BuildableControl>>;
@@ -13,7 +14,8 @@ export type PropertiesFormProps = {
 };
 
 export const PropertiesForm: FC = () => {
-  const { buildableConfigs, activeBuildableId } = useBuilderContext();
+  const { buildableConfigs, activeBuildableId, copyDocumentContainer } =
+    useBuilderContext();
 
   return buildableConfigs.map(({ elementControl }, index) => (
     <Wrapper
@@ -27,32 +29,34 @@ export const PropertiesForm: FC = () => {
           <Typography heading="h5">{elementControl.element.TITLE}</Typography>
         </FormTitle>
         <FlexBox gap="sm">
+          <CopyElement
+            getCopyString={() => elementControl.elementString}
+            title={elementControl.element.TITLE}
+          />
+          <CopyPage container={copyDocumentContainer} />
           <IconButton icon={<BookmarkIcon width={24} height={24} />} />
-          <IconButton icon={<TrashIcon width={24} height={24} />} />
+          <IconButton
+            icon={<TrashIcon width={24} height={24} />}
+            color="danger"
+          />
         </FlexBox>
         <FormItems element={elementControl} />
       </FlexBox>
-      <FlexBox gap="sm" direction="column">
+      {/* <FlexBox gap="sm" direction="column">
         <Typography weight="medium">Export</Typography>
-        <CopyButton
-          getCopyString={() =>
-            `<!DOCTYPE html><html><head><title>Test UI Builder</title><script src="https://unpkg.com/@stevndegwa/ui-builder-components/controls-dist/ui-builder-controls.umd.js" async ></script></head><body>${elementControl.elementString}</body></html>`
-          }
-          title={elementControl.element.TITLE}
-        >
-          <Typography size="md" weight="medium">
-            Copy document
-          </Typography>
-        </CopyButton>
-        <CopyButton
-          getCopyString={() => elementControl.elementString}
-          title={elementControl.element.TITLE}
-        >
-          <Typography size="md" weight="medium">
-            Copy {elementControl.element?.TITLE?.toLowerCase()}
-          </Typography>
-        </CopyButton>
-      </FlexBox>
+        <FlexBox direction="column" gap="xs" align="flex-start" justify="start">
+          <CopyButton
+            getCopyString={() =>
+              `<!DOCTYPE html><html><head><title>Test UI Builder</title><script src="https://unpkg.com/@stevndegwa/ui-builder-components/controls-dist/ui-builder-controls.umd.js" async ></script></head><body>${elementControl.elementString}</body></html>`
+            }
+            title={elementControl.element.TITLE}
+          >
+            <Typography size="sm" weight="regular">
+              Copy document
+            </Typography>
+          </CopyButton>
+        </FlexBox>
+      </FlexBox> */}
     </Wrapper>
   ));
 };
