@@ -34,7 +34,7 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
 
     const { buildableConfigs, getBuildableConfigById } =
       useBuildableConfigsInit(contentsWrapperRef);
-    const { activeBuildableId, addElementsModalOpen, closeAddElementsModal } =
+    const { activeBuildableId, addElementsModalOpen, closeAddElementsModal, removeActionsById, setActiveElementId } =
       useActions(
         buildableConfigs,
         scratchPadRef,
@@ -53,15 +53,17 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
     );
 
     return (
-      <BuilderContextProvider
-        value={{
-          notify,
-          buildableConfigs,
-          getBuildableConfigById,
-          activeBuildableId,
-          activeBuildableControl,
-        }}
-      >
+              <BuilderContextProvider
+          value={{
+            notify,
+            buildableConfigs,
+            getBuildableConfigById,
+            activeBuildableId,
+            activeBuildableControl,
+            removeActionsById,
+            setActiveElementId,
+          }}
+        >
         <Wrapper gap="sm">
           <Editor>
             <Contents ref={contentsWrapperRef}>{children}</Contents>

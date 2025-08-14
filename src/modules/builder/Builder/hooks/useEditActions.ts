@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { BuilderElementsGeometry } from "@modules/builder/utils/BuilderElementsGeometry";
-import { popupMenu, generate, iconButton } from "@modules/builder/elements";
+import { generate, iconButton } from "@modules/builder/elements";
 import { BuildableControl } from "@modules/builder/BuildableControl";
 
 export function useEditActions(
@@ -74,56 +74,13 @@ export function useEditActions(
                   )
                   ?.setAttribute("opacity", "0");
               },
+              click: () => {
+                setActiveElementId(elementControl.uniqueId);
+              },
             },
             icon: {
               name: "edit",
             },
-            popupMenu: popupMenu({
-              name: "edit-actions",
-              title: elementControl.element.TITLE,
-              children: [
-                iconButton({
-                  name: "settings",
-                  closePopupMenu: true,
-                  title: "Settings",
-                  events: {
-                    click: () => {
-                      setActiveElementId(elementControl.uniqueId);
-                    },
-                  },
-                  icon: {
-                    name: "settings",
-                  },
-                }),
-                !elementControl.is.section()
-                  ? iconButton({
-                      name: "delete",
-                      title: "Delete",
-                      attributes: {
-                        transform: "translate(24,0)",
-                      },
-                      events: {
-                        click: () => {
-                          elementControl.deleteElement();
-
-                          /**
-                           * TODO: remove builder actions
-                           */
-
-                          removeEditActionById(elementControl.uniqueId);
-                          removeResizeActionById(elementControl.uniqueId);
-                          removeAddActionById(elementControl.uniqueId);
-
-                          setActiveElementId(undefined);
-                        },
-                      },
-                      icon: {
-                        name: "delete",
-                      },
-                    })
-                  : ({} as ElementConfigType),
-              ],
-            }),
           }),
         ],
       } as ElementConfigType;

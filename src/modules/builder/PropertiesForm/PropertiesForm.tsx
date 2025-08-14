@@ -14,7 +14,7 @@ export type PropertiesFormProps = {
 };
 
 export const PropertiesForm: FC = () => {
-  const { buildableConfigs, activeBuildableId, copyDocumentContainer } =
+  const { buildableConfigs, activeBuildableId, copyDocumentContainer, removeActionsById, setActiveElementId } =
     useBuilderContext();
 
   return buildableConfigs.map(({ elementControl }, index) => (
@@ -33,11 +33,20 @@ export const PropertiesForm: FC = () => {
             getCopyString={() => elementControl.elementString}
             title={elementControl.element.TITLE}
           />
-          <CopyPage container={copyDocumentContainer} />
+          <CopyPage container={copyDocumentContainer || null} />
           <IconButton icon={<BookmarkIcon width={24} height={24} />} />
           <IconButton
             icon={<TrashIcon width={24} height={24} />}
             color="danger"
+            disabled={elementControl.is.section()}
+            title={elementControl.is.section() ? "Cannot delete section elements" : "Delete element"}
+            onClick={() => {
+              if (!elementControl.is.section()) {
+                elementControl.deleteElement();
+                removeActionsById(elementControl.uniqueId);
+                setActiveElementId(undefined);
+              }
+            }}
           />
         </FlexBox>
         <FormItems element={elementControl} />

@@ -10,6 +10,8 @@ export type BuilderContextType = {
   activeBuildableId?: string;
   activeBuildableControl?: BuildableFrameConfig<BuildableControl>;
   copyDocumentContainer?: HTMLDivElement | null;
+  removeActionsById: (id: string) => void;
+  setActiveElementId: (id?: string) => void;
 };
 
 const BuilderContext = createContext<BuilderContextType>(
