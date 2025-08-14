@@ -5,6 +5,7 @@ import { Length } from "./Length";
 import { MultilineText } from "./MultilineText";
 import { SinglelineText } from "./SinglelineText";
 import { Size } from "./Size";
+import { WysiwygEditor } from "./WysiwygEditor";
 
 export const Field = Object.assign(_Field, {
   Length,
@@ -13,4 +14,5 @@ export const Field = Object.assign(_Field, {
   SinglelineText,
   Size,
   DataTable,
+  WysiwygEditor,
 });

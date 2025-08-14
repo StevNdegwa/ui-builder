@@ -29,7 +29,8 @@
     "d3-array": "^3.2.4",
     "d3-scale": "^4.0.2",
     "d3-selection": "^3.0.0",
-    "lit": "^3.2.1"
+    "lit": "^3.2.1",
+    "react-simple-wysiwyg": "^3.4.0"
   },
   "peerDependencies": {
     "@chromatic-com/storybook": "^3.2.5",

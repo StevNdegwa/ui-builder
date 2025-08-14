@@ -1,6 +1,6 @@
 import { Field } from "../Field";
 
-const { Length, Color, MultilineText, SinglelineText, DataTable, Size } = Field;
+const { Length, Color, MultilineText, SinglelineText, DataTable, Size, WysiwygEditor } = Field;
 
 export const buildableControlsConfig = {
   width: {
@@ -16,7 +16,7 @@ export const buildableControlsConfig = {
     label: "Background Color",
   },
   "text-content": {
-    component: MultilineText,
+    component: WysiwygEditor,
     label: "Text Content",
   },
   "image-source": {
