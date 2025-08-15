@@ -1,4 +1,4 @@
-import React, { useRef, forwardRef, PropsWithChildren, useMemo } from "react";
+import { useRef, forwardRef, PropsWithChildren, useMemo } from "react";
 import { rgba } from "polished";
 import { useForwardRef } from "@modules/utils/hooks";
 import { FlexBox } from "@ui/components";

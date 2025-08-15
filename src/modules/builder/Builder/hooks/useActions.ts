@@ -41,9 +41,7 @@ export function useActions(
   const { removeEditActionById } = useEditActions(
     elements,
     editActionsRef,
-    setActiveElementId,
-    removeResizeActionById,
-    removeAddActionById
+    setActiveElementId
   );
 
   useEditActionsResize(elements, getBuildableConfigById);
