@@ -1,6 +1,6 @@
 import { Field } from "../Field";
 
-const { Length, Color, MultilineText, SinglelineText, DataTable, Size, WysiwygEditor } = Field;
+const { Length, Color, SinglelineText, DataTable, Size, WysiwygEditor } = Field;
 
 export const buildableControlsConfig = {
   width: {
