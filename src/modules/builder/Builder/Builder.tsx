@@ -1,4 +1,4 @@
-import { useRef, forwardRef, PropsWithChildren, useMemo } from "react";
+import React, { useRef, forwardRef, PropsWithChildren, useMemo } from "react";
 import { rgba } from "polished";
 import { useForwardRef } from "@modules/utils/hooks";
 import { FlexBox } from "@ui/components";
@@ -28,6 +28,7 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
     const addActionsRef = useRef<SVGGElement>(null);
     const scratchPadRef = useRef<SVGRectElement>(null);
     const editorSVGRef = useRef<SVGSVGElement>(null);
+    const copyDocumentContainerRef = useRef<HTMLDivElement | null>(null);
 
     const { width: scratchPadWidth, height: scratchPadHeight } =
       useScratchPad(contentsWrapperRef);
@@ -43,6 +44,11 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
         addActionsRef,
         getBuildableConfigById
       );
+
+    // Get the copyDocumentContainer from the DOM
+    React.useEffect(() => {
+      copyDocumentContainerRef.current = document.getElementById('copyDocumentContainer') as HTMLDivElement;
+    }, []);
 
     const activeBuildableControl = useMemo(
       () =>

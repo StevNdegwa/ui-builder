@@ -8,9 +8,7 @@ export const Header = forwardRef<HTMLDivElement>((_, ref) => {
       <Box>
         <AppIcon />
       </Box>
-      <Box>
-        <Box id="copyDocumentContainer" />
-      </Box>
+      <Box></Box>
     </Wrapper>
   );
 });

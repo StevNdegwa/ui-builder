@@ -15,12 +15,19 @@ export const FormTitle = styled(FlexBox)`
     theme: {
       borderRadius: { sm },
       colorSchemes: {
-        palette: { secondary },
+        palette: { secondary, gray },
       },
     },
   }) => `
     background-color: ${secondary[500]};
     color: white;
     border-radius: ${sm};
+    &.document-title {
+      background-color: transparent;
+      color: ${gray[900]};
+      font-weight: bold;
+      padding-left: 0;
+      height: 20px;
+    }
   `}
 `;
