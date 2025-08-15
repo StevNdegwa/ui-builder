@@ -11,7 +11,7 @@ export const Wrapper = styled.button<{
   ${({
     theme: {
       colorSchemes: {
-        palette: { secondary, primary, gray, success },
+        palette: { secondary, primary, gray, success, danger },
         textOnDark,
       },
       spacings: { padding },
@@ -66,7 +66,7 @@ export const Wrapper = styled.button<{
         }
     }
     &.danger-color {
-        background-color: red;
+        background-color: ${danger[500]};
         color: white;
         &.outlined-variant {
             background-color: transparent;

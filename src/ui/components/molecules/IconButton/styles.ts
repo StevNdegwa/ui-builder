@@ -9,6 +9,11 @@ export const Wrapper = styled(Button)`
   }) => `
     color: inherit;
     border-radius: ${sm};
+    & > div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   `}
 `;
 

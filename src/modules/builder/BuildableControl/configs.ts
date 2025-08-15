@@ -1,6 +1,6 @@
 import { Field } from "../Field";
 
-const { Length, Color, SinglelineText, DataTable, Size, WysiwygEditor } = Field;
+const { Length, Color, SinglelineText, DataTable, Size, WysiwygEditor, ImageInput } = Field;
 
 export const buildableControlsConfig = {
   width: {
@@ -20,8 +20,8 @@ export const buildableControlsConfig = {
     label: "Text Content",
   },
   "image-source": {
-    component: SinglelineText,
-    label: "Image URL",
+    component: ImageInput,
+    label: "Image",
   },
   size: {
     component: Size,
