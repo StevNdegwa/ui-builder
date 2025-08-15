@@ -16,8 +16,6 @@ export const Box = forwardRef<HTMLDivElement, BoxProps>(
     { children, element, className, margin, padding, rounded, ...props },
     ref
   ) => {
-    console.log("\n Box rendered >> ", ref);
-
     const elementClasses = clsx(className, {
       [`padding-${padding}`]: !!padding,
       [`margin-${margin}`]: !!margin,

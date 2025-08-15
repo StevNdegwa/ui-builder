@@ -11,6 +11,7 @@ export type BuilderContextType = {
   activeBuildableControl?: BuildableFrameConfig<BuildableControl>;
   removeActionsById: (id: string) => void;
   setActiveElementId: (id?: string) => void;
+  updateBuilderConfig: () => void;
 };
 
 const BuilderContext = createContext<BuilderContextType>(

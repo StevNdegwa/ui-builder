@@ -1,6 +1,6 @@
 import { Field } from "../Field";
 
-const { Length, Color, SinglelineText, DataTable, Size, WysiwygEditor, ImageInput } = Field;
+const { Length, Color, SinglelineText, DataTable, Size, WysiwygEditor, ImageInput, LayoutSelect } = Field;
 
 export const buildableControlsConfig = {
   width: {
@@ -34,6 +34,10 @@ export const buildableControlsConfig = {
   barColor: {
     component: Color,
     label: "Bar Color",
+  },
+  layout: {
+    component: LayoutSelect,
+    label: "Layout",
   },
 };
 

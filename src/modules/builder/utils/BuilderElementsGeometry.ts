@@ -58,13 +58,12 @@ export class BuilderElementsGeometry {
   });
 
   static editButton = ({
-    width,
-    leftPadding,
-    topPadding,
-    y,
-  }: ElementBox & Pos): Record<string, string | number> => ({
-    transform: `translate(${width - (leftPadding || 0)}, ${
-      y + (topPadding || 0)
-    })`,
+    width = 0,
+    leftPadding = 16,
+    topPadding = 2,
+    y = 0,
+    x = 0,
+  }: ElementBox & Pos): Record<string, string | number> =>({
+    transform: `translate(${x + (width - leftPadding)}, ${y + topPadding})`,
   });
 }

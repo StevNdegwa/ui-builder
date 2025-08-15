@@ -7,8 +7,6 @@ export function useEditActions(
   elements: BuildableFrameConfig<BuildableControl>[],
   editActionsRef: React.RefObject<SVGGElement | null>,
   setActiveElementId: (id?: string) => void,
-  removeResizeActionById: (id: string) => void,
-  removeAddActionById: (id: string) => void
 ) {
   const removeEditActionById = useCallback(
     (id: string) => {
@@ -87,12 +85,7 @@ export function useEditActions(
 
       return configType;
     },
-    [
-      removeAddActionById,
-      removeEditActionById,
-      removeResizeActionById,
-      setActiveElementId,
-    ]
+    [setActiveElementId]
   );
 
   useEffect(() => {

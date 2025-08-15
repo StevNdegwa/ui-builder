@@ -14,10 +14,18 @@ export class UISection
   TAKES_CHILDREN = true;
   TITLE = "Section";
 
+  declare layout: string;
+
+  static properties = {
+    ...UIBlock.properties,
+    layout: { type: String, attribute: "layout" },
+  };
+
   constructor() {
     super();
 
     this.propData.init("background-color", "transparent");
+    this.propData.init("layout", "single");
   }
 
   static {
@@ -43,8 +51,16 @@ export class UISection
     return newElHeight;
   };
 
+  updatedLayoutProperty = () => {
+    const layout = this.getNewValue("layout");
+
+    return layout;
+  };
+
   updated(changedProperties: Map<string, string>) {
     super.updated(changedProperties);
+
+    this.updateFn(changedProperties, "layout", this.updatedLayoutProperty);
   }
 
   addContent(content: Element) {
@@ -54,7 +70,21 @@ export class UISection
   }
 
   render() {
-    return html`<div class="wrapper ui-ref">
+    const layout = this.propData.get("layout") || "single";
+    
+    if (layout === "two-column") {
+      return html`<div class="wrapper ui-ref two-column-layout">
+        <slot name="contents" id="content-slot"></slot>
+      </div>`;
+    }
+    
+    if (layout === "three-column") {
+      return html`<div class="wrapper ui-ref three-column-layout">
+        <slot name="contents" id="content-slot"></slot>
+      </div>`;
+    }
+    
+    return html`<div class="wrapper ui-ref single-column-layout">
       <slot name="contents" id="content-slot"></slot>
     </div>`;
   }

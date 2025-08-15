@@ -28,27 +28,26 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
     const addActionsRef = useRef<SVGGElement>(null);
     const scratchPadRef = useRef<SVGRectElement>(null);
     const editorSVGRef = useRef<SVGSVGElement>(null);
-    const copyDocumentContainerRef = useRef<HTMLDivElement | null>(null);
 
     const { width: scratchPadWidth, height: scratchPadHeight } =
       useScratchPad(contentsWrapperRef);
 
-    const { buildableConfigs, getBuildableConfigById } =
+    const { buildableConfigs, getBuildableConfigById, updateBuilderConfig } =
       useBuildableConfigsInit(contentsWrapperRef);
-    const { activeBuildableId, addElementsModalOpen, closeAddElementsModal, removeActionsById, setActiveElementId } =
-      useActions(
-        buildableConfigs,
-        scratchPadRef,
-        resizeActionsRef,
-        editActionsRef,
-        addActionsRef,
-        getBuildableConfigById
-      );
-
-    // Get the copyDocumentContainer from the DOM
-    React.useEffect(() => {
-      copyDocumentContainerRef.current = document.getElementById('copyDocumentContainer') as HTMLDivElement;
-    }, []);
+    const {
+      activeBuildableId,
+      addElementsModalOpen,
+      closeAddElementsModal,
+      removeActionsById,
+      setActiveElementId,
+    } = useActions(
+      buildableConfigs,
+      scratchPadRef,
+      resizeActionsRef,
+      editActionsRef,
+      addActionsRef,
+      getBuildableConfigById
+    );
 
     const activeBuildableControl = useMemo(
       () =>
@@ -59,17 +58,18 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
     );
 
     return (
-              <BuilderContextProvider
-          value={{
-            notify,
-            buildableConfigs,
-            getBuildableConfigById,
-            activeBuildableId,
-            activeBuildableControl,
-            removeActionsById,
-            setActiveElementId,
-          }}
-        >
+      <BuilderContextProvider
+        value={{
+          notify,
+          buildableConfigs,
+          getBuildableConfigById,
+          activeBuildableId,
+          activeBuildableControl,
+          removeActionsById,
+          setActiveElementId,
+          updateBuilderConfig,
+        }}
+      >
         <Wrapper gap="sm">
           <Editor>
             <Contents ref={contentsWrapperRef}>{children}</Contents>
