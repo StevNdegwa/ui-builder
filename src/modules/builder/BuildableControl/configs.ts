@@ -31,6 +31,10 @@ export const buildableControlsConfig = {
     component: DataTable,
     label: "Data",
   },
+  barColor: {
+    component: Color,
+    label: "Bar Color",
+  },
 };
 
 export const defaultBuildableControlsConfig = {

@@ -44,7 +44,7 @@ export const Row: FC<RowProps> = ({
       <Input
         size="sm"
         placeholder="Value"
-        type="text"
+        type="number"
         onChange={handleValueChange}
         value={rowValue}
       />

@@ -50,7 +50,7 @@ export const AddRow: FC<AddRowProps> = ({ addRow }) => {
       <Input
         size="sm"
         placeholder="Value"
-        type="text"
+        type="number"
         onChange={handleValueChange}
         value={value}
       />
