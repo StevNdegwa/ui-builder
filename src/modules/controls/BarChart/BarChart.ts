@@ -119,12 +119,7 @@ export class UIBarChart
     // Update grid lines
     const gridLayer = this.chartWrapper.select(".grid-layer");
     gridLayer.selectAll("*").remove();
-    this.addGridLines(gridLayer, realChartWidth, realChartHeight);
-
-    // Update axes
-    const axisLayer = this.chartWrapper.select(".axis-layer");
-    axisLayer.selectAll("*").remove();
-    this.addAxesToLayer(axisLayer, realChartWidth, realChartHeight, processedData);
+    this.addGridLines(gridLayer, realChartWidth);
 
     const barColor = this.getNewValue("barColor") || "#4729CE";
 
@@ -142,20 +137,61 @@ export class UIBarChart
       .attr("rx", 2)
       .attr("ry", 2);
 
+    // Update axes (on top of bars)
+    const axisLayer = this.chartWrapper.select(".axis-layer");
+    axisLayer.selectAll("*").remove();
+    this.addAxesToLayer(axisLayer, realChartWidth, realChartHeight, processedData);
+
     // Update value labels
     const labelLayer = this.chartWrapper.select(".label-layer");
-    labelLayer
-      .selectAll(".value-label")
+    
+    // Clear the entire label layer and recreate it
+    labelLayer.selectAll("*").remove();
+    
+    // Create a group for each data point with both background and text
+    const labelGroups = labelLayer
+      .selectAll(".label-group")
       .data(processedData)
-      .join("text")
+      .join("g")
+      .attr("class", "label-group");
+    
+    // Add text labels first (so we can measure them)
+    labelGroups
+      .append("text")
       .attr("class", "value-label")
       .attr("x", (d) => (this.xScale(d.label) as number) + this.xScale.bandwidth() / 2)
-      .attr("y", (d) => this.yScale(d.value) - 5)
+      .attr("y", (d) => this.yScale(d.value) + (realChartHeight - this.yScale(d.value)) / 2 + 4)
       .attr("text-anchor", "middle")
-      .attr("fill", "#666")
+      .attr("fill", "white")
       .attr("font-size", "11px")
       .attr("font-weight", "600")
       .text((d) => this.formatNumber(d.value));
+    
+    // Now add background rectangles positioned behind the text
+    labelGroups.each((_d, i, nodes) => {
+      const group = nodes[i] as SVGElement;
+      const textElement = group.querySelector('.value-label') as SVGTextElement;
+      
+      if (textElement && textElement.getBBox) {
+        const bbox = textElement.getBBox();
+        
+        // Create background rectangle with proper dimensions
+        const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        rect.setAttribute("class", "value-label-bg");
+        rect.setAttribute("x", String(bbox.x - 4));
+        rect.setAttribute("y", String(bbox.y - 2));
+        rect.setAttribute("width", String(bbox.width + 8));
+        rect.setAttribute("height", String(bbox.height + 4));
+        rect.setAttribute("rx", "3");
+        rect.setAttribute("ry", "3");
+        rect.setAttribute("fill", "white");
+        rect.setAttribute("stroke", "#e0e0e0");
+        rect.setAttribute("stroke-width", "0.5");
+        
+        // Insert the background before the text so it appears behind
+        group.insertBefore(rect, textElement);
+      }
+    });
 
     return JSON.stringify(newData);
   }
@@ -192,17 +228,14 @@ export class UIBarChart
 
     // Create layer groups in correct order
     const gridLayer = this.chartWrapper.append("g").attr("class", "grid-layer");
-    const axisLayer = this.chartWrapper.append("g").attr("class", "axis-layer");
     const barLayer = this.chartWrapper.append("g").attr("class", "bar-layer");
+    const axisLayer = this.chartWrapper.append("g").attr("class", "axis-layer");
     const labelLayer = this.chartWrapper.append("g").attr("class", "label-layer");
 
     // Add grid lines to grid layer (behind everything)
-    this.addGridLines(gridLayer, realChartWidth, realChartHeight);
+    this.addGridLines(gridLayer, realChartWidth);
 
-    // Add axes to axis layer
-    this.addAxesToLayer(axisLayer, realChartWidth, realChartHeight, processedData);
-
-    // Add bars to bar layer (on top of grid/axes)
+    // Add bars to bar layer (on top of grid)
     const barColor = this.getNewValue("barColor") || "#4729CE";
 
     barLayer
@@ -217,19 +250,54 @@ export class UIBarChart
       .attr("rx", 2) // Rounded corners
       .attr("ry", 2);
 
+    // Add axes to axis layer (on top of bars)
+    this.addAxesToLayer(axisLayer, realChartWidth, realChartHeight, processedData);
+
     // Add value labels to label layer (on top of everything)
-    labelLayer
-      .selectAll(".value-label")
+    // Create a group for each data point with both background and text
+    const labelGroups = labelLayer
+      .selectAll(".label-group")
       .data(processedData)
-      .join("text")
+      .join("g")
+      .attr("class", "label-group");
+    
+    // Add text labels first (so we can measure them)
+    labelGroups
+      .append("text")
       .attr("class", "value-label")
       .attr("x", (d) => (this.xScale(d.label) as number) + this.xScale.bandwidth() / 2)
-      .attr("y", (d) => this.yScale(d.value) - 5)
+      .attr("y", (d) => this.yScale(d.value) + (realChartHeight - this.yScale(d.value)) / 2 + 4)
       .attr("text-anchor", "middle")
-      .attr("fill", "#666")
+      .attr("fill", "white")
       .attr("font-size", "11px")
       .attr("font-weight", "600")
       .text((d) => this.formatNumber(d.value));
+    
+    // Now add background rectangles positioned behind the text
+    labelGroups.each((_d, i, nodes) => {
+      const group = nodes[i] as SVGElement;
+      const textElement = group.querySelector('.value-label') as SVGTextElement;
+      
+      if (textElement && textElement.getBBox) {
+        const bbox = textElement.getBBox();
+        
+        // Create background rectangle with proper dimensions
+        const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        rect.setAttribute("class", "value-label-bg");
+        rect.setAttribute("x", String(bbox.x - 4));
+        rect.setAttribute("y", String(bbox.y - 2));
+        rect.setAttribute("width", String(bbox.width + 8));
+        rect.setAttribute("height", String(bbox.height + 4));
+        rect.setAttribute("rx", "3");
+        rect.setAttribute("ry", "3");
+        rect.setAttribute("fill", "white");
+        rect.setAttribute("stroke", "#e0e0e0");
+        rect.setAttribute("stroke-width", "0.5");
+        
+        // Insert the background before the text so it appears behind
+        group.insertBefore(rect, textElement);
+      }
+    });
   }
 
   addAxes(chartWidth: number, chartHeight: number) {
@@ -237,10 +305,14 @@ export class UIBarChart
     this.updateAxes(chartWidth, chartHeight, chartData);
   }
 
-  addGridLines(gridLayer: any, chartWidth: number, chartHeight: number) {
+  addGridLines(gridLayer: any, chartWidth: number) {
+    const chartData = this.getChartData() as BarChartData[];
+    const maxValue = max(chartData, (d) => d.value) as number;
+    
     const yTicks = 5;
     for (let i = 0; i <= yTicks; i++) {
-      const y = (chartHeight / yTicks) * i;
+      const value = (maxValue / yTicks) * i;
+      const y = this.yScale(value);
       
       // Grid line
       gridLayer
@@ -274,30 +346,46 @@ export class UIBarChart
     // Y-axis ticks and labels
     const yTicks = 5;
     for (let i = 0; i <= yTicks; i++) {
-      const y = (chartHeight / yTicks) * i;
       const value = (maxValue / yTicks) * i;
+      const y = this.yScale(value);
 
       // Tick line
       yAxis
         .append("line")
-        .attr("x1", -5)
+        .attr("x1", 0)
         .attr("y1", y)
-        .attr("x2", 0)
+        .attr("x2", 5)
         .attr("y2", y)
         .attr("stroke", "#666")
         .attr("stroke-width", 1);
 
-      // Tick label
-      yAxis
-        .append("text")
-        .attr("x", -10)
-        .attr("y", y)
+      // Tick label background
+      const labelText = this.formatNumber(value);
+      const labelNode = yAxis.append("text")
+        .attr("x", 15)
+        .attr("y", y + 4)
         .attr("dy", "0.32em")
-        .attr("text-anchor", "end")
+        .attr("text-anchor", "start")
         .attr("fill", "#666")
         .attr("font-size", "12px")
         .attr("font-weight", "500")
-        .text(this.formatNumber(value));
+        .text(labelText);
+
+      // Add white background rectangle behind the text
+      const bbox = labelNode.node()?.getBBox();
+      if (bbox) {
+        yAxis.insert("rect", "text:last-child")
+          .attr("class", "y-axis-label-bg")
+          .attr("x", bbox.x - 4)
+          .attr("y", bbox.y - 2)
+          .attr("width", bbox.width + 8)
+          .attr("height", bbox.height + 4)
+          .attr("fill", "white")
+          .attr("rx", 3)
+          .attr("ry", 3)
+          .attr("stroke", "#e0e0e0")
+          .attr("stroke-width", 0.5);
+      }
     }
 
     // Add X-axis (horizontal)
@@ -342,7 +430,8 @@ export class UIBarChart
     
     const yTicks = 5;
     for (let i = 0; i <= yTicks; i++) {
-      const y = (chartHeight / yTicks) * i;
+      const value = (maxValue / yTicks) * i;
+      const y = this.yScale(value);
       
       // Grid line
       gridGroup
@@ -371,30 +460,46 @@ export class UIBarChart
 
     // Y-axis ticks and labels
     for (let i = 0; i <= yTicks; i++) {
-      const y = (chartHeight / yTicks) * i;
       const value = (maxValue / yTicks) * i;
+      const y = this.yScale(value);
 
       // Tick line
       yAxis
         .append("line")
-        .attr("x1", -5)
+        .attr("x1", 0)
         .attr("y1", y)
-        .attr("x2", 0)
+        .attr("x2", 5)
         .attr("y2", y)
         .attr("stroke", "#666")
         .attr("stroke-width", 1);
 
-      // Tick label
-      yAxis
-        .append("text")
-        .attr("x", -10)
-        .attr("y", y)
+      // Tick label background
+      const labelText = this.formatNumber(value);
+      const labelNode = yAxis.append("text")
+        .attr("x", 18)
+        .attr("y", y + 4)
         .attr("dy", "0.32em")
-        .attr("text-anchor", "end")
+        .attr("text-anchor", "start")
         .attr("fill", "#666")
         .attr("font-size", "12px")
         .attr("font-weight", "500")
-        .text(this.formatNumber(value));
+        .text(labelText);
+
+      // Add white background rectangle behind the text
+      const bbox = labelNode.node()?.getBBox();
+      if (bbox) {
+        yAxis.insert("rect", "text:last-child")
+          .attr("class", "y-axis-label-bg")
+          .attr("x", bbox.x - 4)
+          .attr("y", bbox.y - 2)
+          .attr("width", bbox.width + 8)
+          .attr("height", bbox.height + 4)
+          .attr("fill", "white")
+          .attr("rx", 3)
+          .attr("ry", 3)
+          .attr("stroke", "#e0e0e0")
+          .attr("stroke-width", 0.5);
+      }
     }
 
     // Add X-axis (horizontal)

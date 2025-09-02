@@ -51,6 +51,20 @@ export default css`
     pointer-events: none;
   }
 
+  :host(.ui-bar-chart) .ui-chart-svg .y-axis text {
+    font-size: 12px;
+    fill: #666;
+    font-weight: 500;
+  }
+
+  :host(.ui-bar-chart) .ui-chart-svg .y-axis text,
+  :host(.ui-bar-chart) .ui-chart-svg .value-label {
+    background-color: white;
+    padding: 2px 4px;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
   :host(.ui-bar-chart) .ui-chart-svg rect {
     transition: opacity 0.2s ease;
   }

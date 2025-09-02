@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Y-Axis Labels Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .chart-wrapper {
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .info h3 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+        .info ul {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Y-Axis Labels Positioning Test</h1>
+        
+        <div class="info">
+            <h3>✅ Improvements Made</h3>
+            <p>The bar chart has been enhanced with better Y-axis label positioning and proper layering to ensure all elements are clearly visible.</p>
+            <ul>
+                <li><strong>Y-Axis Labels:</strong> Moved from left side (x=-10) to right side (x=15, x=18) with text-anchor="start"</li>
+                <li><strong>Benefit:</strong> Long numbers like "22,150" are now fully visible and won't be cut off</li>
+                <li><strong>Proper Positioning:</strong> Labels are positioned to the right of the axis line, not overlapping it</li>
+                <li><strong>Y-Axis Backgrounds:</strong> Y-axis labels have white backgrounds for better readability</li>
+                <li><strong>Value Labels:</strong> Now positioned inside bars with white backgrounds for optimal visibility</li>
+                <li><strong>Improved Layering:</strong> Axes are now drawn on top of bars for better visibility</li>
+                <li><strong>Consistent Layout:</strong> Both chart initialization and updates use proper positioning and layering</li>
+            </ul>
+        </div>
+
+        <div class="chart-wrapper">
+            <ui-bar-chart id="testChart" style="width: 600px; height: 400px;"></ui-bar-chart>
+        </div>
+
+        <div class="info">
+            <h3>🔍 What to Look For</h3>
+            <ul>
+                <li>Y-axis labels (0, 4,420, 8,840, 13,260, 17,680, 22,100) should be visible on the right side of the axis</li>
+                <li>Labels should be fully readable with proper thousands separators</li>
+                <li>No labels should be cut off or partially hidden</li>
+                <li>Tick marks should extend to the right of the axis line</li>
+                <li><strong>NEW:</strong> Y-axis labels have white backgrounds with subtle borders for better readability</li>
+                <li><strong>NEW:</strong> Value labels are positioned inside the bars with white backgrounds for optimal visibility</li>
+            </ul>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import the bar chart component
+        import './src/modules/controls/BarChart/BarChart.ts';
+        
+        // Wait for the component to be defined
+        customElements.whenDefined('ui-bar-chart').then(() => {
+            const chart = document.getElementById('testChart');
+            
+            // Test with data that has long numbers to demonstrate the improvement
+            const testData = [
+                { id: "1", label: "Q1", value: 8840 },
+                { id: "2", label: "Q2", value: 13260 },
+                { id: "3", label: "Q3", value: 17680 },
+                { id: "4", label: "Q4", value: 22100 },
+            ];
+            
+            chart.setAttribute('chartData', JSON.stringify(testData));
+        });
+    </script>
+</body>
+</html>
