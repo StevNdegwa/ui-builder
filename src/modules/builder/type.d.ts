@@ -16,6 +16,7 @@ type BuildableFrameConfig<ControlType> = ElementBox &
   Pos & {
     uniqueId: string;
     elementControl: ControlType;
+    atTopEnd: boolean;
   };
 
 type BuilderFieldValue = string | number | boolean | DataTableRow[];

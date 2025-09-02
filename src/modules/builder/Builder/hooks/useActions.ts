@@ -13,7 +13,8 @@ export function useActions(
   addActionsRef: React.RefObject<SVGGElement | null>,
   getBuildableConfigById: (
     id: string
-  ) => BuildableFrameConfig<BuildableControl> | undefined
+  ) => BuildableFrameConfig<BuildableControl> | undefined,
+  updateBuilderConfigSignal: symbol
 ) {
   const [activeBuildableId, setActiveElementId] = useState<string | undefined>(
     undefined
@@ -41,7 +42,8 @@ export function useActions(
   const { removeEditActionById } = useEditActions(
     elements,
     editActionsRef,
-    setActiveElementId
+    setActiveElementId,
+    updateBuilderConfigSignal
   );
 
   useEditActionsResize(elements, getBuildableConfigById);

@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { BuilderElementsGeometry } from "@modules/builder/utils/BuilderElementsGeometry";
 import { generate, iconButton } from "@modules/builder/elements";
 import { BuildableControl } from "@modules/builder/BuildableControl";
@@ -7,6 +7,7 @@ export function useEditActions(
   elements: BuildableFrameConfig<BuildableControl>[],
   editActionsRef: React.RefObject<SVGGElement | null>,
   setActiveElementId: (id?: string) => void,
+  updateBuilderConfigSignal: symbol
 ) {
   const removeEditActionById = useCallback(
     (id: string) => {
@@ -16,6 +17,18 @@ export function useEditActions(
     },
     [editActionsRef]
   );
+
+  const elementAtTopEndExists = useMemo(
+    () =>
+      elements.find(
+        (element) =>
+          updateBuilderConfigSignal && element.elementControl.elementName !== "ui-section" &&
+          element.atTopEnd
+      ),
+    [elements, updateBuilderConfigSignal]
+  );
+
+  console.log("\n elementAtTopEndExists >> ", elementAtTopEndExists);
 
   const getEditActionConfig = useCallback(
     ({
@@ -41,9 +54,7 @@ export function useEditActions(
             height,
             topPadding: 2,
             leftPadding:
-              !elementControl.is.empty() && elementControl.is.section()
-                ? 36
-                : 16,
+              elementControl.is.section() && elementAtTopEndExists ? 36 : 16,
           }),
         },
         data: {
@@ -85,7 +96,7 @@ export function useEditActions(
 
       return configType;
     },
-    [setActiveElementId]
+    [setActiveElementId, elementAtTopEndExists]
   );
 
   useEffect(() => {

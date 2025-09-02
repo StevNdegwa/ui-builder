@@ -1,4 +1,4 @@
-import { useRef, forwardRef, PropsWithChildren, useMemo } from "react";
+import { useRef, forwardRef, PropsWithChildren, useMemo, useState, useCallback } from "react";
 import { rgba } from "polished";
 import { useForwardRef } from "@modules/utils/hooks";
 import { FlexBox } from "@ui/components";
@@ -22,6 +22,7 @@ export type BuilderProps = PropsWithChildren<{
 
 export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
   ({ children, notify }, ref) => {
+    const [updateBuilderConfigSignal, setUpdateBuilderConfigSignal] = useState(Symbol("updateBuilderConfigSignal"));
     const contentsWrapperRef = useForwardRef<HTMLDivElement>(ref);
     const resizeActionsRef = useRef<SVGGElement>(null);
     const editActionsRef = useRef<SVGGElement>(null);
@@ -29,11 +30,14 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
     const scratchPadRef = useRef<SVGRectElement>(null);
     const editorSVGRef = useRef<SVGSVGElement>(null);
 
+    const updateBuilderConfig = useCallback(() => setUpdateBuilderConfigSignal(Symbol("updateBuilderConfigSignal")), []);
+
     const { width: scratchPadWidth, height: scratchPadHeight } =
       useScratchPad(contentsWrapperRef);
 
-    const { buildableConfigs, getBuildableConfigById, updateBuilderConfig } =
-      useBuildableConfigsInit(contentsWrapperRef);
+    const { buildableConfigs, getBuildableConfigById } =
+      useBuildableConfigsInit(contentsWrapperRef, updateBuilderConfigSignal);
+    
     const {
       activeBuildableId,
       addElementsModalOpen,
@@ -46,7 +50,8 @@ export const Builder = forwardRef<HTMLDivElement, BuilderProps>(
       resizeActionsRef,
       editActionsRef,
       addActionsRef,
-      getBuildableConfigById
+      getBuildableConfigById,
+      updateBuilderConfigSignal
     );
 
     const activeBuildableControl = useMemo(

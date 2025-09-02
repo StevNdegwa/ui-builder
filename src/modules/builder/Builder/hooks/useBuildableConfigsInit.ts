@@ -9,9 +9,9 @@ const shortUniqueID = new ShortUniqueId({
 });
 
 export function useBuildableConfigsInit(
-  contentsWrapperRef: React.RefObject<HTMLDivElement | null>
+  contentsWrapperRef: React.RefObject<HTMLDivElement | null>,
+  updateBuilderConfigSignal: symbol
 ) {
-  const [updateBuilderConfigSignal, setUpdateBuilderConfigSignal] = useState(Symbol("updateBuilderConfigSignal"));
   const [buildableConfigs, setBuildableConfigs] = useState<
     BuildableFrameConfig<BuildableControl>[]
   >([]);
@@ -43,6 +43,8 @@ export function useBuildableConfigsInit(
         x: box.x - contentStart.x + BUILDER_PADDING,
         y: box.y - contentStart.y + BUILDER_PADDING,
         elementControl: new BuildableControl(element, uniqueId),
+        atTopEnd:
+          contentStart.x + contentStart.width - (box.x + box.width) <= 36,
       };
     },
     []
@@ -66,7 +68,12 @@ export function useBuildableConfigsInit(
         );
       }
     }, 1);
-  }, [computeBuildableConfig, contentsWrapperRef, uiBuildableElementsLen, updateBuilderConfigSignal]);
+  }, [
+    computeBuildableConfig,
+    contentsWrapperRef,
+    uiBuildableElementsLen,
+    updateBuilderConfigSignal,
+  ]);
 
-  return { buildableConfigs, getBuildableConfigById, computeBuildableConfig, updateBuilderConfig: () => setUpdateBuilderConfigSignal(Symbol("updateBuilderConfigSignal")) };
+  return { buildableConfigs, getBuildableConfigById, computeBuildableConfig };
 }
